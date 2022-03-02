@@ -40,7 +40,7 @@ public class Plane {
         double [] vector1 = new double[3];
         double [] vector2 = new double[3];
 
-        vector1[0] = line1.getA();
+        vector1[0] = line1.();
         vector1[1] = line1.getB();
         vector1[2] = line1.getC();
 
@@ -57,11 +57,17 @@ public class Plane {
     }
 
     //Coalculates the normalvector with cross product
-    public double[] crossProduct(double[] vector1, double[]vector2){
+    public static double[] crossProduct(double[] vector1, double[] vector2){
         double[] normalVector = new double[3];
         normalVector[0] = vector1[1]*vector2[2] - vector1[2]*vector2[1];
         normalVector[1] = -(vector1[0]*vector2[2] - vector1[2]*vector2[0]); 
         normalVector[2] = vector1[0]*vector2[1] - vector1[1]*vector2[0];
 		return normalVector;
+    }
+
+    public double[] getNormalVector() {
+        double pyth = sqrt(pow(a,2) + pow(b,2) + pow(c,2));
+        double [] norm = {a/pyth,b/pyth,c/pyth};
+        return norm;
     }
 }   
