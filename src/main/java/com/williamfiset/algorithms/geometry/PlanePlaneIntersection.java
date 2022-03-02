@@ -7,7 +7,7 @@ public class PlanePlaneIntersection {
     //Expected input ex: ax+by+cz+d
     //Expected output: ?? Parameterized line? (t*(x,y,z))
     public static void checkInputs(double[] planeOne, double[] planeTwo) {
-        if (planeOne.length != 4 || planeTwo.length != 4) throw new ArithmeticException("Planes must be = 3");
+        if (planeOne.length != 4 || planeTwo.length != 4) throw new ArithmeticException("Planes must be in ax+by+cz+d form");
 
     }
     public static int findCommonZero(double[] planeOne, double[] planeTwo){
@@ -50,6 +50,7 @@ public class PlanePlaneIntersection {
         double[] normalVector = crossProduct(planeOne, planeTwo);
         //Zero vector, Planes are parallel to each other.
         if (normalVector[0] == 0 && normalVector[1] == 0 && normalVector[2] == 0) return new Point2D[] {};
+        
         int index = findCommonZero(planeOne, planeTwo);
 
         //if there is no common zero => y=0

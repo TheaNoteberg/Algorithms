@@ -11,10 +11,12 @@ import java.awt.geom.Point2D;
 
 public class Line {
 
-  // The internal representation of a line is
+  // For a 2D line, the internal representation of a line is
   // in general form which is: ax + by = c
-  private double a, b, c;
 
+  // For 3D the form is: (a,b,c) + t(x,y,z)
+  private double a, b, c;
+  private double x,y,z;
   // A very same epsilon value used as a threshold for double equality
   private static final double EPS = 0.0000001;
 
@@ -29,6 +31,44 @@ public class Line {
     b = x2 - x1;
     c = x2 * y1 - x1 * y2;
     normalise();
+  }
+  //creates a line from two points. 
+  public Line(double x1, double y1, double z1, double x2, double y2, double z2) {
+    x = x1 - x2;
+    y = y1 - y2;
+    z = z1 - z2;
+    a = x1;
+    b = y1;
+    c = z1;
+  }
+  
+  public double getA(){
+    return a;
+  }  
+
+
+  public double getB(){
+    return b;
+  }
+  
+  
+  public double getC(){
+    return c;
+  }
+
+
+  public double getX(){
+    return x;
+  }
+
+  
+  public double getY(){
+    return y;
+  }
+
+
+  public double getZ(){
+    return z;
   }
 
   // Constructs a line from a slope and a point
