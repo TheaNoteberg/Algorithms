@@ -14,9 +14,11 @@ public class Line {
   // For a 2D line, the internal representation of a line is
   // in general form which is: ax + by = c
 
-  // For 3D the form is: (a,b,c) + t(x,y,z)
+  // For all other dimensions it's defined by a vector and a point
   private double a, b, c;
-  private double x,y,z;
+  private Vector vector;
+  private Point point;
+  
   // A very same epsilon value used as a threshold for double equality
   private static final double EPS = 0.0000001;
 
@@ -32,43 +34,33 @@ public class Line {
     c = x2 * y1 - x1 * y2;
     normalise();
   }
-  //creates a line from two points. 
+
+  //creates a 3D line from two points. 
   public Line(double x1, double y1, double z1, double x2, double y2, double z2) {
-    x = x1 - x2;
-    y = y1 - y2;
-    z = z1 - z2;
-    a = x1;
-    b = y1;
-    c = z1;
-  }
-  
-  public double getA(){
-    return a;
-  }  
-
-
-  public double getB(){
-    return b;
-  }
-  
-  
-  public double getC(){
-    return c;
+    Point point1 = new Point(x1, y1, z1);
+    Point point2 = new Point(x2, y2, z2);
+    this.vector = vector.makeTwoPointsVector(point1, point2);
+    this.point = point1;
   }
 
-
-  public double getX(){
-    return x;
+  // Constructs a N-Dimensional line from a vector and point (parametric form).
+  public Line(Vector vector, Point point){
+    if (vector.getDim() == point.getDim()){
+      this.vector = vector;
+      this.point = point;
+    }
+    else throw new ArithmeticException("The point and vector must be in the same dimension");
+    
   }
 
-  
-  public double getY(){
-    return y;
-  }
-
-
-  public double getZ(){
-    return z;
+  // Constructs a N-Dimensional line from two vectors (parametric form).
+  public Line(Vector posVector, Vector dirVector){
+    if (posVector.getDim() == dirVector.getDim()){
+      this.vector = posVector;
+      this.point = dirVector;
+    }
+    else throw new ArithmeticException("The vectors must be in the same dimension");
+    
   }
 
   // Constructs a line from a slope and a point
