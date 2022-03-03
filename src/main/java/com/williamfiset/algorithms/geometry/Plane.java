@@ -38,19 +38,21 @@ public class Plane {
     }
     //Construct plane from three points in doubles
     public Plane(double[] point1, double[] point2, double[] point3) {
-        double[] a_b = new double [3];
-        double[] a_c = new double [3];
-        //create 3d lines from line class
-        for(int i = 0; i <point1.length; i++){
-            a_b[i] = point1[i] - point2[i];
-            a_c[i] = point1[i] - point3[i];
-        }
-        double[] normalVector = crossProduct(a_b, a_c);
+        double a_bX  = point1[0] - point2[0];
+        double a_bY  = point1[1] - point2[1];
+        double a_bZ  = point1[2] - point2[2];
+        double a_cX  = point1[0] - point3[0];
+        double a_cY  = point1[1] - point3[1];
+        double a_cZ  = point1[2] - point3[2];
+        Vector a_b = new Vector(a_bX, a_bY, a_bZ);
+        Vector a_b = new Vector(a_cX, a_cY, a_cZ);
 
-        this.a = normalVector[0];
-        this.b = normalVector[1];
-        this.c = normalVector[2];
-        this.d = normalVector[0]*point1[0] + normalVector[1]*point1[1] + normalVector[2]*point1[2];//inte 100% på den här
+        Vector normalVector = Vector.crossProduct(a_b, a_c);
+
+        this.a = normalVector.coordinates[0];
+        this.b = normalVector.coordinates[1];
+        this.c = normalVector.coordinates[2];
+        this.d = this.a*point1[0] + this.b*point1[1] + this.c*point1[2];//inte 100% på den här
     }
     
     //Constructs a plane from 2 lines
