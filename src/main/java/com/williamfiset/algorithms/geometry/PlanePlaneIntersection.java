@@ -1,15 +1,7 @@
 package com.williamfiset.algorithms.geometry;
 
-import java.awt.geom.Point3D;
-
 public class PlanePlaneIntersection {
 
-    //Expected input ex: ax+by+cz+d
-    //Expected output: ?? Parameterized line? (t*(x,y,z))
-    public static void checkInputs(double[] planeOne, double[] planeTwo) {
-        if (planeOne.length != 4 || planeTwo.length != 4) throw new ArithmeticException("Planes must be in ax+by+cz+d form");
-
-    }
     public static int findCommonZero(double[] planeOne, double[] planeTwo){
         int index = -1;
         for (int i = 0; i<planeOne.length-1; i++){
@@ -44,12 +36,14 @@ public class PlanePlaneIntersection {
     }
 
 
-    public static Point2D[] planePlaneIntersection(double[] planeOne, double[] planeTwo ){
-        checkInputs(planeOne, planeTwo);
-        
-        double[] normalVector = crossProduct(planeOne, planeTwo);
+    public static Line planePlaneIntersection(Plane planeOne, Plane planeTwo ){
+
+        //double[] normalVector = Plane.crossProduct(planeOne, planeTwo);
+        double[] normalOne = planeOne.getNormalVector();
+        double[] normalTwo = planeTwo.getNormalVector();
+
         //Zero vector, Planes are parallel to each other.
-        if (normalVector[0] == 0 && normalVector[1] == 0 && normalVector[2] == 0) return new Point2D[] {};
+        if (normalOne == normalTwo) return null;
         
         int index = findCommonZero(planeOne, planeTwo);
 
@@ -75,9 +69,10 @@ public class PlanePlaneIntersection {
         double[] point = findPoint(newPlanOne, newPlanTwo, index);    
 
 
-        return new Point2D[] {new Point2D.Double(normalVector[0],normalVector[1],normalVector[2]), new Point2D.Double(point[0],2) };
+        return new Point2D[] {new Point2D.Double(normalOne,normalVector[1],normalVector[2]), new Point2D.Double(point[0],2) };
     }
     
+    /*
     //Calculates the normal vector between the two planes
     public static double[] crossProduct(double[] planeOne, double[] planeTwo){
         double[] normalVector = new double[3];
@@ -87,7 +82,7 @@ public class PlanePlaneIntersection {
         
         return normalVector;
     }
-
+    */
     public void main(){
         double[] planeOne = {1, 2, 1, -1};
         double[] planeTwo = {2, 3, -2, 2};
