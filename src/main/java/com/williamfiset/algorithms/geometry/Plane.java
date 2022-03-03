@@ -10,7 +10,7 @@ public class Plane {
     // in Hessian normal form which is: ax + by + cz + d = 0
     private Point a, b, c, d;
     // (1,2,3)t + (2,3,4) = (t+2, 2+3t, 3t+4)
-    public Plane(Point a, Point b, Point c, Point d){
+    public Plane(double a, double b, double c, double d){
         this.a = a;
         this.b = b;
         this.c = c;
