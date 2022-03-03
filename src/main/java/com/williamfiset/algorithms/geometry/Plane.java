@@ -58,23 +58,15 @@ public class Plane {
     //Constructs a plane from 2 lines
     public Plane(Line line1, Line line2){
 
-        double [] vector1 = new double[3];
-        double [] vector2 = new double[3];
+        Vector vector1 = new Vector(line1.getA(), line1.getB(), line1.getC());
+        Vector vector2 = new Vector(line2.getA(), line2.getB(), line2.getC());
 
-        vector1[0] = line1.getA();
-        vector1[1] = line1.getB();
-        vector1[2] = line1.getC();
-
-        vector2[0] = line2.getA();
-        vector2[1] = line2.getB();
-        vector2[2] = line2.getC();
-
-        double[] normalVector = crossProduct(vector1, vector2);
+        Vector normalVector = Vector.crossProduct(vector1, vector2);
         
-        this.a = normalVector[0];
-        this.b = normalVector[1];
-        this.c = normalVector[2];
-        this.d = normalVector[0]*line1.getX() + normalVector[1]*line1.getY() + normalVector[2]*line1.getZ();
+        this.a = normalVector.coordinates[0];
+        this.b = normalVector.coordinates[1];
+        this.c = normalVector.coordinates[2];
+        this.d = this.a*line1.getX() + this.b*line1.getY() + this.c*line1.getZ();
     }
     public Plane(Vector vector1, Vector vector2){
 
