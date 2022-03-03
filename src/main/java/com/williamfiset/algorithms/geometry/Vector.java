@@ -38,4 +38,22 @@ public class Vector extends Point {
         
         return new Vector(vector);
     }
+
+    //Coalculates the normalvector with cross product
+    public static Vector crossProduct(Vector vector1, Vector vector2){
+        if( vector1.getDim() != 3 || vector2.getDim() != 3) throw new ArithmeticException("The vectors need to be in 3D");
+        double[] normalVector = new double[3];
+        double x = vector1.getValue(1)*vector2.getValue(2) - vector1.getValue(2)*vector2.getValue(1);
+        double y = -(vector1.getValue(0)*vector2.getValue(2) - vector1.getValue(2)*vector2.getValue(0));
+        double z = vector1.getValue(0)*vector2.getValue(1) - vector1.getValue(1)*vector2.getValue(0);
+        return new Vector(x, y, z);
+    }
+
+    public double getValue(int index) {
+        return coordinates[index];
+    }
+
+    public int getDim(){
+        return coordinates.length;
+    }
 }
