@@ -17,7 +17,7 @@ public class Plane {
         this.d = d;
     }
 
-    //Constructs a plane from 3 points.
+    //Constructs a plane from 3 points. Kanske behöver skapa två vektorer istället för två nya points rad 28,29
     public Plane(Point point1, Point point2, Point point3) {
         double a_bX  = point1.getX() - point2.getX();
         double a_bY  = point1.getY() - point2.getY();
@@ -25,10 +25,11 @@ public class Plane {
         double a_cX  = point1.getX() - point3.getX();
         double a_cY  = point1.getY() - point3.getY();
         double a_cZ  = point1.getZ() - point3.getZ();
-        Point a_b = new Point(a_bX, a_bY, a_bZ);
-        Point a_c = new Point(a_cX, a_cY, a_cZ);
 
-        double[] normalVector = crossProduct(a_b, a_c);
+        Vector a_b = new Vector(a_bX, a_bY, a_bZ);
+        Vector a_c = new Vector(a_cX, a_cY, a_cZ);
+
+        Vector normalVector = Vector.crossProduct(a_b, a_c);
         
         this.a = normalVector[0];
         this.b = normalVector[1];
@@ -72,6 +73,9 @@ public class Plane {
         this.b = normalVector[1];
         this.c = normalVector[2];
         this.d = normalVector[0]*line1.getX() + normalVector[1]*line1.getY() + normalVector[2]*line1.getZ();
+    }
+    public Plane(Vector vector1, Vector vector2){
+
     }
 
     //Coalculates the normalvector with cross product
