@@ -1,12 +1,17 @@
 package com.williamfiset.algorithms.geometry;
 
+import static java.lang.Math.*;
+
 public class PlanePlaneIntersection {
 
-    public static int findCommonZero(double[] planeOne, double[] planeTwo){
+    public static int findCommonZero(Plane planeOne, Plane planeTwo){
         int index = -1;
-        for (int i = 0; i<planeOne.length-1; i++){
+        double[] abcdOne = planeOne.getABCD();
+        double[] abcdTwo = planeTwo.getABCD();
+
+        for (int i = 0; i < 4; i++){
             //If x or y or z is 0 they shouldnt be set to zero to find one point on the line
-            if (planeOne[i] == 0 && planeTwo[i] == 0 ) {
+            if (abcdOne[i] == 0 && abcdTwo[i] == 0) {
                 index = i;
             }
         }
@@ -41,10 +46,20 @@ public class PlanePlaneIntersection {
         //double[] normalVector = Plane.crossProduct(planeOne, planeTwo);
         double[] normalOne = planeOne.getNormalVector();
         double[] normalTwo = planeTwo.getNormalVector();
+        double[] abcdOne = planeOne.getABCD();
+        double[] abcdTwo = planeTwo.getABCD();
+
+        double pOne = abcdOne[3] / sqrt(pow(abcdOne[0], 2) + pow(abcdOne[1], 2) + pow(abcdOne[2], 2));
+        double pTwo = abcdTwo[3] / sqrt(pow(abcdTwo[0], 2) + pow(abcdTwo[1], 2) + pow(abcdTwo[2], 2));
 
         //Zero vector, Planes are parallel to each other.
         if (normalOne == normalTwo) return null;
+
+        // The line consists of a direction vector parallell to both planes
+        // and a point that lies on the line.
+        Vector dirVect = Plane.crossProduct(normalOne, normalTwo);
         
+        /*
         int index = findCommonZero(planeOne, planeTwo);
 
         //if there is no common zero => y=0
@@ -70,6 +85,7 @@ public class PlanePlaneIntersection {
 
 
         return new Point2D[] {new Point2D.Double(normalOne,normalVector[1],normalVector[2]), new Point2D.Double(point[0],2) };
+        */
     }
     
     /*
