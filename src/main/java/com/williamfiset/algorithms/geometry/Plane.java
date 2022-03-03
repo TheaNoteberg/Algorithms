@@ -8,7 +8,7 @@ import static java.lang.Math.*;
 public class Plane {
     // The internal representation of a plane is
     // in Hessian normal form which is: ax + by + cz + d = 0
-    private Point a, b, c, d;
+    private double a, b, c, d;
     // (1,2,3)t + (2,3,4) = (t+2, 2+3t, 3t+4)
     public Plane(double a, double b, double c, double d){
         this.a = a;
