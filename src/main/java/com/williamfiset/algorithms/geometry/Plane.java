@@ -65,9 +65,13 @@ public class Plane {
 		return normalVector;
     }
 
-    public double[] getNormalVector() {
+    public Vector getNormalVector() {
         double pyth = sqrt(pow(a,2) + pow(b,2) + pow(c,2));
         double [] norm = {a/pyth,b/pyth,c/pyth};
-        return norm;
+        return new Vector(norm);
+    }
+
+    public double[] getABCD() {
+        return new double[] {a,b,c,d};    
     }
 }   
