@@ -6,7 +6,7 @@
  */
 package com.williamfiset.algorithms.linearalgebra;
 
-class GaussianElimination {
+public class GaussianElimination {
 
   // Define a small value of epsilon to compare double values
   static final double EPS = 0.00000001;
@@ -17,7 +17,7 @@ class GaussianElimination {
   // NOTE: make sure your matrix is consistent and does not have multiple
   // solutions when you solve the system if you want a unique valid answer.
   // Time Complexity: O(r²c)
-  static void solve(double[][] augmentedMatrix) {
+  public static void solve(double[][] augmentedMatrix) {
     int nRows = augmentedMatrix.length, nCols = augmentedMatrix[0].length, lead = 0;
     for (int r = 0; r < nRows; r++) {
       if (lead >= nCols) break;
