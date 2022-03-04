@@ -102,4 +102,15 @@ public class Plane {
         String d_val=Double.toString(this.d);
         return  a_val + "x + " +  b_val + "y + " + c_val + "z + " + d_val + "= 0";
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof Plane)) return false;
+        if (other == this) return true;
+        Plane plane = (Plane) other;
+        double[] abcdOther = plane.getABCD();
+        double[] abcdThis = new double[] {a,b,c,d};
+        if (Arrays.equals(abcdThis, abcdOther)) return true;
+        else return false;
+    }
 }   

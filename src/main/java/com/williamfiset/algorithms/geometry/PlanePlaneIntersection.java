@@ -68,6 +68,7 @@ public class PlanePlaneIntersection {
 
         // The direction of the line will be the cross product of the plane normals.
         Vector dirVect = Vector.crossProduct(normalOne, normalTwo);
+
         
         //If there is no intersection between the planes return null
         if (dirVect.getValue(0) == 0 && dirVect.getValue(1) == 0 && dirVect.getValue(2) == 0) return null;
@@ -85,7 +86,29 @@ public class PlanePlaneIntersection {
 
         double[][] augmented = {abcdOne, abcdTwo};
         GaussianElimination.solve(augmented);
-        Point point = new Point(new double[] {augmented[0][3], augmented[1][3]});
+        double[] pointArr = new double[3];
+        switch (index) {
+            case 0:
+                pointArr[0] = 0;
+                pointArr[1] = augmented[0][3]; 
+                pointArr[2] = augmented[1][3];
+                break;
+
+            case 1:
+                pointArr[1] = 0;
+                pointArr[0] = augmented[0][3]; 
+                pointArr[2] = augmented[1][3];
+                break;
+
+            case 2:
+                pointArr[2] = 0;
+                pointArr[0] = augmented[0][3]; 
+                pointArr[1] = augmented[1][3];
+                break;
+            default:
+                break;
+        }
+        Point point = new Point(pointArr);
 
         
         return new Line(dirVect, point);
@@ -109,10 +132,11 @@ public class PlanePlaneIntersection {
     */
 
     public static void main(String[] args) {
-        Plane planeOne = new Plane(0, 1, 0, 0);
-        Plane planeTwo = new Plane(1, 0, 0, 0);
-
-        System.out.println(planePlaneIntersection(planeOne, planeTwo));
+        Line answer = new Line (new Vector(0,0,-1), new Vector(-1.75, 1.0, -0.25));
+        Plane planeOne = new Plane(1, 2, 1, -1);
+        Plane planeTwo = new Plane(2, 3, -2, 2);
+        Line result = PlanePlaneIntersection.planePlaneIntersection(planeOne, planeTwo);
+        System.out.println(result == answer);
     }
 
     

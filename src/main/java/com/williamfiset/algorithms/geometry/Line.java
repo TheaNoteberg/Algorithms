@@ -8,6 +8,7 @@ package com.williamfiset.algorithms.geometry;
 import static java.lang.Math.*;
 
 import java.awt.geom.Point2D;
+import java.util.Arrays;
 
 public class Line {
 
@@ -145,8 +146,21 @@ public class Line {
   }
 
   // Get a printable representation of a this Line
+  
   @Override
   public String toString() {
     return a + "x + " + b + "y = " + c;
   }
+
+  @Override
+  public boolean equals(Object other){
+    if (!(other instanceof Plane)) return false;
+    if (other == this) return true;
+    Line line = (Line) other;
+    Vector thisNorm = vector.getNormalized();
+    Vector otherNorm = line.getVector().getNormalized();
+    if (Arrays.equals(thisNorm.coordinates, otherNorm.getCoordinates()) && Arrays.equals(point.coordinates, line.getPoint().getCoordinates())) return true;
+    else return false;
+  }
+  
 }
