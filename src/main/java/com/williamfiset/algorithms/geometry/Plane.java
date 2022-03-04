@@ -2,6 +2,8 @@ package com.williamfiset.algorithms.geometry;
 
 import static java.lang.Math.*;
 
+import java.util.Arrays;
+
 
 //import java.awt.geom.Point3D;
 
@@ -60,6 +62,15 @@ public class Plane {
         double pyth = sqrt(pow(a,2) + pow(b,2) + pow(c,2));
         double [] norm = {a/pyth,b/pyth,c/pyth};
         return new Vector(norm);
+    }
+
+     private void checkInput(Plane plane) {
+        double[] abcdOne = plane.getABCD();
+
+        double[] zeroArr = {0,0,0,0};
+
+        if (Arrays.equals(abcdOne, zeroArr)) {
+         throw new ArithmeticException("there is no plane with only zero values");}
     }
 
     public double[] getABCD() {
