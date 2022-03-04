@@ -7,7 +7,7 @@
  */
 package com.williamfiset.algorithms.linearalgebra;
 
-class MatrixMultiplication {
+public class MatrixMultiplication {
 
   // Returns the result of the product of the matrices 'a' and 'b'
   // or null if the matrices are the wrong dimensions
