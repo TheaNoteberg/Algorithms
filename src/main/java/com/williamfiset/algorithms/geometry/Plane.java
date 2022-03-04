@@ -56,6 +56,7 @@ public class Plane {
         this.b = normalVector[1];
         this.c = normalVector[2];
         this.d = normalVector[0]*line1.getX() + normalVector[1]*line1.getY() + normalVector[2]*line1.getZ();
+        checkInput();
     }
 
     public Vector getNormalVector() {
@@ -64,10 +65,10 @@ public class Plane {
         return new Vector(norm);
     }
 
-     private void checkInput(Plane plane) {
-        double[] abcdOne = plane.getABCD();
+     private void checkInput() {
+        double[] abcdOne = {a,b,c};
 
-        double[] zeroArr = {0,0,0,0};
+        double[] zeroArr = {0,0,0};
 
         if (Arrays.equals(abcdOne, zeroArr)) {
          throw new ArithmeticException("there is no plane with only zero values");}

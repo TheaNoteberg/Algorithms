@@ -1,8 +1,10 @@
 package com.williamfiset.algorithms.geometry;
 
 import static java.lang.Math.*;
+
 import java.util.Arrays;
 
+import com.williamfiset.algorithms.linearalgebra.GaussianElimination;
 import com.williamfiset.algorithms.linearalgebra.MatrixInverse;
 import com.williamfiset.algorithms.linearalgebra.MatrixMultiplication;
 
@@ -12,11 +14,11 @@ public class PlanePlaneIntersection {
    
 
     private static int findCommonZero(Plane planeOne, Plane planeTwo){
-        int index = -1;
+        int index = 2;
         double[] abcdOne = planeOne.getABCD();
         double[] abcdTwo = planeTwo.getABCD();
 
-        for (int i = 0; i < 4; i++){
+        for (int i = 0; i < 3; i++){
             //If x or y or z is 0 they shouldnt be set to zero to find one point on the line
             if (abcdOne[i] == 0 && abcdTwo[i] == 0) {
                 index = i;
@@ -74,15 +76,28 @@ public class PlanePlaneIntersection {
         double pTwo = abcdTwo[3] / sqrt(pow(abcdTwo[0], 2) + pow(abcdTwo[1], 2) + pow(abcdTwo[2], 2));
         
         // Point on the line will exist where m*x0 = b. b = -[p1 p2], m = [n1 n2]^T, x0 = point.
-        double[][] m = {abcdOne, abcdTwo};
-        double[][] b = {{-pOne, -pTwo}};
+        // double[][] m = {{0,0,0}, abcdOne, abcdTwo}; 
+        // double[][] b = {{-pOne, -pTwo}}; //[p1,p2]
 
-        double[][] mInv = MatrixInverse.inverse(m);
+        int index = findCommonZero(planeOne, planeTwo);
+
+        abcdOne[3] = -pOne;
+        abcdTwo[3] = -pTwo;
+
+        abcdOne[index] = 0;
+        abcdTwo[index] = 0;
+
+        double[][] augmented = {abcdOne, abcdTwo};
+        GaussianElimination.solve(augmented);
+        Point point = new Point(new double[] {augmented[0][3], augmented[1][3]});
+
+        
+        return new Line(dirVect, point);
 
         // Find x0, solve equation m*x0 = b => x0 = m^-1*b
-        Point point = new Point(MatrixMultiplication.multiply(mInv, b)[0]);
+        //Point point = new Point(MatrixMultiplication.multiply(mInv, b)[0]);
 
-        return new Line(dirVect, point);
+        //return new Line(dirVect, point);
     }
     
     /*
