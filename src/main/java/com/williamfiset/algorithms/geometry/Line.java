@@ -34,6 +34,7 @@ public class Line {
     c = x2 * y1 - x1 * y2;
     normalise();
   }
+  
 
   //creates a 3D line from two points. 
   public Line(double x1, double y1, double z1, double x2, double y2, double z2) {
@@ -61,6 +62,14 @@ public class Line {
     }
     else throw new ArithmeticException("The vectors must be in the same dimension");
     
+  }
+
+  public Vector getVector(){
+    return vector;
+  }
+
+  public Point getPoint(){
+    return point;
   }
 
   // Constructs a line from a slope and a point

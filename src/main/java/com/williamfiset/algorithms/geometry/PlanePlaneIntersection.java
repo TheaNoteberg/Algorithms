@@ -74,10 +74,6 @@ public class PlanePlaneIntersection {
         
         double pOne = abcdOne[3] / sqrt(pow(abcdOne[0], 2) + pow(abcdOne[1], 2) + pow(abcdOne[2], 2));
         double pTwo = abcdTwo[3] / sqrt(pow(abcdTwo[0], 2) + pow(abcdTwo[1], 2) + pow(abcdTwo[2], 2));
-        
-        // Point on the line will exist where m*x0 = b. b = -[p1 p2], m = [n1 n2]^T, x0 = point.
-        // double[][] m = {{0,0,0}, abcdOne, abcdTwo}; 
-        // double[][] b = {{-pOne, -pTwo}}; //[p1,p2]
 
         int index = findCommonZero(planeOne, planeTwo);
 
