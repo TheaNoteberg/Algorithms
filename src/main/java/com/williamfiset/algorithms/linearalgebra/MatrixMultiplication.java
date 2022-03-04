@@ -11,7 +11,7 @@ class MatrixMultiplication {
 
   // Returns the result of the product of the matrices 'a' and 'b'
   // or null if the matrices are the wrong dimensions
-  static double[][] multiply(double[][] a, double[][] b) {
+  public static double[][] multiply(double[][] a, double[][] b) {
     int aRows = a.length, aCols = a[0].length;
     int bRows = b.length, bCols = b[0].length;
     if (aCols != bRows) return null;
