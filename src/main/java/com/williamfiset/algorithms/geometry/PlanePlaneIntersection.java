@@ -51,9 +51,30 @@ public class PlanePlaneIntersection {
         }
         return new Point(pointArr);
     }
-
      */
-    public static double[] findPoint(double[] planeOne, double[] planeTwo, int index){
+
+    public static Point findPoint(double[] planeOne, double[] planeTwo, int index){
+
+        double[] point = {-1, -1, -1};
+
+        double[] first_equation = {-planeOne[1], -planeOne[2]};
+        double[] second_equation = {planeTwo[0]*first_equation[0]+planeTwo[1],planeTwo[0]*first_equation[1]+ planeTwo[2]};
+
+        double second_variable_solution = -second_equation[1]/second_equation[0]; //y
+        double first_variable_solution = first_equation[0]*second_variable_solution + first_equation[1]; //x
+        double[] both_solutions = {first_variable_solution, second_variable_solution};
+        point[index] = 0;
+        int j = 0;
+        
+        for (int i =0; i<point.length; i++){
+            if (point[i] != 0){
+                point[i] = both_solutions[j];
+                j++; 
+            }
+        }
+       
+        return new Point(point[0], point[1], point[2]);
+        /*
         double result [] = new double[2];
         double[] point = {-1, -1, -1};
         // x2 + y2*x1
@@ -73,17 +94,50 @@ public class PlanePlaneIntersection {
         }
 
         return point;
+        */
 
     }
 
     public static Line planePlaneIntersection(Plane planeOne, Plane planeTwo ){
-        //Egen KOd
+        //Egen Kod
         double [] normaleq1 = planeOne.getABCD();
         double [] normaleq2 = planeTwo.getABCD();
         Vector normalOne = new Vector(normaleq1[0], normaleq1[1], normaleq1[2]);
         Vector normalTwo = new Vector(normaleq2[0], normaleq2[1], normaleq2[2]);
         //egen kod
+        Vector normalVector = Vector.crossProduct(normalOne, normalTwo);
+        if (normalVector.getValue(0) == 0 && normalVector.getValue(1) == 0 && normalVector.getValue(2) == 0) return null;
+        
 
+        int index = findCommonZero(planeOne, planeTwo);
+        //if there is no common zero => y=0
+        if (index == -1) index = 2;
+        
+        double[] newPlanOne = new double[3];
+        double[] newPlanTwo = new double[3];
+        //Remove one dimenson that is set to zero
+        for (int i=0; i<normaleq1.length; i++){
+            if (i>index){
+                newPlanOne[i-1] = normaleq1[i];
+                newPlanTwo[i-1] = normaleq2[i];
+            } 
+            if (i < index) {
+                newPlanOne[i] = normaleq1[i];
+                newPlanTwo[i] = normaleq2[i];
+            }
+        }
+        Point point = findPoint(newPlanOne, newPlanTwo, index);
+        /*
+        for (int i=0; i<newPlanOne.length; i++){
+            System.out.println(newPlanOne[i] + " Plan1 nya eq");
+            System.out.println(newPlanTwo[i] + " Plan2 nya eq");
+            System.out.println(point[i] + "nya Pointen");
+        }
+
+         */
+
+        return new Line(normalVector, point); //Default return
+        /*
         //double[] normalVector = Plane.crossProduct(planeOne, planeTwo);
         //Vector normalOne = planeOne.getNormalVector();
         //Vector normalTwo = planeTwo.getNormalVector();
@@ -159,12 +213,12 @@ public class PlanePlaneIntersection {
 
         //return new Line(dirVect, point);
 
-
+    */
     }
 
 
     public static void main(String[] args) {
-        Line answer = new Line (new Vector(0,0,-1), new Vector(-1.75, 1.0, -0.25));
+        Line answer = new Line (new Vector(-7,4,-1), new Point(-7, 4, 0));
         Plane planeOne = new Plane(1, 2, 1, -1);
         Plane planeTwo = new Plane(2, 3, -2, 2);
         Line result = PlanePlaneIntersection.planePlaneIntersection(planeOne, planeTwo);
@@ -173,6 +227,7 @@ public class PlanePlaneIntersection {
         double[] expectedResult = vector.getCoordinates();
         double[] expectedPoint = point.getCoordinates();
         System.out.println(result == answer);
+
         for (int i=0; i<expectedResult.length; i++){
             System.out.println(expectedResult[i] + " Line");
             System.out.println(expectedPoint[i] + " Point");

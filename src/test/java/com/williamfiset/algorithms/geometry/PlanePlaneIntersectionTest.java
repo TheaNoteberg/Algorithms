@@ -5,12 +5,12 @@ import org.junit.*;
 
 import java.awt.geom.Point2D;
 
-class PlanePlaneIntersectionTest {
+public class PlanePlaneIntersectionTest {
 
     @Test
     public void PlanePlaneIntersectionTestOne(){
         PlanePlaneIntersection obj = new PlanePlaneIntersection();
-        Line answer = new Line (new Vector(0,0,-1), new Vector(-1.75, 1.0, -0.25));
+        Line answer = new Line (new Vector(-7,4,-1), new Point(-7, 4, 0));
         Plane planeOne = new Plane(1, 2, 1, -1);
         Plane planeTwo = new Plane(2, 3, -2, 2);
         Line result = obj.planePlaneIntersection(planeOne, planeTwo);
