@@ -144,9 +144,7 @@ public class Line {
 
     return new Point2D.Double(x, y);
   }
-  //Kan av någon anledningen inte köra programmet atm, men idéen är att se om en given punkt har samma
-  //riktningvektor som linjen om man skapar en ny vektor med den givna punkten och den som är bestämd för linjen.
-  //Om dem har samma riktningsvektor måste punkten ligga på linjen
+
   public boolean pointOnLine(Point point){
     Vector comparizonVector = vector.makeTwoPointsVector(point, this.point);
     comparizonVector.getNormalized();
@@ -157,6 +155,16 @@ public class Line {
       if(cross_value.getValue(i) != 0) return false;
     }
     return true;
+
+  }
+  public boolean sameLines(Line line1, Line line2){
+    Vector normalized_1 = line1.getVector().getNormalized();
+    Vector normalized_2 = line2.getVector().getNormalized();
+    Vector crossVal = vector.crossProduct(normalized_1, normalized_2);
+    for(int i = 0; i<crossVal.getDim(); i++){
+      if(crossVal.getValue(i) != 0) return false;
+    }
+    return line1.pointOnLine(line2.getPoint());
 
   }
   // Get a printable representation of a this Line
