@@ -151,10 +151,13 @@ public class Line {
     Vector comparizonVector = vector.makeTwoPointsVector(point, this.point);
     comparizonVector.getNormalized();
     this.vector.getNormalized();
+    Vector cross_value = comparizonVector.crossProduct(comparizonVector, this.vector);
+
     for(int i = 0; i<comparizonVector.getDim(); i++){
-      if(comparizonVector.getValue(i) != this.vector.getValue(i)) return false;
+      if(cross_value.getValue(i) != 0) return false;
     }
     return true;
+
   }
   // Get a printable representation of a this Line
 
