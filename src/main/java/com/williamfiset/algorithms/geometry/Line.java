@@ -150,9 +150,9 @@ public class Line {
   public boolean pointOnLine(Point point){
     Vector comparizonVector = vector.makeTwoPointsVector(point, this.point);
     comparizonVector.getNormalized();
-    this.vector.getNormalized;
+    this.vector.getNormalized();
     for(int i = 0; i<comparizonVector.getDim(); i++){
-      if(comparizonVector.getvalue(i) != this.vector.getValue(i)) return false;
+      if(comparizonVector.getValue(i) != this.vector.getValue(i)) return false;
     }
     return true;
   }

@@ -37,7 +37,7 @@ public class Plane {
         this.a = normalVector.getValue(0);
         this.b = normalVector.getValue(1);
         this.c = normalVector.getValue(2);
-        this.d = a*point1.getX() + b*point1.getY() + c*point1.getZ();//inte 100% på den här
+        this.d = -(a*point1.getX() + b*point1.getY() + c*point1.getZ());
         checkInput();
     }
     //Construct plane from three points in doubles
@@ -56,7 +56,7 @@ public class Plane {
         this.a = normalVector.coordinates[0];
         this.b = normalVector.coordinates[1];
         this.c = normalVector.coordinates[2];
-        this.d = this.a*point1[0] + this.b*point1[1] + this.c*point1[2];
+        this.d = -(this.a*point1[0] + this.b*point1[1] + this.c*point1[2]);
         checkInput();
     }
     
@@ -72,7 +72,7 @@ public class Plane {
         this.b = normalVector.coordinates[1];
         this.c = normalVector.coordinates[2];
         double[] point = line1.getPoint().coordinates;
-        this.d = this.a*point[0] + this.b*point[1] + this.c*point[2];
+        this.d = -(this.a*point[0] + this.b*point[1] + this.c*point[2]);
         checkInput();
     }
 

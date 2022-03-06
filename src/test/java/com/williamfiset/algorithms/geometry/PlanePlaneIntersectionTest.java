@@ -27,7 +27,7 @@ class PlanePlaneIntersectionTest {
         Line result = obj.planePlaneIntersection(planeOne, planeTwo);
         assertThat(result).isEqualTo(answer);
     }
-
+    /*
     //Should not return a line
     @Test
     public void PlanePlaneIntersectionParallellPlanes(){
@@ -40,4 +40,6 @@ class PlanePlaneIntersectionTest {
         //expected output is an empty array
 
     }
+    */
+
 }

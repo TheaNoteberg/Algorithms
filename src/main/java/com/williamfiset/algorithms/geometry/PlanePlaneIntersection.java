@@ -28,6 +28,7 @@ public class PlanePlaneIntersection {
     }
 
     //Finds one point on the intersection between planeOne and planeTwo.
+    /*
     private static Point findPoint(Plane planeOne, Plane planeTwo, int index){
         double[] abcdOne = planeOne.getABCD();
         double[] abcdTwo = planeTwo.getABCD();
@@ -51,12 +52,41 @@ public class PlanePlaneIntersection {
         return new Point(pointArr);
     }
 
+     */
+    public static double[] findPoint(double[] planeOne, double[] planeTwo, int index){
+        double result [] = new double[2];
+        double[] point = {-1, -1, -1};
+        // x2 + y2*x1
+        // y2*z1 + z2
+        double answerX = planeTwo[0] + planeTwo[1]*planeOne[0];
+        double answerC = planeTwo[1]*planeOne[2] + planeTwo[2];
+
+        result[0] = -answerC/answerX;
+        result[1] = (planeTwo[0]*result[0] + planeTwo[2])/planeTwo[1];
+        point[index] = 0;
+        int j = 0;
+        for(int i = 0; i<planeTwo.length; i++){
+            if (point[i] != 0){
+                point[i] = result[j];
+                j++;
+            }
+        }
+
+        return point;
+
+    }
 
     public static Line planePlaneIntersection(Plane planeOne, Plane planeTwo ){
+        //Egen KOd
+        double [] normaleq1 = planeOne.getABCD();
+        double [] normaleq2 = planeTwo.getABCD();
+        Vector normalOne = new Vector(normaleq1[0], normaleq1[1], normaleq1[2]);
+        Vector normalTwo = new Vector(normaleq2[0], normaleq2[1], normaleq2[2]);
+        //egen kod
 
         //double[] normalVector = Plane.crossProduct(planeOne, planeTwo);
-        Vector normalOne = planeOne.getNormalVector();
-        Vector normalTwo = planeTwo.getNormalVector();
+        //Vector normalOne = planeOne.getNormalVector();
+        //Vector normalTwo = planeTwo.getNormalVector();
         double[] abcdOne = planeOne.getABCD();
         double[] abcdTwo = planeTwo.getABCD();
 
@@ -72,10 +102,15 @@ public class PlanePlaneIntersection {
         
         //If there is no intersection between the planes return null
         if (dirVect.getValue(0) == 0 && dirVect.getValue(1) == 0 && dirVect.getValue(2) == 0) return null;
-        
-        double pOne = abcdOne[3] / sqrt(pow(abcdOne[0], 2) + pow(abcdOne[1], 2) + pow(abcdOne[2], 2));
-        double pTwo = abcdTwo[3] / sqrt(pow(abcdTwo[0], 2) + pow(abcdTwo[1], 2) + pow(abcdTwo[2], 2));
 
+        //double pOne = abcdOne[3] / sqrt(pow(abcdOne[0], 2) + pow(abcdOne[1], 2) + pow(abcdOne[2], 2));
+        //double pTwo = abcdTwo[3] / sqrt(pow(abcdTwo[0], 2) + pow(abcdTwo[1], 2) + pow(abcdTwo[2], 2));
+
+
+        //Tog bort normaliseringen.
+        double pOne = abcdOne[3];
+        double pTwo = abcdTwo[3];
+        //
         int index = findCommonZero(planeOne, planeTwo);
 
         abcdOne[3] = -pOne;
@@ -86,6 +121,12 @@ public class PlanePlaneIntersection {
 
         double[][] augmented = {abcdOne, abcdTwo};
         GaussianElimination.solve(augmented);
+        for (int i = 0; i< augmented.length; i++){
+            for (int j = 0; j < augmented[0].length; j++){
+                System.out.println(augmented[i][j] + " Matrixpos:" + i + " " + j);
+            }
+        }
+
         double[] pointArr = new double[3];
         switch (index) {
             case 0:
@@ -117,26 +158,28 @@ public class PlanePlaneIntersection {
         //Point point = new Point(MatrixMultiplication.multiply(mInv, b)[0]);
 
         //return new Line(dirVect, point);
+
+
     }
-    
-    /*
-    //Calculates the normal vector between the two planes
-    public static double[] crossProduct(double[] planeOne, double[] planeTwo){
-        double[] normalVector = new double[3];
-        normalVector[0] = planeOne[1]*planeTwo[2] - planeOne[2]*planeTwo[1];
-        normalVector[1] = -(planeOne[0]*planeTwo[2] - planeOne[2]*planeTwo[0]); 
-        normalVector[2] = planeOne[0]*planeTwo[1] - planeOne[1]*planeTwo[0];
-        
-        return normalVector;
-    }
-    */
+
 
     public static void main(String[] args) {
         Line answer = new Line (new Vector(0,0,-1), new Vector(-1.75, 1.0, -0.25));
         Plane planeOne = new Plane(1, 2, 1, -1);
         Plane planeTwo = new Plane(2, 3, -2, 2);
         Line result = PlanePlaneIntersection.planePlaneIntersection(planeOne, planeTwo);
+        Vector vector = result.getVector();
+        Point point = result.getPoint();
+        double[] expectedResult = vector.getCoordinates();
+        double[] expectedPoint = point.getCoordinates();
         System.out.println(result == answer);
+        for (int i=0; i<expectedResult.length; i++){
+            System.out.println(expectedResult[i] + " Line");
+            System.out.println(expectedPoint[i] + " Point");
+        }
+
+
+
     }
 
     
