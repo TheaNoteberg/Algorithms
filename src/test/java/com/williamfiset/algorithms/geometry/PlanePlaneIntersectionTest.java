@@ -13,7 +13,7 @@ public class PlanePlaneIntersectionTest {
         Plane planeOne = new Plane(1, 2, 1, -1);
         Plane planeTwo = new Plane(2, 3, -2, 2);
         Line result = PlanePlaneIntersection.planePlaneIntersection(planeOne, planeTwo);
-        assertThat(result.sameLines(result, answer)).isEqualTo(true);
+        assertThat(answer).isEqualTo(result);
     }
     
     @Test
@@ -24,7 +24,7 @@ public class PlanePlaneIntersectionTest {
         Plane planeOne = new Plane (1, 1, 1, 1);
         Plane planeTwo = new Plane (1, 2, 3, 4);
         Line result = PlanePlaneIntersection.planePlaneIntersection(planeOne, planeTwo);
-        assertThat(result.sameLines(result, answer)).isEqualTo(true);
+        assertThat(answer).isEqualTo(result);
     }
     
     @Test
