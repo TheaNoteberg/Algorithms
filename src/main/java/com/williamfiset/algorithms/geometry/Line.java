@@ -8,6 +8,7 @@ package com.williamfiset.algorithms.geometry;
 import static java.lang.Math.*;
 
 import java.awt.geom.Point2D;
+import java.util.Arrays;
 
 public class Line {
 
@@ -34,6 +35,7 @@ public class Line {
     c = x2 * y1 - x1 * y2;
     normalise();
   }
+  
 
   //creates a 3D line from two points. 
   public Line(double x1, double y1, double z1, double x2, double y2, double z2) {
@@ -61,6 +63,14 @@ public class Line {
     }
     else throw new ArithmeticException("The vectors must be in the same dimension");
     
+  }
+
+  public Vector getVector(){
+    return vector;
+  }
+
+  public Point getPoint(){
+    return point;
   }
 
   // Constructs a line from a slope and a point
@@ -135,9 +145,45 @@ public class Line {
     return new Point2D.Double(x, y);
   }
 
+  public boolean pointOnLine(Point point){
+    Vector comparizonVector = vector.makeTwoPointsVector(point, this.point);
+    comparizonVector.getNormalized();
+    this.vector.getNormalized();
+    Vector cross_value = comparizonVector.crossProduct(comparizonVector, this.vector);
+
+    for(int i = 0; i<comparizonVector.getDim(); i++){
+      if(cross_value.getValue(i) != 0) return false;
+    }
+    return true;
+
+  }
+  public boolean sameLines(Line line1, Line line2){
+    Vector normalized_1 = line1.getVector().getNormalized();
+    Vector normalized_2 = line2.getVector().getNormalized();
+    Vector crossVal = vector.crossProduct(normalized_1, normalized_2);
+    for(int i = 0; i<crossVal.getDim(); i++){
+      if(crossVal.getValue(i) != 0) return false;
+    }
+    return line1.pointOnLine(line2.getPoint());
+
+  }
   // Get a printable representation of a this Line
+
+  
   @Override
   public String toString() {
     return a + "x + " + b + "y = " + c;
   }
+
+  @Override
+  public boolean equals(Object other){
+    if (!(other instanceof Plane)) return false;
+    if (other == this) return true;
+    Line line = (Line) other;
+    Vector thisNorm = vector.getNormalized();
+    Vector otherNorm = line.getVector().getNormalized();
+    if (Arrays.equals(thisNorm.coordinates, otherNorm.getCoordinates()) && Arrays.equals(point.coordinates, line.getPoint().getCoordinates())) return true;
+    else return false;
+  }
+  
 }

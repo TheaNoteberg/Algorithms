@@ -31,6 +31,10 @@ public class Point {
         this.dim = 3;
     }
 
+    public int getDim(){
+        return coordinates.length;
+    }
+
     public double[] getCoordinates() {
         return coordinates;
     }

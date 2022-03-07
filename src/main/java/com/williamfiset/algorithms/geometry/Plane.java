@@ -2,6 +2,8 @@ package com.williamfiset.algorithms.geometry;
 
 import static java.lang.Math.*;
 
+import java.util.Arrays;
+
 
 //import java.awt.geom.Point3D;
 
@@ -15,6 +17,7 @@ public class Plane {
         this.b = b;
         this.c = c;
         this.d = d;
+        checkInput();
     }
 
     //Constructs a plane from 3 points. Kanske behöver skapa två vektorer istället för två nya points rad 28,29
@@ -31,10 +34,11 @@ public class Plane {
 
         Vector normalVector = Vector.crossProduct(a_b, a_c);
         
-        this.a = normalVector[0];
-        this.b = normalVector[1];
-        this.c = normalVector[2];
-        this.d = normalVector[0]*point1.getX() + normalVector[1]*point1getY() + normalVector[2]*point1getZ();//inte 100% på den här
+        this.a = normalVector.getValue(0);
+        this.b = normalVector.getValue(1);
+        this.c = normalVector.getValue(2);
+        this.d = -(a*point1.getX() + b*point1.getY() + c*point1.getZ());
+        checkInput();
     }
     //Construct plane from three points in doubles
     public Plane(double[] point1, double[] point2, double[] point3) {
@@ -45,47 +49,68 @@ public class Plane {
         double a_cY  = point1[1] - point3[1];
         double a_cZ  = point1[2] - point3[2];
         Vector a_b = new Vector(a_bX, a_bY, a_bZ);
-        Vector a_b = new Vector(a_cX, a_cY, a_cZ);
+        Vector a_c = new Vector(a_cX, a_cY, a_cZ);
 
         Vector normalVector = Vector.crossProduct(a_b, a_c);
 
         this.a = normalVector.coordinates[0];
         this.b = normalVector.coordinates[1];
         this.c = normalVector.coordinates[2];
-        this.d = this.a*point1[0] + this.b*point1[1] + this.c*point1[2];//inte 100% på den här
+        this.d = -(this.a*point1[0] + this.b*point1[1] + this.c*point1[2]);
+        checkInput();
     }
     
     //Constructs a plane from 2 lines
     public Plane(Line line1, Line line2){
 
-        Vector vector1 = new Vector(line1.getA(), line1.getB(), line1.getC());
-        Vector vector2 = new Vector(line2.getA(), line2.getB(), line2.getC());
+        Vector vector1 = line1.getVector();
+        Vector vector2 = line2.getVector();
 
         Vector normalVector = Vector.crossProduct(vector1, vector2);
         
         this.a = normalVector.coordinates[0];
         this.b = normalVector.coordinates[1];
         this.c = normalVector.coordinates[2];
-        this.d = this.a*line1.getX() + this.b*line1.getY() + this.c*line1.getZ();
+        double[] point = line1.getPoint().coordinates;
+        this.d = -(this.a*point[0] + this.b*point[1] + this.c*point[2]);
+        checkInput();
     }
-    public Plane(Vector vector1, Vector vector2){
 
-    }
-
-    public double[] getNormalVector() {
+    public Vector getNormalVector() {
         double pyth = sqrt(pow(a,2) + pow(b,2) + pow(c,2));
         double [] norm = {a/pyth,b/pyth,c/pyth};
-        for(int i = 0; i < norm.length; i++){
-            if(norm[i] == -0) norm[i] = 0;
-        }
+        return new Vector(norm);
+    }
 
-        return norm;
+    private void checkInput() {
+        double[] abcdOne = {a,b,c};
+
+        double[] zeroArr = {0,0,0};
+
+        if (Arrays.equals(abcdOne, zeroArr)) {
+         throw new ArithmeticException("there is no plane with only zero values");}
+    }
+
+    public double[] getABCD() {
+        return new double[] {a,b,c,d}; 
+       
     }
     public String toString() {
         String a_val=Double.toString(this.a);
         String b_val=Double.toString(this.b);
         String c_val=Double.toString(this.c);
         String d_val=Double.toString(this.d);
-        return  a_val + "x + " +  b_val + "y + " + c_val + "z + "  d_val + "= 0";
+        return  a_val + "x + " +  b_val + "y + " + c_val + "z + " + d_val + "= 0";
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof Plane)) return false;
+        if (other == this) return true;
+        Plane plane = (Plane) other;
+        double[] abcdOther = plane.getABCD();
+        double[] abcdThis = new double[] {a,b,c,d};
+        if (Arrays.equals(abcdThis, abcdOther)) return true;
+        else return false;
     }
 }   

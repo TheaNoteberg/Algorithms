@@ -5,13 +5,13 @@
  */
 package com.williamfiset.algorithms.linearalgebra;
 
-class MatrixInverse {
+public class MatrixInverse {
 
   // Define a small value of epsilon to compare double values
   static final double EPS = 0.00000001;
 
   // Invert the specified matrix. Assumes invertibility. Time Complexity: O(r²c)
-  static double[][] inverse(double[][] matrix) {
+  public static double[][] inverse(double[][] matrix) {
     if (matrix.length != matrix[0].length) return null;
     int n = matrix.length;
     double[][] augmented = new double[n][n * 2];
