@@ -1,0 +1,182 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > MagicalCows</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">&lt;empty package name&gt;</a>
+</div>
+
+<h1>Coverage Summary for Class: MagicalCows (&lt;empty package name&gt;)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MagicalCows</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/23)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/**
+<i class="no-highlight">2</i>&nbsp; * Solution to Magical Cows (https://open.kattis.com/problems/magicalcows)
+<i class="no-highlight">3</i>&nbsp; *
+<i class="no-highlight">4</i>&nbsp; * &lt;p&gt;Problem author: Graeme Zinck
+<i class="no-highlight">5</i>&nbsp; *
+<i class="no-highlight">6</i>&nbsp; * &lt;p&gt;Solution by: William Fiset
+<i class="no-highlight">7</i>&nbsp; *
+<i class="no-highlight">8</i>&nbsp; * &lt;p&gt;The main thing to realize with magical cows is that the total number of cows allowed on each
+<i class="no-highlight">9</i>&nbsp; * farm is bounded by C which is less than or equal to 1000, so you can keep track of all cows in a
+<i class="no-highlight">10</i>&nbsp; * frequency table for each farm size.
+<i class="no-highlight">11</i>&nbsp; *
+<i class="no-highlight">12</i>&nbsp; * &lt;p&gt;NOTE: You can ignore taking the floor/ceiling of the number of cows on a split since when you
+<i class="no-highlight">13</i>&nbsp; * double the number of cows you always get an even number.
+<i class="no-highlight">14</i>&nbsp; */
+<i class="no-highlight">15</i>&nbsp;import java.io.*;
+<i class="no-highlight">16</i>&nbsp;import java.util.*;
+<i class="no-highlight">17</i>&nbsp;
+<b class="nc"><i class="no-highlight">18</i>&nbsp;public class MagicalCows {</b>
+<i class="no-highlight">19</i>&nbsp;
+<b class="nc"><i class="no-highlight">20</i>&nbsp;  static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));</b>
+<i class="no-highlight">21</i>&nbsp;
+<i class="no-highlight">22</i>&nbsp;  // The maximum number of days.
+<i class="no-highlight">23</i>&nbsp;  static final int MAX_DAYS = 50;
+<i class="no-highlight">24</i>&nbsp;
+<i class="no-highlight">25</i>&nbsp;  public static void main(String[] args) throws IOException {
+<b class="nc"><i class="no-highlight">26</i>&nbsp;    String[] line = br.readLine().split(&quot; &quot;);</b>
+<i class="no-highlight">27</i>&nbsp;
+<i class="no-highlight">28</i>&nbsp;    // The maximum number of cows on a farm
+<b class="nc"><i class="no-highlight">29</i>&nbsp;    final int C = Integer.parseInt(line[0]);</b>
+<i class="no-highlight">30</i>&nbsp;
+<i class="no-highlight">31</i>&nbsp;    // The initial number of farms
+<b class="nc"><i class="no-highlight">32</i>&nbsp;    final int N = Integer.parseInt(line[1]);</b>
+<i class="no-highlight">33</i>&nbsp;
+<i class="no-highlight">34</i>&nbsp;    // The number of queries
+<b class="nc"><i class="no-highlight">35</i>&nbsp;    final int M = Integer.parseInt(line[2]);</b>
+<i class="no-highlight">36</i>&nbsp;
+<i class="no-highlight">37</i>&nbsp;    // The dp table.
+<b class="nc"><i class="no-highlight">38</i>&nbsp;    long[][] dp = new long[MAX_DAYS + 1][C + 1];</b>
+<i class="no-highlight">39</i>&nbsp;
+<i class="no-highlight">40</i>&nbsp;    // Count the initial frequency of farms of different sizes
+<b class="nc"><i class="no-highlight">41</i>&nbsp;    for (int i = 0; i &lt; N; i++) {</b>
+<b class="nc"><i class="no-highlight">42</i>&nbsp;      int cows = Integer.parseInt(br.readLine());</b>
+<b class="nc"><i class="no-highlight">43</i>&nbsp;      dp[0][cows]++;</b>
+<i class="no-highlight">44</i>&nbsp;    }
+<i class="no-highlight">45</i>&nbsp;
+<b class="nc"><i class="no-highlight">46</i>&nbsp;    for (int day = 0; day &lt; MAX_DAYS; day++) {</b>
+<i class="no-highlight">47</i>&nbsp;      // For all farm sizes between 1 and `C`, double the number of cows.
+<b class="nc"><i class="no-highlight">48</i>&nbsp;      for (int i = 1; i &lt;= C; i++) {</b>
+<b class="nc"><i class="no-highlight">49</i>&nbsp;        if (i &lt;= C / 2) {</b>
+<i class="no-highlight">50</i>&nbsp;          // Cow count on farm with size `i` doubled, but the number of farms did not.
+<b class="nc"><i class="no-highlight">51</i>&nbsp;          dp[day + 1][i * 2] += dp[day][i];</b>
+<i class="no-highlight">52</i>&nbsp;        } else {
+<i class="no-highlight">53</i>&nbsp;          // The number of cows per farm on the farm with size `i` exceeds the
+<i class="no-highlight">54</i>&nbsp;          // permitted limit, so double the number of farms.
+<b class="nc"><i class="no-highlight">55</i>&nbsp;          dp[day + 1][i] += 2 * dp[day][i];</b>
+<i class="no-highlight">56</i>&nbsp;        }
+<i class="no-highlight">57</i>&nbsp;      }
+<i class="no-highlight">58</i>&nbsp;    }
+<i class="no-highlight">59</i>&nbsp;
+<i class="no-highlight">60</i>&nbsp;    // Answer each query
+<b class="nc"><i class="no-highlight">61</i>&nbsp;    for (int i = 0; i &lt; M; i++) {</b>
+<b class="nc"><i class="no-highlight">62</i>&nbsp;      int day = Integer.parseInt(br.readLine());</b>
+<b class="nc"><i class="no-highlight">63</i>&nbsp;      System.out.println(query(dp, day));</b>
+<i class="no-highlight">64</i>&nbsp;    }
+<i class="no-highlight">65</i>&nbsp;  }
+<i class="no-highlight">66</i>&nbsp;
+<i class="no-highlight">67</i>&nbsp;  // Find the number of farms on a particular day by summing all farms
+<i class="no-highlight">68</i>&nbsp;  // of every frequency for that day.
+<i class="no-highlight">69</i>&nbsp;  private static long query(long[][] dp, int day) {
+<b class="nc"><i class="no-highlight">70</i>&nbsp;    long farms = 0;</b>
+<b class="nc"><i class="no-highlight">71</i>&nbsp;    long[] frequencies = dp[day];</b>
+<b class="nc"><i class="no-highlight">72</i>&nbsp;    for (int i = 0; i &lt; frequencies.length; i++) {</b>
+<b class="nc"><i class="no-highlight">73</i>&nbsp;      farms += frequencies[i];</b>
+<i class="no-highlight">74</i>&nbsp;    }
+<b class="nc"><i class="no-highlight">75</i>&nbsp;    return farms;</b>
+<i class="no-highlight">76</i>&nbsp;  }
+<i class="no-highlight">77</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-07 12:04</div>
+</div>
+</body>
+</html>

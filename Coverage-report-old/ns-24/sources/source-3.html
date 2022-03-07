@@ -1,0 +1,186 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > EulerTotientFunction</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.math</a>
+</div>
+
+<h1>Coverage Summary for Class: EulerTotientFunction (com.williamfiset.algorithms.math)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">EulerTotientFunction</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/43)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package com.williamfiset.algorithms.math;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import java.util.*;
+<i class="no-highlight">4</i>&nbsp;
+<b class="nc"><i class="no-highlight">5</i>&nbsp;public class EulerTotientFunction {</b>
+<i class="no-highlight">6</i>&nbsp;
+<i class="no-highlight">7</i>&nbsp;  public static long eulersTotient(long n) {
+<b class="nc"><i class="no-highlight">8</i>&nbsp;    for (long p : new HashSet&lt;Long&gt;(primeFactorization(n))) n -= (n / p);</b>
+<b class="nc"><i class="no-highlight">9</i>&nbsp;    return n;</b>
+<i class="no-highlight">10</i>&nbsp;  }
+<i class="no-highlight">11</i>&nbsp;
+<i class="no-highlight">12</i>&nbsp;  private static ArrayList&lt;Long&gt; primeFactorization(long n) {
+<b class="nc"><i class="no-highlight">13</i>&nbsp;    ArrayList&lt;Long&gt; factors = new ArrayList&lt;Long&gt;();</b>
+<b class="nc"><i class="no-highlight">14</i>&nbsp;    if (n &lt;= 0) throw new IllegalArgumentException();</b>
+<b class="nc"><i class="no-highlight">15</i>&nbsp;    else if (n == 1) return factors;</b>
+<b class="nc"><i class="no-highlight">16</i>&nbsp;    PriorityQueue&lt;Long&gt; divisorQueue = new PriorityQueue&lt;Long&gt;();</b>
+<b class="nc"><i class="no-highlight">17</i>&nbsp;    divisorQueue.add(n);</b>
+<b class="nc"><i class="no-highlight">18</i>&nbsp;    while (!divisorQueue.isEmpty()) {</b>
+<b class="nc"><i class="no-highlight">19</i>&nbsp;      long divisor = divisorQueue.remove();</b>
+<b class="nc"><i class="no-highlight">20</i>&nbsp;      if (isPrime(divisor)) {</b>
+<b class="nc"><i class="no-highlight">21</i>&nbsp;        factors.add(divisor);</b>
+<b class="nc"><i class="no-highlight">22</i>&nbsp;        continue;</b>
+<i class="no-highlight">23</i>&nbsp;      }
+<b class="nc"><i class="no-highlight">24</i>&nbsp;      long next_divisor = pollardRho(divisor);</b>
+<b class="nc"><i class="no-highlight">25</i>&nbsp;      if (next_divisor == divisor) {</b>
+<b class="nc"><i class="no-highlight">26</i>&nbsp;        divisorQueue.add(divisor);</b>
+<i class="no-highlight">27</i>&nbsp;      } else {
+<b class="nc"><i class="no-highlight">28</i>&nbsp;        divisorQueue.add(next_divisor);</b>
+<b class="nc"><i class="no-highlight">29</i>&nbsp;        divisorQueue.add(divisor / next_divisor);</b>
+<i class="no-highlight">30</i>&nbsp;      }
+<b class="nc"><i class="no-highlight">31</i>&nbsp;    }</b>
+<b class="nc"><i class="no-highlight">32</i>&nbsp;    return factors;</b>
+<i class="no-highlight">33</i>&nbsp;  }
+<i class="no-highlight">34</i>&nbsp;
+<i class="no-highlight">35</i>&nbsp;  private static long pollardRho(long n) {
+<b class="nc"><i class="no-highlight">36</i>&nbsp;    if (n % 2 == 0) return 2;</b>
+<i class="no-highlight">37</i>&nbsp;    // Get a number in the range [2, 10^6]
+<b class="nc"><i class="no-highlight">38</i>&nbsp;    long x = 2 + (long) (999999 * Math.random());</b>
+<b class="nc"><i class="no-highlight">39</i>&nbsp;    long c = 2 + (long) (999999 * Math.random());</b>
+<b class="nc"><i class="no-highlight">40</i>&nbsp;    long y = x;</b>
+<b class="nc"><i class="no-highlight">41</i>&nbsp;    long d = 1;</b>
+<b class="nc"><i class="no-highlight">42</i>&nbsp;    while (d == 1) {</b>
+<b class="nc"><i class="no-highlight">43</i>&nbsp;      x = (x * x + c) % n;</b>
+<b class="nc"><i class="no-highlight">44</i>&nbsp;      y = (y * y + c) % n;</b>
+<b class="nc"><i class="no-highlight">45</i>&nbsp;      y = (y * y + c) % n;</b>
+<b class="nc"><i class="no-highlight">46</i>&nbsp;      d = gcf(Math.abs(x - y), n);</b>
+<b class="nc"><i class="no-highlight">47</i>&nbsp;      if (d == n) break;</b>
+<i class="no-highlight">48</i>&nbsp;    }
+<b class="nc"><i class="no-highlight">49</i>&nbsp;    return d;</b>
+<i class="no-highlight">50</i>&nbsp;  }
+<i class="no-highlight">51</i>&nbsp;
+<i class="no-highlight">52</i>&nbsp;  private static long gcf(long a, long b) {
+<b class="nc"><i class="no-highlight">53</i>&nbsp;    return b == 0 ? a : gcf(b, a % b);</b>
+<i class="no-highlight">54</i>&nbsp;  }
+<i class="no-highlight">55</i>&nbsp;
+<i class="no-highlight">56</i>&nbsp;  private static boolean isPrime(long n) {
+<i class="no-highlight">57</i>&nbsp;
+<b class="nc"><i class="no-highlight">58</i>&nbsp;    if (n &lt; 2) return false;</b>
+<b class="nc"><i class="no-highlight">59</i>&nbsp;    if (n == 2 || n == 3) return true;</b>
+<b class="nc"><i class="no-highlight">60</i>&nbsp;    if (n % 2 == 0 || n % 3 == 0) return false;</b>
+<i class="no-highlight">61</i>&nbsp;
+<b class="nc"><i class="no-highlight">62</i>&nbsp;    int limit = (int) Math.sqrt(n);</b>
+<i class="no-highlight">63</i>&nbsp;
+<b class="nc"><i class="no-highlight">64</i>&nbsp;    for (int i = 5; i &lt;= limit; i += 6) if (n % i == 0 || n % (i + 2) == 0) return false;</b>
+<i class="no-highlight">65</i>&nbsp;
+<b class="nc"><i class="no-highlight">66</i>&nbsp;    return true;</b>
+<i class="no-highlight">67</i>&nbsp;  }
+<i class="no-highlight">68</i>&nbsp;
+<i class="no-highlight">69</i>&nbsp;  public static void main(String[] args) {
+<i class="no-highlight">70</i>&nbsp;
+<i class="no-highlight">71</i>&nbsp;    // Prints 8 because 1,2,4,7,8,11,13,14 are all
+<i class="no-highlight">72</i>&nbsp;    // less than 15 and relatively prime with 15
+<b class="nc"><i class="no-highlight">73</i>&nbsp;    System.out.printf(&quot;phi(15) = %d\n&quot;, eulersTotient(15));</b>
+<i class="no-highlight">74</i>&nbsp;
+<b class="nc"><i class="no-highlight">75</i>&nbsp;    System.out.println();</b>
+<i class="no-highlight">76</i>&nbsp;
+<b class="nc"><i class="no-highlight">77</i>&nbsp;    for (int x = 1; x &lt;= 11; x++) {</b>
+<b class="nc"><i class="no-highlight">78</i>&nbsp;      System.out.printf(&quot;phi(%d) = %d\n&quot;, x, eulersTotient(x));</b>
+<i class="no-highlight">79</i>&nbsp;    }
+<i class="no-highlight">80</i>&nbsp;  }
+<i class="no-highlight">81</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-01 13:32</div>
+</div>
+</body>
+</html>

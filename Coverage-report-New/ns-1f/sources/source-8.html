@@ -1,0 +1,270 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > MinCostMaxFlowJohnsons</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.graphtheory.networkflow</a>
+</div>
+
+<h1>Coverage Summary for Class: MinCostMaxFlowJohnsons (com.williamfiset.algorithms.graphtheory.networkflow)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MinCostMaxFlowJohnsons</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (56/56)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">MinCostMaxFlowJohnsons$1Node</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/5)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (61/61)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/**
+<i class="no-highlight">2</i>&nbsp; * Min cost max flow implementation using Johnson&#39;s algorithm (initial Bellman- Ford + subsequent
+<i class="no-highlight">3</i>&nbsp; * Dijkstra runs) as a method of finding augmenting paths.
+<i class="no-highlight">4</i>&nbsp; *
+<i class="no-highlight">5</i>&nbsp; * &lt;p&gt;Tested against: - https://open.kattis.com/problems/mincostmaxflow -
+<i class="no-highlight">6</i>&nbsp; * https://open.kattis.com/problems/jobpostings
+<i class="no-highlight">7</i>&nbsp; *
+<i class="no-highlight">8</i>&nbsp; * &lt;p&gt;Time Complexity: O(E²Vlog(V))
+<i class="no-highlight">9</i>&nbsp; *
+<i class="no-highlight">10</i>&nbsp; * @author William Fiset, william.alexandre.fiset@gmail.com
+<i class="no-highlight">11</i>&nbsp; */
+<i class="no-highlight">12</i>&nbsp;package com.williamfiset.algorithms.graphtheory.networkflow;
+<i class="no-highlight">13</i>&nbsp;
+<i class="no-highlight">14</i>&nbsp;import static java.lang.Math.min;
+<i class="no-highlight">15</i>&nbsp;
+<i class="no-highlight">16</i>&nbsp;import java.util.*;
+<i class="no-highlight">17</i>&nbsp;
+<i class="no-highlight">18</i>&nbsp;public class MinCostMaxFlowJohnsons extends NetworkFlowSolverBase {
+<i class="no-highlight">19</i>&nbsp;
+<i class="no-highlight">20</i>&nbsp;  /**
+<i class="no-highlight">21</i>&nbsp;   * Creates an instance of a flow network solver. Use the {@link NetworkFlowSolverBase#addEdge}
+<i class="no-highlight">22</i>&nbsp;   * method to add edges to the graph.
+<i class="no-highlight">23</i>&nbsp;   *
+<i class="no-highlight">24</i>&nbsp;   * @param n - The number of nodes in the graph including source and sink nodes.
+<i class="no-highlight">25</i>&nbsp;   * @param s - The index of the source node, 0 &lt;= s &lt; n
+<i class="no-highlight">26</i>&nbsp;   * @param t - The index of the sink node, 0 &lt;= t &lt; n, t != s
+<i class="no-highlight">27</i>&nbsp;   */
+<i class="no-highlight">28</i>&nbsp;  public MinCostMaxFlowJohnsons(int n, int s, int t) {
+<b class="fc"><i class="no-highlight">29</i>&nbsp;    super(n, s, t);</b>
+<b class="fc"><i class="no-highlight">30</i>&nbsp;  }</b>
+<i class="no-highlight">31</i>&nbsp;
+<i class="no-highlight">32</i>&nbsp;  private void init() {
+<b class="fc"><i class="no-highlight">33</i>&nbsp;    long[] dist = new long[n];</b>
+<b class="fc"><i class="no-highlight">34</i>&nbsp;    Arrays.fill(dist, INF);</b>
+<b class="fc"><i class="no-highlight">35</i>&nbsp;    dist[s] = 0;</b>
+<i class="no-highlight">36</i>&nbsp;
+<i class="no-highlight">37</i>&nbsp;    // Run Bellman-Ford algorithm to get the optimal distance to each node, O(VE)
+<b class="fc"><i class="no-highlight">38</i>&nbsp;    for (int i = 0; i &lt; n - 1; i++)</b>
+<b class="fc"><i class="no-highlight">39</i>&nbsp;      for (List&lt;Edge&gt; edges : graph)</b>
+<b class="fc"><i class="no-highlight">40</i>&nbsp;        for (Edge edge : edges)</b>
+<b class="fc"><i class="no-highlight">41</i>&nbsp;          if (edge.remainingCapacity() &gt; 0 &amp;&amp; dist[edge.from] + edge.cost &lt; dist[edge.to])</b>
+<b class="fc"><i class="no-highlight">42</i>&nbsp;            dist[edge.to] = dist[edge.from] + edge.cost;</b>
+<i class="no-highlight">43</i>&nbsp;
+<b class="fc"><i class="no-highlight">44</i>&nbsp;    adjustEdgeCosts(dist);</b>
+<b class="fc"><i class="no-highlight">45</i>&nbsp;  }</b>
+<i class="no-highlight">46</i>&nbsp;
+<i class="no-highlight">47</i>&nbsp;  // Adjust edge costs to be non-negative for Dijkstra&#39;s algorithm, O(E)
+<i class="no-highlight">48</i>&nbsp;  private void adjustEdgeCosts(long[] dist) {
+<b class="fc"><i class="no-highlight">49</i>&nbsp;    for (int from = 0; from &lt; n; from++) {</b>
+<b class="fc"><i class="no-highlight">50</i>&nbsp;      for (Edge edge : graph[from]) {</b>
+<b class="fc"><i class="no-highlight">51</i>&nbsp;        if (edge.remainingCapacity() &gt; 0) {</b>
+<b class="fc"><i class="no-highlight">52</i>&nbsp;          edge.cost += dist[from] - dist[edge.to];</b>
+<i class="no-highlight">53</i>&nbsp;        } else {
+<b class="fc"><i class="no-highlight">54</i>&nbsp;          edge.cost = 0;</b>
+<i class="no-highlight">55</i>&nbsp;        }
+<b class="fc"><i class="no-highlight">56</i>&nbsp;      }</b>
+<i class="no-highlight">57</i>&nbsp;    }
+<b class="fc"><i class="no-highlight">58</i>&nbsp;  }</b>
+<i class="no-highlight">59</i>&nbsp;
+<i class="no-highlight">60</i>&nbsp;  @Override
+<i class="no-highlight">61</i>&nbsp;  public void solve() {
+<b class="fc"><i class="no-highlight">62</i>&nbsp;    init();</b>
+<i class="no-highlight">63</i>&nbsp;
+<i class="no-highlight">64</i>&nbsp;    // Sum up the bottlenecks on each augmenting path to find the max flow and min cost.
+<i class="no-highlight">65</i>&nbsp;    List&lt;Edge&gt; path;
+<b class="fc"><i class="no-highlight">66</i>&nbsp;    while ((path = getAugmentingPath()).size() != 0) {</b>
+<i class="no-highlight">67</i>&nbsp;
+<i class="no-highlight">68</i>&nbsp;      // Find bottle neck edge value along path.
+<b class="fc"><i class="no-highlight">69</i>&nbsp;      long bottleNeck = Long.MAX_VALUE;</b>
+<b class="fc"><i class="no-highlight">70</i>&nbsp;      for (Edge edge : path) bottleNeck = min(bottleNeck, edge.remainingCapacity());</b>
+<i class="no-highlight">71</i>&nbsp;
+<i class="no-highlight">72</i>&nbsp;      // Retrace path while augmenting the flow
+<b class="fc"><i class="no-highlight">73</i>&nbsp;      for (Edge edge : path) {</b>
+<b class="fc"><i class="no-highlight">74</i>&nbsp;        edge.augment(bottleNeck);</b>
+<b class="fc"><i class="no-highlight">75</i>&nbsp;        minCost += bottleNeck * edge.originalCost;</b>
+<b class="fc"><i class="no-highlight">76</i>&nbsp;      }</b>
+<b class="fc"><i class="no-highlight">77</i>&nbsp;      maxFlow += bottleNeck;</b>
+<b class="fc"><i class="no-highlight">78</i>&nbsp;    }</b>
+<b class="fc"><i class="no-highlight">79</i>&nbsp;  }</b>
+<i class="no-highlight">80</i>&nbsp;
+<i class="no-highlight">81</i>&nbsp;  // Finds an augmenting path from the source node to the sink using Johnson&#39;s
+<i class="no-highlight">82</i>&nbsp;  // shortest path algorithm. First, Bellman-Ford was ran to get the shortest
+<i class="no-highlight">83</i>&nbsp;  // path from the source to every node, and then the graph was cost adjusted
+<i class="no-highlight">84</i>&nbsp;  // to remove negative edge weights so that Dijkstra&#39;s can be used in
+<i class="no-highlight">85</i>&nbsp;  // subsequent runs for improved time complexity.
+<i class="no-highlight">86</i>&nbsp;  private List&lt;Edge&gt; getAugmentingPath() {
+<i class="no-highlight">87</i>&nbsp;
+<i class="no-highlight">88</i>&nbsp;    class Node implements Comparable&lt;Node&gt; {
+<i class="no-highlight">89</i>&nbsp;      int id;
+<i class="no-highlight">90</i>&nbsp;      long value;
+<i class="no-highlight">91</i>&nbsp;
+<b class="fc"><i class="no-highlight">92</i>&nbsp;      public Node(int id, long value) {</b>
+<b class="fc"><i class="no-highlight">93</i>&nbsp;        this.id = id;</b>
+<b class="fc"><i class="no-highlight">94</i>&nbsp;        this.value = value;</b>
+<b class="fc"><i class="no-highlight">95</i>&nbsp;      }</b>
+<i class="no-highlight">96</i>&nbsp;
+<i class="no-highlight">97</i>&nbsp;      @Override
+<i class="no-highlight">98</i>&nbsp;      public int compareTo(Node other) {
+<b class="fc"><i class="no-highlight">99</i>&nbsp;        return (int) (value - other.value);</b>
+<i class="no-highlight">100</i>&nbsp;      }
+<i class="no-highlight">101</i>&nbsp;    }
+<i class="no-highlight">102</i>&nbsp;
+<b class="fc"><i class="no-highlight">103</i>&nbsp;    long[] dist = new long[n];</b>
+<b class="fc"><i class="no-highlight">104</i>&nbsp;    Arrays.fill(dist, INF);</b>
+<b class="fc"><i class="no-highlight">105</i>&nbsp;    dist[s] = 0;</b>
+<i class="no-highlight">106</i>&nbsp;
+<b class="fc"><i class="no-highlight">107</i>&nbsp;    markAllNodesAsUnvisited();</b>
+<b class="fc"><i class="no-highlight">108</i>&nbsp;    Edge[] prev = new Edge[n];</b>
+<i class="no-highlight">109</i>&nbsp;
+<b class="fc"><i class="no-highlight">110</i>&nbsp;    PriorityQueue&lt;Node&gt; pq = new PriorityQueue&lt;&gt;();</b>
+<b class="fc"><i class="no-highlight">111</i>&nbsp;    pq.offer(new Node(s, 0));</b>
+<i class="no-highlight">112</i>&nbsp;
+<i class="no-highlight">113</i>&nbsp;    // Run Dijkstra&#39;s to find augmenting path.
+<b class="fc"><i class="no-highlight">114</i>&nbsp;    while (!pq.isEmpty()) {</b>
+<b class="fc"><i class="no-highlight">115</i>&nbsp;      Node node = pq.poll();</b>
+<b class="fc"><i class="no-highlight">116</i>&nbsp;      visit(node.id);</b>
+<b class="fc"><i class="no-highlight">117</i>&nbsp;      if (dist[node.id] &lt; node.value) continue;</b>
+<b class="fc"><i class="no-highlight">118</i>&nbsp;      List&lt;Edge&gt; edges = graph[node.id];</b>
+<b class="fc"><i class="no-highlight">119</i>&nbsp;      for (int i = 0; i &lt; edges.size(); i++) {</b>
+<b class="fc"><i class="no-highlight">120</i>&nbsp;        Edge edge = edges.get(i);</b>
+<b class="fc"><i class="no-highlight">121</i>&nbsp;        if (visited(edge.to)) continue;</b>
+<b class="fc"><i class="no-highlight">122</i>&nbsp;        long newDist = dist[edge.from] + edge.cost;</b>
+<b class="fc"><i class="no-highlight">123</i>&nbsp;        if (edge.remainingCapacity() &gt; 0 &amp;&amp; newDist &lt; dist[edge.to]) {</b>
+<b class="fc"><i class="no-highlight">124</i>&nbsp;          prev[edge.to] = edge;</b>
+<b class="fc"><i class="no-highlight">125</i>&nbsp;          dist[edge.to] = newDist;</b>
+<b class="fc"><i class="no-highlight">126</i>&nbsp;          pq.offer(new Node(edge.to, dist[edge.to]));</b>
+<i class="no-highlight">127</i>&nbsp;        }
+<i class="no-highlight">128</i>&nbsp;      }
+<b class="fc"><i class="no-highlight">129</i>&nbsp;    }</b>
+<i class="no-highlight">130</i>&nbsp;
+<b class="fc"><i class="no-highlight">131</i>&nbsp;    LinkedList&lt;Edge&gt; path = new LinkedList&lt;&gt;();</b>
+<b class="fc"><i class="no-highlight">132</i>&nbsp;    if (dist[t] == INF) return path;</b>
+<i class="no-highlight">133</i>&nbsp;
+<b class="fc"><i class="no-highlight">134</i>&nbsp;    adjustEdgeCosts(dist);</b>
+<i class="no-highlight">135</i>&nbsp;
+<b class="fc"><i class="no-highlight">136</i>&nbsp;    for (Edge edge = prev[t]; edge != null; edge = prev[edge.from]) path.addFirst(edge);</b>
+<b class="fc"><i class="no-highlight">137</i>&nbsp;    return path;</b>
+<i class="no-highlight">138</i>&nbsp;  }
+<i class="no-highlight">139</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-07 12:04</div>
+</div>
+</body>
+</html>

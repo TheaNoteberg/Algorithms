@@ -1,0 +1,256 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > SubstringVerificationSuffixArray</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.strings</a>
+</div>
+
+<h1>Coverage Summary for Class: SubstringVerificationSuffixArray (com.williamfiset.algorithms.strings)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SubstringVerificationSuffixArray</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">SubstringVerificationSuffixArray$SuffixArray</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/50)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/56)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/**
+<i class="no-highlight">2</i>&nbsp; * This file shows you how to use a suffix array to determine if a pattern exists within a text.
+<i class="no-highlight">3</i>&nbsp; * This implementation has the advantage that once the suffix array is built queries can be very
+<i class="no-highlight">4</i>&nbsp; * fast.
+<i class="no-highlight">5</i>&nbsp; *
+<i class="no-highlight">6</i>&nbsp; * &lt;p&gt;Time complexity: O(nlogn) for suffix array construction and O(mlogn) time for individual
+<i class="no-highlight">7</i>&nbsp; * queries (where m is query string length). As noted below, depending on the length of the string
+<i class="no-highlight">8</i>&nbsp; * (if it is very large) it may be faster to use KMP or if you&#39;re doing a lot of queries on small
+<i class="no-highlight">9</i>&nbsp; * strings then Rabin-Karp in combination with a bloom filter.
+<i class="no-highlight">10</i>&nbsp; *
+<i class="no-highlight">11</i>&nbsp; * @author William Fiset, william.alexandre.fiset@gmail.com
+<i class="no-highlight">12</i>&nbsp; */
+<i class="no-highlight">13</i>&nbsp;package com.williamfiset.algorithms.strings;
+<i class="no-highlight">14</i>&nbsp;
+<i class="no-highlight">15</i>&nbsp;import java.util.*;
+<i class="no-highlight">16</i>&nbsp;
+<i class="no-highlight">17</i>&nbsp;// Example usage
+<b class="nc"><i class="no-highlight">18</i>&nbsp;public class SubstringVerificationSuffixArray {</b>
+<i class="no-highlight">19</i>&nbsp;  public static void main(String[] args) {
+<i class="no-highlight">20</i>&nbsp;
+<b class="nc"><i class="no-highlight">21</i>&nbsp;    String pattern = &quot;hello world&quot;;</b>
+<b class="nc"><i class="no-highlight">22</i>&nbsp;    String text = &quot;hello lemon Lennon wallet world tree cabbage hello world teapot calculator&quot;;</b>
+<b class="nc"><i class="no-highlight">23</i>&nbsp;    SuffixArray sa = new SuffixArray(text);</b>
+<b class="nc"><i class="no-highlight">24</i>&nbsp;    System.out.println(sa.contains(pattern));</b>
+<b class="nc"><i class="no-highlight">25</i>&nbsp;    System.out.println(sa.contains(&quot;this pattern does not exist&quot;));</b>
+<i class="no-highlight">26</i>&nbsp;  }
+<i class="no-highlight">27</i>&nbsp;
+<i class="no-highlight">28</i>&nbsp;  public static class SuffixArray {
+<i class="no-highlight">29</i>&nbsp;
+<i class="no-highlight">30</i>&nbsp;    // ALPHABET_SZ is the default alphabet size, this may need to be much
+<i class="no-highlight">31</i>&nbsp;    // larger if you&#39;re using the LCS method with multiple sentinels
+<b class="nc"><i class="no-highlight">32</i>&nbsp;    int ALPHABET_SZ = 256, N;</b>
+<i class="no-highlight">33</i>&nbsp;    int[] T, sa, sa2, rank, tmp, c;
+<i class="no-highlight">34</i>&nbsp;
+<i class="no-highlight">35</i>&nbsp;    public SuffixArray(String str) {
+<b class="nc"><i class="no-highlight">36</i>&nbsp;      this(toIntArray(str));</b>
+<i class="no-highlight">37</i>&nbsp;    }
+<i class="no-highlight">38</i>&nbsp;
+<i class="no-highlight">39</i>&nbsp;    private static int[] toIntArray(String s) {
+<b class="nc"><i class="no-highlight">40</i>&nbsp;      int[] text = new int[s.length()];</b>
+<b class="nc"><i class="no-highlight">41</i>&nbsp;      for (int i = 0; i &lt; s.length(); i++) text[i] = s.charAt(i);</b>
+<b class="nc"><i class="no-highlight">42</i>&nbsp;      return text;</b>
+<i class="no-highlight">43</i>&nbsp;    }
+<i class="no-highlight">44</i>&nbsp;
+<i class="no-highlight">45</i>&nbsp;    // Designated constructor
+<b class="nc"><i class="no-highlight">46</i>&nbsp;    public SuffixArray(int[] text) {</b>
+<b class="nc"><i class="no-highlight">47</i>&nbsp;      T = text;</b>
+<b class="nc"><i class="no-highlight">48</i>&nbsp;      N = text.length;</b>
+<b class="nc"><i class="no-highlight">49</i>&nbsp;      sa = new int[N];</b>
+<b class="nc"><i class="no-highlight">50</i>&nbsp;      sa2 = new int[N];</b>
+<b class="nc"><i class="no-highlight">51</i>&nbsp;      rank = new int[N];</b>
+<b class="nc"><i class="no-highlight">52</i>&nbsp;      c = new int[Math.max(ALPHABET_SZ, N)];</b>
+<b class="nc"><i class="no-highlight">53</i>&nbsp;      construct();</b>
+<i class="no-highlight">54</i>&nbsp;    }
+<i class="no-highlight">55</i>&nbsp;
+<i class="no-highlight">56</i>&nbsp;    private void construct() {
+<i class="no-highlight">57</i>&nbsp;      int i, p, r;
+<b class="nc"><i class="no-highlight">58</i>&nbsp;      for (i = 0; i &lt; N; ++i) c[rank[i] = T[i]]++;</b>
+<b class="nc"><i class="no-highlight">59</i>&nbsp;      for (i = 1; i &lt; ALPHABET_SZ; ++i) c[i] += c[i - 1];</b>
+<b class="nc"><i class="no-highlight">60</i>&nbsp;      for (i = N - 1; i &gt;= 0; --i) sa[--c[T[i]]] = i;</b>
+<b class="nc"><i class="no-highlight">61</i>&nbsp;      for (p = 1; p &lt; N; p &lt;&lt;= 1) {</b>
+<b class="nc"><i class="no-highlight">62</i>&nbsp;        for (r = 0, i = N - p; i &lt; N; ++i) sa2[r++] = i;</b>
+<b class="nc"><i class="no-highlight">63</i>&nbsp;        for (i = 0; i &lt; N; ++i) if (sa[i] &gt;= p) sa2[r++] = sa[i] - p;</b>
+<b class="nc"><i class="no-highlight">64</i>&nbsp;        Arrays.fill(c, 0, ALPHABET_SZ, 0);</b>
+<b class="nc"><i class="no-highlight">65</i>&nbsp;        for (i = 0; i &lt; N; ++i) c[rank[i]]++;</b>
+<b class="nc"><i class="no-highlight">66</i>&nbsp;        for (i = 1; i &lt; ALPHABET_SZ; ++i) c[i] += c[i - 1];</b>
+<b class="nc"><i class="no-highlight">67</i>&nbsp;        for (i = N - 1; i &gt;= 0; --i) sa[--c[rank[sa2[i]]]] = sa2[i];</b>
+<b class="nc"><i class="no-highlight">68</i>&nbsp;        for (sa2[sa[0]] = r = 0, i = 1; i &lt; N; ++i) {</b>
+<b class="nc"><i class="no-highlight">69</i>&nbsp;          if (!(rank[sa[i - 1]] == rank[sa[i]]</b>
+<i class="no-highlight">70</i>&nbsp;              &amp;&amp; sa[i - 1] + p &lt; N
+<i class="no-highlight">71</i>&nbsp;              &amp;&amp; sa[i] + p &lt; N
+<b class="nc"><i class="no-highlight">72</i>&nbsp;              &amp;&amp; rank[sa[i - 1] + p] == rank[sa[i] + p])) r++;</b>
+<b class="nc"><i class="no-highlight">73</i>&nbsp;          sa2[sa[i]] = r;</b>
+<i class="no-highlight">74</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">75</i>&nbsp;        tmp = rank;</b>
+<b class="nc"><i class="no-highlight">76</i>&nbsp;        rank = sa2;</b>
+<b class="nc"><i class="no-highlight">77</i>&nbsp;        sa2 = tmp;</b>
+<b class="nc"><i class="no-highlight">78</i>&nbsp;        if (r == N - 1) break;</b>
+<b class="nc"><i class="no-highlight">79</i>&nbsp;        ALPHABET_SZ = r + 1;</b>
+<i class="no-highlight">80</i>&nbsp;      }
+<i class="no-highlight">81</i>&nbsp;    }
+<i class="no-highlight">82</i>&nbsp;
+<i class="no-highlight">83</i>&nbsp;    // Runs on O(mlog(n)) where m is the length of the substring
+<i class="no-highlight">84</i>&nbsp;    // and n is the length of the text. Depending on the length
+<i class="no-highlight">85</i>&nbsp;    // of the string (if it is very large) it may be faster to
+<i class="no-highlight">86</i>&nbsp;    // use KMP or if you&#39;re doing a lot of queries then Rabin-Karp
+<i class="no-highlight">87</i>&nbsp;    // in combination with a bloom filter.
+<i class="no-highlight">88</i>&nbsp;    //
+<i class="no-highlight">89</i>&nbsp;    // NOTE: This is the naive implementation. There exists an
+<i class="no-highlight">90</i>&nbsp;    // implementation which runs in O(m + log(n)) time
+<i class="no-highlight">91</i>&nbsp;    public boolean contains(String substr) {
+<i class="no-highlight">92</i>&nbsp;
+<b class="nc"><i class="no-highlight">93</i>&nbsp;      if (substr == null) return false;</b>
+<b class="nc"><i class="no-highlight">94</i>&nbsp;      if (substr.equals(&quot;&quot;)) return true;</b>
+<i class="no-highlight">95</i>&nbsp;
+<i class="no-highlight">96</i>&nbsp;      String suffix_str;
+<b class="nc"><i class="no-highlight">97</i>&nbsp;      int lo = 0, hi = N - 1;</b>
+<b class="nc"><i class="no-highlight">98</i>&nbsp;      int substr_len = substr.length();</b>
+<i class="no-highlight">99</i>&nbsp;
+<i class="no-highlight">100</i>&nbsp;      // Do binary search
+<b class="nc"><i class="no-highlight">101</i>&nbsp;      while (lo &lt;= hi) {</b>
+<i class="no-highlight">102</i>&nbsp;
+<b class="nc"><i class="no-highlight">103</i>&nbsp;        int mid = (lo + hi) &gt;&gt;&gt; 1;</b>
+<b class="nc"><i class="no-highlight">104</i>&nbsp;        int suffix_index = sa[mid];</b>
+<b class="nc"><i class="no-highlight">105</i>&nbsp;        int suffix_len = N - suffix_index;</b>
+<i class="no-highlight">106</i>&nbsp;
+<i class="no-highlight">107</i>&nbsp;        // Extract part of the suffix we need to compare
+<b class="nc"><i class="no-highlight">108</i>&nbsp;        if (suffix_len &lt;= substr_len) suffix_str = new String(T, suffix_index, suffix_len);</b>
+<b class="nc"><i class="no-highlight">109</i>&nbsp;        else suffix_str = new String(T, suffix_index, substr_len);</b>
+<i class="no-highlight">110</i>&nbsp;
+<b class="nc"><i class="no-highlight">111</i>&nbsp;        int cmp = suffix_str.compareTo(substr);</b>
+<i class="no-highlight">112</i>&nbsp;
+<i class="no-highlight">113</i>&nbsp;        // Found a match
+<b class="nc"><i class="no-highlight">114</i>&nbsp;        if (cmp == 0) {</b>
+<b class="nc"><i class="no-highlight">115</i>&nbsp;          return true;</b>
+<b class="nc"><i class="no-highlight">116</i>&nbsp;        } else if (cmp &lt; 0) {</b>
+<b class="nc"><i class="no-highlight">117</i>&nbsp;          lo = mid + 1;</b>
+<i class="no-highlight">118</i>&nbsp;        } else {
+<b class="nc"><i class="no-highlight">119</i>&nbsp;          hi = mid - 1;</b>
+<i class="no-highlight">120</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">121</i>&nbsp;      }</b>
+<b class="nc"><i class="no-highlight">122</i>&nbsp;      return false;</b>
+<i class="no-highlight">123</i>&nbsp;    }
+<i class="no-highlight">124</i>&nbsp;  }
+<i class="no-highlight">125</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-07 12:04</div>
+</div>
+</body>
+</html>

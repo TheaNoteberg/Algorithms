@@ -1,0 +1,255 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ModularLinearAlgebra</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.linearalgebra</a>
+</div>
+
+<h1>Coverage Summary for Class: ModularLinearAlgebra (com.williamfiset.algorithms.linearalgebra)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ModularLinearAlgebra</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/68)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/** Solve a system of linear equations in a finite field Time Complexity: O(r^2c) */
+<i class="no-highlight">2</i>&nbsp;package com.williamfiset.algorithms.linearalgebra;
+<i class="no-highlight">3</i>&nbsp;
+<b class="nc"><i class="no-highlight">4</i>&nbsp;class ModularLinearAlgebra {</b>
+<i class="no-highlight">5</i>&nbsp;
+<i class="no-highlight">6</i>&nbsp;  // Takes an augmented matrix as input along with a prime
+<i class="no-highlight">7</i>&nbsp;  // number as the order of the finite field on which the
+<i class="no-highlight">8</i>&nbsp;  // calculations are being performed. The inv[] array is
+<i class="no-highlight">9</i>&nbsp;  // the multiplicative inverse of each element in this
+<i class="no-highlight">10</i>&nbsp;  // finite field. After running this method, the input
+<i class="no-highlight">11</i>&nbsp;  // matrix arr[] will be in reduced row echelon form
+<i class="no-highlight">12</i>&nbsp;  // Time Complexity: O(r^2c)
+<i class="no-highlight">13</i>&nbsp;  static void rref(int[][] arr, int prime, int[] inv) {
+<b class="nc"><i class="no-highlight">14</i>&nbsp;    int n = arr.length, m = arr[0].length;</b>
+<b class="nc"><i class="no-highlight">15</i>&nbsp;    int r = 0;</b>
+<b class="nc"><i class="no-highlight">16</i>&nbsp;    for (int i = 0; i &lt; m - 1 &amp;&amp; r &lt; n; i++) {</b>
+<b class="nc"><i class="no-highlight">17</i>&nbsp;      if (arr[r][i] == 0) {</b>
+<b class="nc"><i class="no-highlight">18</i>&nbsp;        for (int k = r + 1; k &lt; n; k++) {</b>
+<b class="nc"><i class="no-highlight">19</i>&nbsp;          if (arr[k][i] != 0) {</b>
+<b class="nc"><i class="no-highlight">20</i>&nbsp;            int[] t = arr[r];</b>
+<b class="nc"><i class="no-highlight">21</i>&nbsp;            arr[r] = arr[k];</b>
+<b class="nc"><i class="no-highlight">22</i>&nbsp;            arr[k] = t;</b>
+<b class="nc"><i class="no-highlight">23</i>&nbsp;            break;</b>
+<i class="no-highlight">24</i>&nbsp;          }
+<i class="no-highlight">25</i>&nbsp;        }
+<i class="no-highlight">26</i>&nbsp;      }
+<b class="nc"><i class="no-highlight">27</i>&nbsp;      if (arr[r][i] == 0) {</b>
+<b class="nc"><i class="no-highlight">28</i>&nbsp;        continue;</b>
+<i class="no-highlight">29</i>&nbsp;      }
+<b class="nc"><i class="no-highlight">30</i>&nbsp;      int inverse = inv[arr[r][i]];</b>
+<b class="nc"><i class="no-highlight">31</i>&nbsp;      for (int k = i; k &lt; m; k++) arr[r][k] = (arr[r][k] * inverse) % prime;</b>
+<b class="nc"><i class="no-highlight">32</i>&nbsp;      for (int j = 0; j &lt; n; j++) {</b>
+<b class="nc"><i class="no-highlight">33</i>&nbsp;        int c = arr[j][i];</b>
+<b class="nc"><i class="no-highlight">34</i>&nbsp;        if (j == r || c == 0) continue;</b>
+<b class="nc"><i class="no-highlight">35</i>&nbsp;        arr[j][i] = 0;</b>
+<b class="nc"><i class="no-highlight">36</i>&nbsp;        for (int k = i + 1; k &lt; m; k++) arr[j][k] = (arr[j][k] - c * arr[r][k] + c * prime) % prime;</b>
+<i class="no-highlight">37</i>&nbsp;      }
+<b class="nc"><i class="no-highlight">38</i>&nbsp;      r++;</b>
+<i class="no-highlight">39</i>&nbsp;    }
+<i class="no-highlight">40</i>&nbsp;  }
+<i class="no-highlight">41</i>&nbsp;
+<i class="no-highlight">42</i>&nbsp;  // Finds the inverse of a non-augmented matrix in the finite field
+<i class="no-highlight">43</i>&nbsp;  // with order equal to the given prime.
+<i class="no-highlight">44</i>&nbsp;  static int[][] inverse(int[][] arr, int prime, int[] modInv) {
+<b class="nc"><i class="no-highlight">45</i>&nbsp;    if (arr.length != arr[0].length) return null;</b>
+<b class="nc"><i class="no-highlight">46</i>&nbsp;    int n = arr.length;</b>
+<b class="nc"><i class="no-highlight">47</i>&nbsp;    int[][] augmented = new int[n][n * 2];</b>
+<b class="nc"><i class="no-highlight">48</i>&nbsp;    for (int i = 0; i &lt; n; i++) {</b>
+<b class="nc"><i class="no-highlight">49</i>&nbsp;      for (int j = 0; j &lt; n; j++) {</b>
+<b class="nc"><i class="no-highlight">50</i>&nbsp;        augmented[i][j] = arr[i][j];</b>
+<i class="no-highlight">51</i>&nbsp;      }
+<b class="nc"><i class="no-highlight">52</i>&nbsp;      augmented[i][i + n] = 1;</b>
+<i class="no-highlight">53</i>&nbsp;    }
+<b class="nc"><i class="no-highlight">54</i>&nbsp;    rref(augmented, prime, modInv);</b>
+<b class="nc"><i class="no-highlight">55</i>&nbsp;    int[][] inv = new int[n][n];</b>
+<b class="nc"><i class="no-highlight">56</i>&nbsp;    for (int i = 0; i &lt; n; i++) {</b>
+<b class="nc"><i class="no-highlight">57</i>&nbsp;      for (int j = 0; j &lt; n; j++) {</b>
+<b class="nc"><i class="no-highlight">58</i>&nbsp;        if (i == j &amp;&amp; augmented[i][j] != 1) return null;</b>
+<b class="nc"><i class="no-highlight">59</i>&nbsp;        else if (augmented[i][j] != 0) return null;</b>
+<b class="nc"><i class="no-highlight">60</i>&nbsp;        inv[i][j] = augmented[i][j + n];</b>
+<i class="no-highlight">61</i>&nbsp;      }
+<i class="no-highlight">62</i>&nbsp;    }
+<b class="nc"><i class="no-highlight">63</i>&nbsp;    return inv;</b>
+<i class="no-highlight">64</i>&nbsp;  }
+<i class="no-highlight">65</i>&nbsp;
+<i class="no-highlight">66</i>&nbsp;  // To be checked after the augmented matrix has been
+<i class="no-highlight">67</i>&nbsp;  // row reduced to reduced row echelon form
+<i class="no-highlight">68</i>&nbsp;  static boolean isInconsistent(int[][] arr) {
+<b class="nc"><i class="no-highlight">69</i>&nbsp;    int nCols = arr[0].length;</b>
+<i class="no-highlight">70</i>&nbsp;    outer:
+<b class="nc"><i class="no-highlight">71</i>&nbsp;    for (int y = 0; y &lt; arr.length; y++) {</b>
+<b class="nc"><i class="no-highlight">72</i>&nbsp;      if (arr[y][nCols - 1] != 0) {</b>
+<b class="nc"><i class="no-highlight">73</i>&nbsp;        for (int x = 0; x &lt; nCols - 1; x++) {</b>
+<b class="nc"><i class="no-highlight">74</i>&nbsp;          if (arr[y][x] != 0) continue outer;</b>
+<i class="no-highlight">75</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">76</i>&nbsp;        return true;</b>
+<i class="no-highlight">77</i>&nbsp;      }
+<i class="no-highlight">78</i>&nbsp;    }
+<b class="nc"><i class="no-highlight">79</i>&nbsp;    return false;</b>
+<i class="no-highlight">80</i>&nbsp;  }
+<i class="no-highlight">81</i>&nbsp;
+<i class="no-highlight">82</i>&nbsp;  // To be checked after the augmented matrix has been
+<i class="no-highlight">83</i>&nbsp;  // row reduced to reduced row echelon form and checked
+<i class="no-highlight">84</i>&nbsp;  // for consistency
+<i class="no-highlight">85</i>&nbsp;  static boolean hasMultipleSolutions(int[][] arr) {
+<b class="nc"><i class="no-highlight">86</i>&nbsp;    int nCols = arr[0].length;</b>
+<b class="nc"><i class="no-highlight">87</i>&nbsp;    int nEmptyRows = 0;</b>
+<i class="no-highlight">88</i>&nbsp;    outer:
+<b class="nc"><i class="no-highlight">89</i>&nbsp;    for (int y = 0; y &lt; arr.length; y++) {</b>
+<b class="nc"><i class="no-highlight">90</i>&nbsp;      for (int x = 0; x &lt; nCols; x++) {</b>
+<b class="nc"><i class="no-highlight">91</i>&nbsp;        if (arr[y][x] != 0) continue outer;</b>
+<i class="no-highlight">92</i>&nbsp;      }
+<b class="nc"><i class="no-highlight">93</i>&nbsp;      nEmptyRows++;</b>
+<i class="no-highlight">94</i>&nbsp;    }
+<b class="nc"><i class="no-highlight">95</i>&nbsp;    return nCols - 1 &gt; arr.length - nEmptyRows;</b>
+<i class="no-highlight">96</i>&nbsp;  }
+<i class="no-highlight">97</i>&nbsp;
+<i class="no-highlight">98</i>&nbsp;  // Returns {gcd(a,b), x, y} such that ax+by=gcd(a,b)
+<i class="no-highlight">99</i>&nbsp;  static int[] egcd(int a, int b) {
+<b class="nc"><i class="no-highlight">100</i>&nbsp;    if (b == 0) return new int[] {a, 1, 0};</b>
+<b class="nc"><i class="no-highlight">101</i>&nbsp;    int[] ret = egcd(b, a % b);</b>
+<b class="nc"><i class="no-highlight">102</i>&nbsp;    int tmp = ret[1] - ret[2] * (a / b);</b>
+<b class="nc"><i class="no-highlight">103</i>&nbsp;    ret[1] = ret[2];</b>
+<b class="nc"><i class="no-highlight">104</i>&nbsp;    ret[2] = tmp;</b>
+<b class="nc"><i class="no-highlight">105</i>&nbsp;    return ret;</b>
+<i class="no-highlight">106</i>&nbsp;  }
+<i class="no-highlight">107</i>&nbsp;
+<i class="no-highlight">108</i>&nbsp;  // Returns the inverse of x mod m
+<i class="no-highlight">109</i>&nbsp;  static int modInv(int x, int m) {
+<b class="nc"><i class="no-highlight">110</i>&nbsp;    return (egcd(x, m)[1] + m) % m;</b>
+<i class="no-highlight">111</i>&nbsp;  }
+<i class="no-highlight">112</i>&nbsp;
+<i class="no-highlight">113</i>&nbsp;  public static void main(String[] args) {
+<i class="no-highlight">114</i>&nbsp;    // Suppose we want to solve the following system for
+<i class="no-highlight">115</i>&nbsp;    // the variables x, y, z, in Z_7:
+<i class="no-highlight">116</i>&nbsp;    //
+<i class="no-highlight">117</i>&nbsp;    // 5x +  y -  z = 0
+<i class="no-highlight">118</i>&nbsp;    // 3x + 0y + 4z = 1
+<i class="no-highlight">119</i>&nbsp;    //  x - 2y + 2z = 4
+<i class="no-highlight">120</i>&nbsp;    // Then we would setup the following augment matrix:
+<i class="no-highlight">121</i>&nbsp;
+<b class="nc"><i class="no-highlight">122</i>&nbsp;    int p = 7;</b>
+<b class="nc"><i class="no-highlight">123</i>&nbsp;    int[][] augmentedMatrix = {</b>
+<i class="no-highlight">124</i>&nbsp;      {5, 1, 6, 0},
+<i class="no-highlight">125</i>&nbsp;      {3, 0, 4, 1},
+<i class="no-highlight">126</i>&nbsp;      {1, 5, 2, 4}
+<i class="no-highlight">127</i>&nbsp;    };
+<i class="no-highlight">128</i>&nbsp;    // Note that negative values have been changed to their
+<i class="no-highlight">129</i>&nbsp;    // corresponding values in Z_p
+<i class="no-highlight">130</i>&nbsp;
+<i class="no-highlight">131</i>&nbsp;    // Compute the multiplicative inverse for each element in Z_p
+<b class="nc"><i class="no-highlight">132</i>&nbsp;    int[] inv = new int[p];</b>
+<b class="nc"><i class="no-highlight">133</i>&nbsp;    for (int i = 1; i &lt; p; i++) {</b>
+<b class="nc"><i class="no-highlight">134</i>&nbsp;      inv[i] = modInv(i, p);</b>
+<i class="no-highlight">135</i>&nbsp;    }
+<i class="no-highlight">136</i>&nbsp;
+<i class="no-highlight">137</i>&nbsp;    // Put the matrix in reduced row echelon form
+<b class="nc"><i class="no-highlight">138</i>&nbsp;    rref(augmentedMatrix, p, inv);</b>
+<i class="no-highlight">139</i>&nbsp;
+<b class="nc"><i class="no-highlight">140</i>&nbsp;    if (!isInconsistent(augmentedMatrix) &amp;&amp; !hasMultipleSolutions(augmentedMatrix)) {</b>
+<i class="no-highlight">141</i>&nbsp;
+<b class="nc"><i class="no-highlight">142</i>&nbsp;      int x = augmentedMatrix[0][3];</b>
+<b class="nc"><i class="no-highlight">143</i>&nbsp;      int y = augmentedMatrix[1][3];</b>
+<b class="nc"><i class="no-highlight">144</i>&nbsp;      int z = augmentedMatrix[2][3];</b>
+<i class="no-highlight">145</i>&nbsp;
+<i class="no-highlight">146</i>&nbsp;      // Prints: x = 1, y = 5, z = 3
+<b class="nc"><i class="no-highlight">147</i>&nbsp;      System.out.printf(&quot;x = %d, y = %d, z = %d\n&quot;, x, y, z);</b>
+<i class="no-highlight">148</i>&nbsp;    }
+<i class="no-highlight">149</i>&nbsp;  }
+<i class="no-highlight">150</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-01 13:32</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,337 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > LineSegmentLineSegmentIntersection</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.geometry</a>
+</div>
+
+<h1>Coverage Summary for Class: LineSegmentLineSegmentIntersection (com.williamfiset.algorithms.geometry)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">LineSegmentLineSegmentIntersection</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/77)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">LineSegmentLineSegmentIntersection$Pt</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/81)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/**
+<i class="no-highlight">2</i>&nbsp; * This snippet finds the intersection of two line segments. The intersection may either be empty, a
+<i class="no-highlight">3</i>&nbsp; * single point or the intersection is a subsegment there&#39;s an overlap.
+<i class="no-highlight">4</i>&nbsp; *
+<i class="no-highlight">5</i>&nbsp; * &lt;p&gt;NOTE: In the code, I assume that a line segment (x1, y1), (x2, y2) with x1 = x2 and y1 = y2 is
+<i class="no-highlight">6</i>&nbsp; * a valid line segment. Mathematically speaking, a line segment consists of distinct points, but I
+<i class="no-highlight">7</i>&nbsp; * am allowing segments to be points in this implementation for completeness.
+<i class="no-highlight">8</i>&nbsp; *
+<i class="no-highlight">9</i>&nbsp; * @author: William Fiset, william.alexandre.fiset@gmail.com
+<i class="no-highlight">10</i>&nbsp; */
+<i class="no-highlight">11</i>&nbsp;package com.williamfiset.algorithms.geometry;
+<i class="no-highlight">12</i>&nbsp;
+<i class="no-highlight">13</i>&nbsp;import static java.lang.Math.abs;
+<i class="no-highlight">14</i>&nbsp;import static java.lang.Math.max;
+<i class="no-highlight">15</i>&nbsp;import static java.lang.Math.min;
+<i class="no-highlight">16</i>&nbsp;
+<i class="no-highlight">17</i>&nbsp;import java.util.ArrayList;
+<i class="no-highlight">18</i>&nbsp;import java.util.List;
+<i class="no-highlight">19</i>&nbsp;
+<b class="nc"><i class="no-highlight">20</i>&nbsp;public class LineSegmentLineSegmentIntersection {</b>
+<i class="no-highlight">21</i>&nbsp;
+<i class="no-highlight">22</i>&nbsp;  // Small epsilon used for double value comparison.
+<i class="no-highlight">23</i>&nbsp;  private static final double EPS = 1e-7;
+<i class="no-highlight">24</i>&nbsp;
+<i class="no-highlight">25</i>&nbsp;  // 2D Point class.
+<i class="no-highlight">26</i>&nbsp;  public static class Pt {
+<i class="no-highlight">27</i>&nbsp;    double x, y;
+<i class="no-highlight">28</i>&nbsp;
+<b class="nc"><i class="no-highlight">29</i>&nbsp;    public Pt(double x, double y) {</b>
+<b class="nc"><i class="no-highlight">30</i>&nbsp;      this.x = x;</b>
+<b class="nc"><i class="no-highlight">31</i>&nbsp;      this.y = y;</b>
+<i class="no-highlight">32</i>&nbsp;    }
+<i class="no-highlight">33</i>&nbsp;
+<i class="no-highlight">34</i>&nbsp;    public boolean equals(Pt pt) {
+<b class="nc"><i class="no-highlight">35</i>&nbsp;      return abs(x - pt.x) &lt; EPS &amp;&amp; abs(y - pt.y) &lt; EPS;</b>
+<i class="no-highlight">36</i>&nbsp;    }
+<i class="no-highlight">37</i>&nbsp;  }
+<i class="no-highlight">38</i>&nbsp;
+<i class="no-highlight">39</i>&nbsp;  // Finds the intersection point(s) of two line segments. Unlike regular line
+<i class="no-highlight">40</i>&nbsp;  // segments, segments which are points (x1 = x2 and y1 = y2) are allowed.
+<i class="no-highlight">41</i>&nbsp;  public static Pt[] lineSegmentLineSegmentIntersection(Pt p1, Pt p2, Pt p3, Pt p4) {
+<i class="no-highlight">42</i>&nbsp;
+<i class="no-highlight">43</i>&nbsp;    // No intersection.
+<b class="nc"><i class="no-highlight">44</i>&nbsp;    if (!segmentsIntersect(p1, p2, p3, p4)) return new Pt[] {};</b>
+<i class="no-highlight">45</i>&nbsp;
+<i class="no-highlight">46</i>&nbsp;    // Both segments are a single point.
+<b class="nc"><i class="no-highlight">47</i>&nbsp;    if (p1.equals(p2) &amp;&amp; p2.equals(p3) &amp;&amp; p3.equals(p4)) return new Pt[] {p1};</b>
+<i class="no-highlight">48</i>&nbsp;
+<b class="nc"><i class="no-highlight">49</i>&nbsp;    List&lt;Pt&gt; endpoints = getCommonEndpoints(p1, p2, p3, p4);</b>
+<b class="nc"><i class="no-highlight">50</i>&nbsp;    int n = endpoints.size();</b>
+<i class="no-highlight">51</i>&nbsp;
+<i class="no-highlight">52</i>&nbsp;    // One of the line segments is an intersecting single point.
+<i class="no-highlight">53</i>&nbsp;    // NOTE: checking only n == 1 is insufficient to return early
+<i class="no-highlight">54</i>&nbsp;    // because the solution might be a sub segment.
+<b class="nc"><i class="no-highlight">55</i>&nbsp;    boolean singleton = p1.equals(p2) || p3.equals(p4);</b>
+<b class="nc"><i class="no-highlight">56</i>&nbsp;    if (n == 1 &amp;&amp; singleton) return new Pt[] {endpoints.get(0)};</b>
+<i class="no-highlight">57</i>&nbsp;
+<i class="no-highlight">58</i>&nbsp;    // Segments are equal.
+<b class="nc"><i class="no-highlight">59</i>&nbsp;    if (n == 2) return new Pt[] {endpoints.get(0), endpoints.get(1)};</b>
+<i class="no-highlight">60</i>&nbsp;
+<b class="nc"><i class="no-highlight">61</i>&nbsp;    boolean collinearSegments = (orientation(p1, p2, p3) == 0) &amp;&amp; (orientation(p1, p2, p4) == 0);</b>
+<i class="no-highlight">62</i>&nbsp;
+<i class="no-highlight">63</i>&nbsp;    // The intersection will be a sub-segment of the two
+<i class="no-highlight">64</i>&nbsp;    // segments since they overlap each other.
+<b class="nc"><i class="no-highlight">65</i>&nbsp;    if (collinearSegments) {</b>
+<i class="no-highlight">66</i>&nbsp;
+<i class="no-highlight">67</i>&nbsp;      // Segment #2 is enclosed in segment #1
+<b class="nc"><i class="no-highlight">68</i>&nbsp;      if (pointOnLine(p1, p2, p3) &amp;&amp; pointOnLine(p1, p2, p4)) return new Pt[] {p3, p4};</b>
+<i class="no-highlight">69</i>&nbsp;
+<i class="no-highlight">70</i>&nbsp;      // Segment #1 is enclosed in segment #2
+<b class="nc"><i class="no-highlight">71</i>&nbsp;      if (pointOnLine(p3, p4, p1) &amp;&amp; pointOnLine(p3, p4, p2)) return new Pt[] {p1, p2};</b>
+<i class="no-highlight">72</i>&nbsp;
+<i class="no-highlight">73</i>&nbsp;      // The subsegment is part of segment #1 and part of segment #2.
+<i class="no-highlight">74</i>&nbsp;      // Find the middle points which correspond to this segment.
+<b class="nc"><i class="no-highlight">75</i>&nbsp;      Pt midPoint1 = pointOnLine(p1, p2, p3) ? p3 : p4;</b>
+<b class="nc"><i class="no-highlight">76</i>&nbsp;      Pt midPoint2 = pointOnLine(p3, p4, p1) ? p1 : p2;</b>
+<i class="no-highlight">77</i>&nbsp;
+<i class="no-highlight">78</i>&nbsp;      // There is actually only one middle point!
+<b class="nc"><i class="no-highlight">79</i>&nbsp;      if (midPoint1.equals(midPoint2)) return new Pt[] {midPoint1};</b>
+<i class="no-highlight">80</i>&nbsp;
+<b class="nc"><i class="no-highlight">81</i>&nbsp;      return new Pt[] {midPoint1, midPoint2};</b>
+<i class="no-highlight">82</i>&nbsp;    }
+<i class="no-highlight">83</i>&nbsp;
+<i class="no-highlight">84</i>&nbsp;    /* Beyond this point there is a unique intersection point. */
+<i class="no-highlight">85</i>&nbsp;
+<i class="no-highlight">86</i>&nbsp;    // Segment #1 is a vertical line.
+<b class="nc"><i class="no-highlight">87</i>&nbsp;    if (abs(p1.x - p2.x) &lt; EPS) {</b>
+<b class="nc"><i class="no-highlight">88</i>&nbsp;      double m = (p4.y - p3.y) / (p4.x - p3.x);</b>
+<b class="nc"><i class="no-highlight">89</i>&nbsp;      double b = p3.y - m * p3.x;</b>
+<b class="nc"><i class="no-highlight">90</i>&nbsp;      return new Pt[] {new Pt(p1.x, m * p1.x + b)};</b>
+<i class="no-highlight">91</i>&nbsp;    }
+<i class="no-highlight">92</i>&nbsp;
+<i class="no-highlight">93</i>&nbsp;    // Segment #2 is a vertical line.
+<b class="nc"><i class="no-highlight">94</i>&nbsp;    if (abs(p3.x - p4.x) &lt; EPS) {</b>
+<b class="nc"><i class="no-highlight">95</i>&nbsp;      double m = (p2.y - p1.y) / (p2.x - p1.x);</b>
+<b class="nc"><i class="no-highlight">96</i>&nbsp;      double b = p1.y - m * p1.x;</b>
+<b class="nc"><i class="no-highlight">97</i>&nbsp;      return new Pt[] {new Pt(p3.x, m * p3.x + b)};</b>
+<i class="no-highlight">98</i>&nbsp;    }
+<i class="no-highlight">99</i>&nbsp;
+<b class="nc"><i class="no-highlight">100</i>&nbsp;    double m1 = (p2.y - p1.y) / (p2.x - p1.x);</b>
+<b class="nc"><i class="no-highlight">101</i>&nbsp;    double m2 = (p4.y - p3.y) / (p4.x - p3.x);</b>
+<b class="nc"><i class="no-highlight">102</i>&nbsp;    double b1 = p1.y - m1 * p1.x;</b>
+<b class="nc"><i class="no-highlight">103</i>&nbsp;    double b2 = p3.y - m2 * p3.x;</b>
+<b class="nc"><i class="no-highlight">104</i>&nbsp;    double x = (b2 - b1) / (m1 - m2);</b>
+<b class="nc"><i class="no-highlight">105</i>&nbsp;    double y = (m1 * b2 - m2 * b1) / (m1 - m2);</b>
+<i class="no-highlight">106</i>&nbsp;
+<b class="nc"><i class="no-highlight">107</i>&nbsp;    return new Pt[] {new Pt(x, y)};</b>
+<i class="no-highlight">108</i>&nbsp;  }
+<i class="no-highlight">109</i>&nbsp;
+<i class="no-highlight">110</i>&nbsp;  // Finds the orientation of point &#39;c&#39; relative to the line segment (a, b)
+<i class="no-highlight">111</i>&nbsp;  // Returns  0 if all three points are collinear.
+<i class="no-highlight">112</i>&nbsp;  // Returns -1 if &#39;c&#39; is clockwise to segment (a, b), i.e right of line formed by the segment.
+<i class="no-highlight">113</i>&nbsp;  // Returns +1 if &#39;c&#39; is counter clockwise to segment (a, b), i.e left of line
+<i class="no-highlight">114</i>&nbsp;  // formed by the segment.
+<i class="no-highlight">115</i>&nbsp;  private static int orientation(Pt a, Pt b, Pt c) {
+<b class="nc"><i class="no-highlight">116</i>&nbsp;    double value = (b.y - a.y) * (c.x - b.x) - (b.x - a.x) * (c.y - b.y);</b>
+<b class="nc"><i class="no-highlight">117</i>&nbsp;    if (abs(value) &lt; EPS) return 0;</b>
+<b class="nc"><i class="no-highlight">118</i>&nbsp;    return (value &gt; 0) ? -1 : +1;</b>
+<i class="no-highlight">119</i>&nbsp;  }
+<i class="no-highlight">120</i>&nbsp;
+<i class="no-highlight">121</i>&nbsp;  // Tests whether point &#39;c&#39; is on the line segment (a, b).
+<i class="no-highlight">122</i>&nbsp;  // Ensure first that point c is collinear to segment (a, b) and
+<i class="no-highlight">123</i>&nbsp;  // then check whether c is within the rectangle formed by (a, b)
+<i class="no-highlight">124</i>&nbsp;  private static boolean pointOnLine(Pt a, Pt b, Pt c) {
+<b class="nc"><i class="no-highlight">125</i>&nbsp;    return orientation(a, b, c) == 0</b>
+<b class="nc"><i class="no-highlight">126</i>&nbsp;        &amp;&amp; min(a.x, b.x) &lt;= c.x</b>
+<b class="nc"><i class="no-highlight">127</i>&nbsp;        &amp;&amp; c.x &lt;= max(a.x, b.x)</b>
+<b class="nc"><i class="no-highlight">128</i>&nbsp;        &amp;&amp; min(a.y, b.y) &lt;= c.y</b>
+<b class="nc"><i class="no-highlight">129</i>&nbsp;        &amp;&amp; c.y &lt;= max(a.y, b.y);</b>
+<i class="no-highlight">130</i>&nbsp;  }
+<i class="no-highlight">131</i>&nbsp;
+<i class="no-highlight">132</i>&nbsp;  // Determines whether two segments intersect.
+<i class="no-highlight">133</i>&nbsp;  private static boolean segmentsIntersect(Pt p1, Pt p2, Pt p3, Pt p4) {
+<i class="no-highlight">134</i>&nbsp;
+<i class="no-highlight">135</i>&nbsp;    // Get the orientation of points p3 and p4 in relation
+<i class="no-highlight">136</i>&nbsp;    // to the line segment (p1, p2)
+<b class="nc"><i class="no-highlight">137</i>&nbsp;    int o1 = orientation(p1, p2, p3);</b>
+<b class="nc"><i class="no-highlight">138</i>&nbsp;    int o2 = orientation(p1, p2, p4);</b>
+<b class="nc"><i class="no-highlight">139</i>&nbsp;    int o3 = orientation(p3, p4, p1);</b>
+<b class="nc"><i class="no-highlight">140</i>&nbsp;    int o4 = orientation(p3, p4, p2);</b>
+<i class="no-highlight">141</i>&nbsp;
+<i class="no-highlight">142</i>&nbsp;    // If the points p1, p2 are on opposite sides of the infinite
+<i class="no-highlight">143</i>&nbsp;    // line formed by (p3, p4) and conversly p3, p4 are on opposite
+<i class="no-highlight">144</i>&nbsp;    // sides of the infinite line formed by (p1, p2) then there is
+<i class="no-highlight">145</i>&nbsp;    // an intersection.
+<b class="nc"><i class="no-highlight">146</i>&nbsp;    if (o1 != o2 &amp;&amp; o3 != o4) return true;</b>
+<i class="no-highlight">147</i>&nbsp;
+<i class="no-highlight">148</i>&nbsp;    // Collinear special cases (perhaps these if checks can be simplified?)
+<b class="nc"><i class="no-highlight">149</i>&nbsp;    if (o1 == 0 &amp;&amp; pointOnLine(p1, p2, p3)) return true;</b>
+<b class="nc"><i class="no-highlight">150</i>&nbsp;    if (o2 == 0 &amp;&amp; pointOnLine(p1, p2, p4)) return true;</b>
+<b class="nc"><i class="no-highlight">151</i>&nbsp;    if (o3 == 0 &amp;&amp; pointOnLine(p3, p4, p1)) return true;</b>
+<b class="nc"><i class="no-highlight">152</i>&nbsp;    if (o4 == 0 &amp;&amp; pointOnLine(p3, p4, p2)) return true;</b>
+<i class="no-highlight">153</i>&nbsp;
+<b class="nc"><i class="no-highlight">154</i>&nbsp;    return false;</b>
+<i class="no-highlight">155</i>&nbsp;  }
+<i class="no-highlight">156</i>&nbsp;
+<i class="no-highlight">157</i>&nbsp;  private static List&lt;Pt&gt; getCommonEndpoints(Pt p1, Pt p2, Pt p3, Pt p4) {
+<i class="no-highlight">158</i>&nbsp;
+<b class="nc"><i class="no-highlight">159</i>&nbsp;    List&lt;Pt&gt; points = new ArrayList&lt;&gt;();</b>
+<i class="no-highlight">160</i>&nbsp;
+<b class="nc"><i class="no-highlight">161</i>&nbsp;    if (p1.equals(p3)) {</b>
+<b class="nc"><i class="no-highlight">162</i>&nbsp;      points.add(p1);</b>
+<b class="nc"><i class="no-highlight">163</i>&nbsp;      if (p2.equals(p4)) points.add(p2);</b>
+<i class="no-highlight">164</i>&nbsp;
+<b class="nc"><i class="no-highlight">165</i>&nbsp;    } else if (p1.equals(p4)) {</b>
+<b class="nc"><i class="no-highlight">166</i>&nbsp;      points.add(p1);</b>
+<b class="nc"><i class="no-highlight">167</i>&nbsp;      if (p2.equals(p3)) points.add(p2);</b>
+<i class="no-highlight">168</i>&nbsp;
+<b class="nc"><i class="no-highlight">169</i>&nbsp;    } else if (p2.equals(p3)) {</b>
+<b class="nc"><i class="no-highlight">170</i>&nbsp;      points.add(p2);</b>
+<b class="nc"><i class="no-highlight">171</i>&nbsp;      if (p1.equals(p4)) points.add(p1);</b>
+<i class="no-highlight">172</i>&nbsp;
+<b class="nc"><i class="no-highlight">173</i>&nbsp;    } else if (p2.equals(p4)) {</b>
+<b class="nc"><i class="no-highlight">174</i>&nbsp;      points.add(p2);</b>
+<b class="nc"><i class="no-highlight">175</i>&nbsp;      if (p1.equals(p3)) points.add(p1);</b>
+<i class="no-highlight">176</i>&nbsp;    }
+<i class="no-highlight">177</i>&nbsp;
+<b class="nc"><i class="no-highlight">178</i>&nbsp;    return points;</b>
+<i class="no-highlight">179</i>&nbsp;  }
+<i class="no-highlight">180</i>&nbsp;
+<i class="no-highlight">181</i>&nbsp;  public static void main(String[] args) {
+<i class="no-highlight">182</i>&nbsp;
+<i class="no-highlight">183</i>&nbsp;    // Segment #1 is (p1, p2), segment #2 is (p3, p4)
+<i class="no-highlight">184</i>&nbsp;    Pt p1, p2, p3, p4;
+<i class="no-highlight">185</i>&nbsp;
+<b class="nc"><i class="no-highlight">186</i>&nbsp;    p1 = new Pt(-2, 4);</b>
+<b class="nc"><i class="no-highlight">187</i>&nbsp;    p2 = new Pt(3, 3);</b>
+<b class="nc"><i class="no-highlight">188</i>&nbsp;    p3 = new Pt(0, 0);</b>
+<b class="nc"><i class="no-highlight">189</i>&nbsp;    p4 = new Pt(2, 4);</b>
+<b class="nc"><i class="no-highlight">190</i>&nbsp;    Pt[] points = lineSegmentLineSegmentIntersection(p1, p2, p3, p4);</b>
+<b class="nc"><i class="no-highlight">191</i>&nbsp;    Pt point = points[0];</b>
+<i class="no-highlight">192</i>&nbsp;
+<i class="no-highlight">193</i>&nbsp;    // Prints: (1.636, 3.273)
+<b class="nc"><i class="no-highlight">194</i>&nbsp;    System.out.printf(&quot;(%.3f, %.3f)\n&quot;, point.x, point.y);</b>
+<i class="no-highlight">195</i>&nbsp;
+<b class="nc"><i class="no-highlight">196</i>&nbsp;    p1 = new Pt(-10, 0);</b>
+<b class="nc"><i class="no-highlight">197</i>&nbsp;    p2 = new Pt(+10, 0);</b>
+<b class="nc"><i class="no-highlight">198</i>&nbsp;    p3 = new Pt(-5, 0);</b>
+<b class="nc"><i class="no-highlight">199</i>&nbsp;    p4 = new Pt(+5, 0);</b>
+<b class="nc"><i class="no-highlight">200</i>&nbsp;    points = lineSegmentLineSegmentIntersection(p1, p2, p3, p4);</b>
+<b class="nc"><i class="no-highlight">201</i>&nbsp;    Pt point1 = points[0], point2 = points[1];</b>
+<i class="no-highlight">202</i>&nbsp;
+<i class="no-highlight">203</i>&nbsp;    // Prints: (-5.000, 0.000) (5.000, 0.000)
+<b class="nc"><i class="no-highlight">204</i>&nbsp;    System.out.printf(&quot;(%.3f, %.3f) (%.3f, %.3f)\n&quot;, point1.x, point1.y, point2.x, point2.y);</b>
+<i class="no-highlight">205</i>&nbsp;  }
+<i class="no-highlight">206</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-07 12:04</div>
+</div>
+</body>
+</html>

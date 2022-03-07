@@ -1,0 +1,202 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > PointInsideTriangle</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.geometry</a>
+</div>
+
+<h1>Coverage Summary for Class: PointInsideTriangle (com.williamfiset.algorithms.geometry)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PointInsideTriangle</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/33)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/**
+<i class="no-highlight">2</i>&nbsp; * This file shows you how to determine if a point is inside or on the boundary of a triangle formed
+<i class="no-highlight">3</i>&nbsp; * by three points.
+<i class="no-highlight">4</i>&nbsp; *
+<i class="no-highlight">5</i>&nbsp; * &lt;p&gt;Time Complexity: O(1)
+<i class="no-highlight">6</i>&nbsp; *
+<i class="no-highlight">7</i>&nbsp; * @author William Fiset, william.alexandre.fiset@gmail.com
+<i class="no-highlight">8</i>&nbsp; */
+<i class="no-highlight">9</i>&nbsp;package com.williamfiset.algorithms.geometry;
+<i class="no-highlight">10</i>&nbsp;
+<i class="no-highlight">11</i>&nbsp;import static java.lang.Math.*;
+<i class="no-highlight">12</i>&nbsp;
+<i class="no-highlight">13</i>&nbsp;import java.awt.geom.Point2D;
+<i class="no-highlight">14</i>&nbsp;
+<b class="nc"><i class="no-highlight">15</i>&nbsp;public class PointInsideTriangle {</b>
+<i class="no-highlight">16</i>&nbsp;
+<i class="no-highlight">17</i>&nbsp;  private static final double EPS = 1e-8;
+<i class="no-highlight">18</i>&nbsp;
+<i class="no-highlight">19</i>&nbsp;  // Determine if the point &#39;p&#39; lies inside or exactly on the border of the
+<i class="no-highlight">20</i>&nbsp;  // triangle formed by the three points a,b,c. If you do want to exclude
+<i class="no-highlight">21</i>&nbsp;  // the border modify this method so that instead of checking against &#39;&lt;=&#39; and
+<i class="no-highlight">22</i>&nbsp;  // &#39;&gt;=&#39; it checks against strictly less than and strictly greater than.
+<i class="no-highlight">23</i>&nbsp;  public static boolean pointInsideTriangle(Point2D a, Point2D b, Point2D c, Point2D p) {
+<i class="no-highlight">24</i>&nbsp;
+<i class="no-highlight">25</i>&nbsp;    // Points a,b,c form a degenerate triangle
+<b class="nc"><i class="no-highlight">26</i>&nbsp;    if (collinear(a, b, c) == 0) {</b>
+<b class="nc"><i class="no-highlight">27</i>&nbsp;      throw new IllegalArgumentException(&quot;points a,b,c do not form a triangle!&quot;);</b>
+<i class="no-highlight">28</i>&nbsp;    }
+<i class="no-highlight">29</i>&nbsp;
+<i class="no-highlight">30</i>&nbsp;    // Compute the directions the point &#39;p&#39; is relative to
+<i class="no-highlight">31</i>&nbsp;    // the three half planes formed by the points of the triangle
+<b class="nc"><i class="no-highlight">32</i>&nbsp;    int dir1 = collinear(a, b, p);</b>
+<b class="nc"><i class="no-highlight">33</i>&nbsp;    int dir2 = collinear(b, c, p);</b>
+<b class="nc"><i class="no-highlight">34</i>&nbsp;    int dir3 = collinear(c, a, p);</b>
+<i class="no-highlight">35</i>&nbsp;
+<i class="no-highlight">36</i>&nbsp;    // Check if two of the half planes overlap in
+<i class="no-highlight">37</i>&nbsp;    // the area where the triangle is found.
+<b class="nc"><i class="no-highlight">38</i>&nbsp;    return (dir1 &lt;= 0 &amp;&amp; dir2 &lt;= 0 &amp;&amp; dir3 &lt;= 0) || (dir1 &gt;= 0 &amp;&amp; dir2 &gt;= 0 &amp;&amp; dir3 &gt;= 0);</b>
+<i class="no-highlight">39</i>&nbsp;  }
+<i class="no-highlight">40</i>&nbsp;
+<i class="no-highlight">41</i>&nbsp;  // A slightly more optimized version which does less comparisons.
+<i class="no-highlight">42</i>&nbsp;  public static boolean pointInsideTriangle2(Point2D a, Point2D b, Point2D c, Point2D p) {
+<i class="no-highlight">43</i>&nbsp;
+<i class="no-highlight">44</i>&nbsp;    // Points a,b,c form a degenerate triangle
+<b class="nc"><i class="no-highlight">45</i>&nbsp;    if (collinear(a, b, c) == 0) {</b>
+<b class="nc"><i class="no-highlight">46</i>&nbsp;      throw new IllegalArgumentException(&quot;points a,b,c do not form a triangle!&quot;);</b>
+<i class="no-highlight">47</i>&nbsp;    }
+<i class="no-highlight">48</i>&nbsp;
+<i class="no-highlight">49</i>&nbsp;    // Change &#39;&lt;&#39; to &#39;&lt;=&#39; to exclude points on the boundary
+<b class="nc"><i class="no-highlight">50</i>&nbsp;    boolean dir1 = collinear(a, b, p) &lt; 0;</b>
+<b class="nc"><i class="no-highlight">51</i>&nbsp;    boolean dir2 = collinear(b, c, p) &lt; 0;</b>
+<b class="nc"><i class="no-highlight">52</i>&nbsp;    boolean dir3 = collinear(c, a, p) &lt; 0;</b>
+<i class="no-highlight">53</i>&nbsp;
+<b class="nc"><i class="no-highlight">54</i>&nbsp;    return (dir1 == dir2) &amp;&amp; (dir2 == dir3);</b>
+<i class="no-highlight">55</i>&nbsp;  }
+<i class="no-highlight">56</i>&nbsp;
+<i class="no-highlight">57</i>&nbsp;  // Suppose a != b and the points a &amp; b form an infinite line and we want
+<i class="no-highlight">58</i>&nbsp;  // to determine if c is a point on that line. This method returns 0 if
+<i class="no-highlight">59</i>&nbsp;  // it is on the line, -1 if c is to the right of the line and +1 if it&#39;s
+<i class="no-highlight">60</i>&nbsp;  // to the left from the frame of reference of standing at point a
+<i class="no-highlight">61</i>&nbsp;  // and facing point b.
+<i class="no-highlight">62</i>&nbsp;  private static int collinear(Point2D a, Point2D b, Point2D c) {
+<b class="nc"><i class="no-highlight">63</i>&nbsp;    double ax = a.getX(), ay = a.getY();</b>
+<b class="nc"><i class="no-highlight">64</i>&nbsp;    double bx = b.getX(), by = b.getY();</b>
+<b class="nc"><i class="no-highlight">65</i>&nbsp;    double cx = c.getX(), cy = c.getY();</b>
+<b class="nc"><i class="no-highlight">66</i>&nbsp;    double area = (bx - ax) * (cy - ay) - (by - ay) * (cx - ax);</b>
+<b class="nc"><i class="no-highlight">67</i>&nbsp;    if (abs(area) &lt; EPS) return 0;</b>
+<b class="nc"><i class="no-highlight">68</i>&nbsp;    return (int) signum(area);</b>
+<i class="no-highlight">69</i>&nbsp;  }
+<i class="no-highlight">70</i>&nbsp;
+<i class="no-highlight">71</i>&nbsp;  public static void main(String[] args) {
+<i class="no-highlight">72</i>&nbsp;
+<b class="nc"><i class="no-highlight">73</i>&nbsp;    Point2D a = new Point2D.Double(0, 5);</b>
+<b class="nc"><i class="no-highlight">74</i>&nbsp;    Point2D b = new Point2D.Double(0, 0);</b>
+<b class="nc"><i class="no-highlight">75</i>&nbsp;    Point2D c = new Point2D.Double(5, 0);</b>
+<i class="no-highlight">76</i>&nbsp;
+<b class="nc"><i class="no-highlight">77</i>&nbsp;    for (int i = -2; i &lt; 7; i++) {</b>
+<b class="nc"><i class="no-highlight">78</i>&nbsp;      for (int j = -2; j &lt; 7; j++) {</b>
+<b class="nc"><i class="no-highlight">79</i>&nbsp;        Point2D p = new Point2D.Double(i, j);</b>
+<b class="nc"><i class="no-highlight">80</i>&nbsp;        if (pointInsideTriangle(a, b, c, p)) {</b>
+<b class="nc"><i class="no-highlight">81</i>&nbsp;          System.out.printf(&quot;(%.3f,%.3f) is inside the triangle\n&quot;, p.getX(), p.getY());</b>
+<i class="no-highlight">82</i>&nbsp;        }
+<i class="no-highlight">83</i>&nbsp;      }
+<i class="no-highlight">84</i>&nbsp;    }
+<i class="no-highlight">85</i>&nbsp;
+<b class="nc"><i class="no-highlight">86</i>&nbsp;    System.out.println();</b>
+<i class="no-highlight">87</i>&nbsp;
+<b class="nc"><i class="no-highlight">88</i>&nbsp;    for (int i = -2; i &lt; 7; i++) {</b>
+<b class="nc"><i class="no-highlight">89</i>&nbsp;      for (int j = -2; j &lt; 7; j++) {</b>
+<b class="nc"><i class="no-highlight">90</i>&nbsp;        Point2D p = new Point2D.Double(i, j);</b>
+<b class="nc"><i class="no-highlight">91</i>&nbsp;        if (pointInsideTriangle2(a, b, c, p)) {</b>
+<b class="nc"><i class="no-highlight">92</i>&nbsp;          System.out.printf(&quot;(%.3f,%.3f) is inside the triangle\n&quot;, p.getX(), p.getY());</b>
+<i class="no-highlight">93</i>&nbsp;        }
+<i class="no-highlight">94</i>&nbsp;      }
+<i class="no-highlight">95</i>&nbsp;    }
+<i class="no-highlight">96</i>&nbsp;  }
+<i class="no-highlight">97</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-01 13:32</div>
+</div>
+</body>
+</html>

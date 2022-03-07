@@ -1,0 +1,176 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > LazyRangeAdder</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.other</a>
+</div>
+
+<h1>Coverage Summary for Class: LazyRangeAdder (com.williamfiset.algorithms.other)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">LazyRangeAdder</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (3/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    61,5%
+  </span>
+  <span class="absValue">
+    (16/26)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/**
+<i class="no-highlight">2</i>&nbsp; * The LazyRangerAdder is a handy class for performing addition range updates of constant values on
+<i class="no-highlight">3</i>&nbsp; * an array. This range adder is especially useful for offline algorithms which know all range
+<i class="no-highlight">4</i>&nbsp; * updates ahead of time.
+<i class="no-highlight">5</i>&nbsp; *
+<i class="no-highlight">6</i>&nbsp; * &lt;p&gt;Time complexity to update O(1) but time complexity to finalize all additions is O(n)
+<i class="no-highlight">7</i>&nbsp; *
+<i class="no-highlight">8</i>&nbsp; * @author Atharva Thorve, aaathorve@gmail.com
+<i class="no-highlight">9</i>&nbsp; */
+<i class="no-highlight">10</i>&nbsp;package com.williamfiset.algorithms.other;
+<i class="no-highlight">11</i>&nbsp;
+<i class="no-highlight">12</i>&nbsp;public class LazyRangeAdder {
+<i class="no-highlight">13</i>&nbsp;
+<i class="no-highlight">14</i>&nbsp;  // The number of elements in the input array.
+<i class="no-highlight">15</i>&nbsp;  private int n;
+<i class="no-highlight">16</i>&nbsp;
+<i class="no-highlight">17</i>&nbsp;  // The original input array
+<i class="no-highlight">18</i>&nbsp;  private int[] array;
+<i class="no-highlight">19</i>&nbsp;
+<i class="no-highlight">20</i>&nbsp;  // The difference array with the deltas between values, size n+1
+<i class="no-highlight">21</i>&nbsp;  private int[] differenceArray;
+<i class="no-highlight">22</i>&nbsp;
+<i class="no-highlight">23</i>&nbsp;  // Initialize an instance of a LazyRangeAdder on some input values
+<b class="fc"><i class="no-highlight">24</i>&nbsp;  public LazyRangeAdder(int[] array) {</b>
+<b class="fc"><i class="no-highlight">25</i>&nbsp;    this.array = array;</b>
+<b class="fc"><i class="no-highlight">26</i>&nbsp;    this.n = array.length;</b>
+<i class="no-highlight">27</i>&nbsp;
+<b class="fc"><i class="no-highlight">28</i>&nbsp;    differenceArray = new int[n + 1];</b>
+<b class="fc"><i class="no-highlight">29</i>&nbsp;    differenceArray[0] = array[0];</b>
+<b class="fc"><i class="no-highlight">30</i>&nbsp;    for (int i = 1; i &lt; n; i++) {</b>
+<b class="fc"><i class="no-highlight">31</i>&nbsp;      differenceArray[i] = array[i] - array[i - 1];</b>
+<i class="no-highlight">32</i>&nbsp;    }
+<b class="fc"><i class="no-highlight">33</i>&nbsp;  }</b>
+<i class="no-highlight">34</i>&nbsp;
+<i class="no-highlight">35</i>&nbsp;  // Add `x` to the range [l, r] inclusive
+<i class="no-highlight">36</i>&nbsp;  public void add(int l, int r, int x) {
+<b class="fc"><i class="no-highlight">37</i>&nbsp;    differenceArray[l] += x;</b>
+<b class="fc"><i class="no-highlight">38</i>&nbsp;    differenceArray[r + 1] -= x;</b>
+<b class="fc"><i class="no-highlight">39</i>&nbsp;  }</b>
+<i class="no-highlight">40</i>&nbsp;
+<i class="no-highlight">41</i>&nbsp;  // IMPORTANT: Make certain to call this method once all the additions
+<i class="no-highlight">42</i>&nbsp;  // have been made with add(l, r, x)
+<i class="no-highlight">43</i>&nbsp;  public void done() {
+<b class="fc"><i class="no-highlight">44</i>&nbsp;    for (int i = 0; i &lt; n; i++) {</b>
+<b class="fc"><i class="no-highlight">45</i>&nbsp;      if (i == 0) {</b>
+<b class="fc"><i class="no-highlight">46</i>&nbsp;        array[i] = differenceArray[i];</b>
+<i class="no-highlight">47</i>&nbsp;      } else {
+<b class="fc"><i class="no-highlight">48</i>&nbsp;        array[i] = differenceArray[i] + array[i - 1];</b>
+<i class="no-highlight">49</i>&nbsp;      }
+<i class="no-highlight">50</i>&nbsp;    }
+<b class="fc"><i class="no-highlight">51</i>&nbsp;  }</b>
+<i class="no-highlight">52</i>&nbsp;
+<i class="no-highlight">53</i>&nbsp;  public static void main(String[] args) {
+<i class="no-highlight">54</i>&nbsp;    // Array to be updated
+<b class="nc"><i class="no-highlight">55</i>&nbsp;    int[] array = {10, 4, 6, 13, 8, 15, 17, 22};</b>
+<b class="nc"><i class="no-highlight">56</i>&nbsp;    LazyRangeAdder lazyRangeAdder = new LazyRangeAdder(array);</b>
+<i class="no-highlight">57</i>&nbsp;
+<i class="no-highlight">58</i>&nbsp;    // After below add(l, r, x), the
+<i class="no-highlight">59</i>&nbsp;    // elements should become [10, 14, 16, 23, 18, 15, 17, 22]
+<b class="nc"><i class="no-highlight">60</i>&nbsp;    lazyRangeAdder.add(1, 4, 10);</b>
+<b class="nc"><i class="no-highlight">61</i>&nbsp;    lazyRangeAdder.done();</b>
+<b class="nc"><i class="no-highlight">62</i>&nbsp;    System.out.println(java.util.Arrays.toString(array));</b>
+<i class="no-highlight">63</i>&nbsp;
+<i class="no-highlight">64</i>&nbsp;    // After below add(l, r, x), the
+<i class="no-highlight">65</i>&nbsp;    // elements should become [22, 26, 28, 30, 25, 22, 24, 34]
+<b class="nc"><i class="no-highlight">66</i>&nbsp;    lazyRangeAdder.add(3, 6, -5);</b>
+<b class="nc"><i class="no-highlight">67</i>&nbsp;    lazyRangeAdder.add(0, 7, 12);</b>
+<b class="nc"><i class="no-highlight">68</i>&nbsp;    lazyRangeAdder.done();</b>
+<b class="nc"><i class="no-highlight">69</i>&nbsp;    System.out.println(java.util.Arrays.toString(array));</b>
+<b class="nc"><i class="no-highlight">70</i>&nbsp;  }</b>
+<i class="no-highlight">71</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-01 13:32</div>
+</div>
+</body>
+</html>

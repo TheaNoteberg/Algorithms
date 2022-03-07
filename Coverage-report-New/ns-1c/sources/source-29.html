@@ -1,0 +1,207 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > TwoSatSolverAdjacencyList</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.graphtheory</a>
+</div>
+
+<h1>Coverage Summary for Class: TwoSatSolverAdjacencyList (com.williamfiset.algorithms.graphtheory)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TwoSatSolverAdjacencyList</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    57,1%
+  </span>
+  <span class="absValue">
+    (4/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    67,9%
+  </span>
+  <span class="absValue">
+    (19/28)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/** NOTE: This file is still in development! */
+<i class="no-highlight">2</i>&nbsp;package com.williamfiset.algorithms.graphtheory;
+<i class="no-highlight">3</i>&nbsp;
+<i class="no-highlight">4</i>&nbsp;import java.util.*;
+<i class="no-highlight">5</i>&nbsp;
+<i class="no-highlight">6</i>&nbsp;public class TwoSatSolverAdjacencyList {
+<i class="no-highlight">7</i>&nbsp;
+<i class="no-highlight">8</i>&nbsp;  private int n;
+<i class="no-highlight">9</i>&nbsp;  private List&lt;List&lt;Integer&gt;&gt; graph;
+<i class="no-highlight">10</i>&nbsp;
+<i class="no-highlight">11</i>&nbsp;  private boolean solved;
+<i class="no-highlight">12</i>&nbsp;  private boolean isSatisfiable;
+<i class="no-highlight">13</i>&nbsp;  private TarjanSccSolverAdjacencyList sccSolver;
+<i class="no-highlight">14</i>&nbsp;
+<b class="fc"><i class="no-highlight">15</i>&nbsp;  public TwoSatSolverAdjacencyList(List&lt;List&lt;Integer&gt;&gt; graph) {</b>
+<b class="fc"><i class="no-highlight">16</i>&nbsp;    n = graph.size() / 2;</b>
+<b class="fc"><i class="no-highlight">17</i>&nbsp;    sccSolver = new TarjanSccSolverAdjacencyList(graph);</b>
+<b class="fc"><i class="no-highlight">18</i>&nbsp;  }</b>
+<i class="no-highlight">19</i>&nbsp;
+<i class="no-highlight">20</i>&nbsp;  // Returns true/false depending on whether this 2SAT problem is satisfiable
+<i class="no-highlight">21</i>&nbsp;  public boolean isSatisfiable() {
+<b class="fc"><i class="no-highlight">22</i>&nbsp;    if (!solved) solve();</b>
+<b class="fc"><i class="no-highlight">23</i>&nbsp;    return isSatisfiable;</b>
+<i class="no-highlight">24</i>&nbsp;  }
+<i class="no-highlight">25</i>&nbsp;
+<i class="no-highlight">26</i>&nbsp;  public void solve() {
+<b class="fc"><i class="no-highlight">27</i>&nbsp;    if (solved) return;</b>
+<i class="no-highlight">28</i>&nbsp;
+<b class="fc"><i class="no-highlight">29</i>&nbsp;    int[] sccs = sccSolver.getSccs();</b>
+<i class="no-highlight">30</i>&nbsp;    // System.out.println(Arrays.toString(sccs));
+<i class="no-highlight">31</i>&nbsp;
+<i class="no-highlight">32</i>&nbsp;    // Assume that this 2SAT problem is satisfiable and try to
+<i class="no-highlight">33</i>&nbsp;    // disprove it by looking at which SCCs p and ~p belong to.
+<b class="fc"><i class="no-highlight">34</i>&nbsp;    isSatisfiable = true;</b>
+<b class="fc"><i class="no-highlight">35</i>&nbsp;    for (int i = 0; i &lt; sccs.length; i += 2) {</b>
+<b class="fc"><i class="no-highlight">36</i>&nbsp;      if (sccs[i] == sccs[i ^ 1]) {</b>
+<b class="fc"><i class="no-highlight">37</i>&nbsp;        isSatisfiable = false;</b>
+<b class="fc"><i class="no-highlight">38</i>&nbsp;        break;</b>
+<i class="no-highlight">39</i>&nbsp;      }
+<i class="no-highlight">40</i>&nbsp;    }
+<i class="no-highlight">41</i>&nbsp;
+<i class="no-highlight">42</i>&nbsp;    // Find a truth assignment.
+<b class="fc"><i class="no-highlight">43</i>&nbsp;    if (isSatisfiable) {</b>
+<i class="no-highlight">44</i>&nbsp;      // get topsort ordering
+<i class="no-highlight">45</i>&nbsp;    }
+<i class="no-highlight">46</i>&nbsp;
+<b class="fc"><i class="no-highlight">47</i>&nbsp;    solved = true;</b>
+<b class="fc"><i class="no-highlight">48</i>&nbsp;  }</b>
+<i class="no-highlight">49</i>&nbsp;
+<i class="no-highlight">50</i>&nbsp;  // Creates an implication graph.
+<i class="no-highlight">51</i>&nbsp;  //
+<i class="no-highlight">52</i>&nbsp;  // NOTE: In the implication graph node i should be stored in position 2i
+<i class="no-highlight">53</i>&nbsp;  // and its negation in position 2i + 1. This is done so that we can quickly
+<i class="no-highlight">54</i>&nbsp;  // access the negation of a node by doing an xor operation. For example:
+<i class="no-highlight">55</i>&nbsp;  // Node 4&#39;s negation is 5 since 4 ⊕ 1 = 5 and 5&#39;s negation is 4 since 5 ⊕ 1 = 4.
+<i class="no-highlight">56</i>&nbsp;  public static List&lt;List&lt;Integer&gt;&gt; createImplicationGraph(int n) {
+<b class="nc"><i class="no-highlight">57</i>&nbsp;    List&lt;List&lt;Integer&gt;&gt; graph = new ArrayList&lt;&gt;(2 * n);</b>
+<b class="nc"><i class="no-highlight">58</i>&nbsp;    for (int i = 0; i &lt; 2 * n; i++) graph.add(new ArrayList&lt;&gt;());</b>
+<b class="nc"><i class="no-highlight">59</i>&nbsp;    return graph;</b>
+<i class="no-highlight">60</i>&nbsp;  }
+<i class="no-highlight">61</i>&nbsp;
+<i class="no-highlight">62</i>&nbsp;  // Make sure 0 &lt;= p, q &lt; 2n
+<i class="no-highlight">63</i>&nbsp;  public static void addXorClause(List&lt;List&lt;Integer&gt;&gt; graph, int p, int q) {
+<i class="no-highlight">64</i>&nbsp;    // xor(p, q) = (p or q) and (~p or ~q)
+<b class="nc"><i class="no-highlight">65</i>&nbsp;    addOrClause(graph, p, q);</b>
+<b class="nc"><i class="no-highlight">66</i>&nbsp;    addOrClause(graph, p ^ 1, q ^ 1);</b>
+<b class="nc"><i class="no-highlight">67</i>&nbsp;  }</b>
+<i class="no-highlight">68</i>&nbsp;
+<i class="no-highlight">69</i>&nbsp;  // Add p or q to the graph where p, q come from the CNF
+<i class="no-highlight">70</i>&nbsp;  // Make sure 0 &lt;= p, q &lt; 2n
+<i class="no-highlight">71</i>&nbsp;  public static void addOrClause(List&lt;List&lt;Integer&gt;&gt; graph, int p, int q) {
+<i class="no-highlight">72</i>&nbsp;    // Add the edges ~p -&gt; q and ~q -&gt; p to implication graph.
+<i class="no-highlight">73</i>&nbsp;    // System.out.printf(&quot;p = %d, ~p = %d, q = %d, ~q = %d\n&quot;, p, p ^ 1, q, q ^ 1);
+<i class="no-highlight">74</i>&nbsp;    // System.out.printf(&quot;%d -&gt; %d\n&quot;, p^1, q);
+<i class="no-highlight">75</i>&nbsp;    // System.out.printf(&quot;%d -&gt; %d\n&quot;, q^1, p);
+<b class="fc"><i class="no-highlight">76</i>&nbsp;    graph.get(p ^ 1).add(q);</b>
+<b class="fc"><i class="no-highlight">77</i>&nbsp;    graph.get(q ^ 1).add(p);</b>
+<b class="fc"><i class="no-highlight">78</i>&nbsp;  }</b>
+<i class="no-highlight">79</i>&nbsp;
+<i class="no-highlight">80</i>&nbsp;  public static void main(String[] args) {
+<i class="no-highlight">81</i>&nbsp;
+<b class="nc"><i class="no-highlight">82</i>&nbsp;    int n = 2;</b>
+<b class="nc"><i class="no-highlight">83</i>&nbsp;    List&lt;List&lt;Integer&gt;&gt; graph = createImplicationGraph(n);</b>
+<i class="no-highlight">84</i>&nbsp;
+<i class="no-highlight">85</i>&nbsp;    // addOrClause(graph, n, 0, negate(1, n));
+<i class="no-highlight">86</i>&nbsp;    // addOrClause(graph, n, negate(0, n), 2);
+<i class="no-highlight">87</i>&nbsp;    // addOrClause(graph, n, negate(1, n), negate(3, n));
+<i class="no-highlight">88</i>&nbsp;    // addOrClause(graph, n, 3, 0);
+<i class="no-highlight">89</i>&nbsp;    // addOrClause(graph, n, negate(2, n), 4);
+<i class="no-highlight">90</i>&nbsp;    // addOrClause(graph, n, negate(1, n), 4);
+<i class="no-highlight">91</i>&nbsp;
+<i class="no-highlight">92</i>&nbsp;    // addOrClause(graph, n, 0, 1^1);
+<i class="no-highlight">93</i>&nbsp;    // addOrClause(graph, n, 0, 1);
+<i class="no-highlight">94</i>&nbsp;    // addOrClause(graph, n, 0^1, 1);
+<i class="no-highlight">95</i>&nbsp;    // System.out.println(graph);
+<i class="no-highlight">96</i>&nbsp;
+<i class="no-highlight">97</i>&nbsp;    // TwoSatSolverAdjacencyList solver = new TwoSatSolverAdjacencyList(graph);
+<i class="no-highlight">98</i>&nbsp;    // int[] sccs = solver.sccSolver.getSccs();
+<i class="no-highlight">99</i>&nbsp;    // System.out.println(Arrays.toString(sccs));
+<i class="no-highlight">100</i>&nbsp;
+<b class="nc"><i class="no-highlight">101</i>&nbsp;  }</b>
+<i class="no-highlight">102</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-07 12:04</div>
+</div>
+</body>
+</html>

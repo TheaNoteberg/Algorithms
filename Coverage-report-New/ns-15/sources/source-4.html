@@ -1,0 +1,207 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > SuffixArraySlow</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.datastructures.suffixarray</a>
+</div>
+
+<h1>Coverage Summary for Class: SuffixArraySlow (com.williamfiset.algorithms.datastructures.suffixarray)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SuffixArraySlow</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (2/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    70,6%
+  </span>
+  <span class="absValue">
+    (12/17)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">SuffixArraySlow$Suffix</td>
+<td class="coverageStat">
+  <span class="percent">
+    66,7%
+  </span>
+  <span class="absValue">
+    (2/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    91,7%
+  </span>
+  <span class="absValue">
+    (11/12)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    57,1%
+  </span>
+  <span class="absValue">
+    (4/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    79,3%
+  </span>
+  <span class="absValue">
+    (23/29)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/**
+<i class="no-highlight">2</i>&nbsp; * Naive suffix array implementation.
+<i class="no-highlight">3</i>&nbsp; *
+<i class="no-highlight">4</i>&nbsp; * &lt;p&gt;Time Complexity: O(n^2log(n))
+<i class="no-highlight">5</i>&nbsp; *
+<i class="no-highlight">6</i>&nbsp; * @author William Fiset, william.alexandre.fiset@gmail.com
+<i class="no-highlight">7</i>&nbsp; */
+<i class="no-highlight">8</i>&nbsp;package com.williamfiset.algorithms.datastructures.suffixarray;
+<i class="no-highlight">9</i>&nbsp;
+<i class="no-highlight">10</i>&nbsp;public class SuffixArraySlow extends SuffixArray {
+<i class="no-highlight">11</i>&nbsp;
+<i class="no-highlight">12</i>&nbsp;  private static class Suffix implements Comparable&lt;Suffix&gt; {
+<i class="no-highlight">13</i>&nbsp;    // Starting position of suffix in text
+<i class="no-highlight">14</i>&nbsp;    final int index, len;
+<i class="no-highlight">15</i>&nbsp;    final int[] text;
+<i class="no-highlight">16</i>&nbsp;
+<b class="fc"><i class="no-highlight">17</i>&nbsp;    public Suffix(int[] text, int index) {</b>
+<b class="fc"><i class="no-highlight">18</i>&nbsp;      this.len = text.length - index;</b>
+<b class="fc"><i class="no-highlight">19</i>&nbsp;      this.index = index;</b>
+<b class="fc"><i class="no-highlight">20</i>&nbsp;      this.text = text;</b>
+<b class="fc"><i class="no-highlight">21</i>&nbsp;    }</b>
+<i class="no-highlight">22</i>&nbsp;
+<i class="no-highlight">23</i>&nbsp;    // Compare the two suffixes inspired by Robert Sedgewick and Kevin Wayne
+<i class="no-highlight">24</i>&nbsp;    @Override
+<i class="no-highlight">25</i>&nbsp;    public int compareTo(Suffix other) {
+<b class="fc"><i class="no-highlight">26</i>&nbsp;      if (this == other) return 0;</b>
+<b class="fc"><i class="no-highlight">27</i>&nbsp;      int min_len = Math.min(len, other.len);</b>
+<b class="fc"><i class="no-highlight">28</i>&nbsp;      for (int i = 0; i &lt; min_len; i++) {</b>
+<b class="fc"><i class="no-highlight">29</i>&nbsp;        if (text[index + i] &lt; other.text[other.index + i]) return -1;</b>
+<b class="fc"><i class="no-highlight">30</i>&nbsp;        if (text[index + i] &gt; other.text[other.index + i]) return +1;</b>
+<i class="no-highlight">31</i>&nbsp;      }
+<b class="fc"><i class="no-highlight">32</i>&nbsp;      return len - other.len;</b>
+<i class="no-highlight">33</i>&nbsp;    }
+<i class="no-highlight">34</i>&nbsp;
+<i class="no-highlight">35</i>&nbsp;    @Override
+<i class="no-highlight">36</i>&nbsp;    public String toString() {
+<b class="nc"><i class="no-highlight">37</i>&nbsp;      return new String(text, index, len);</b>
+<i class="no-highlight">38</i>&nbsp;    }
+<i class="no-highlight">39</i>&nbsp;  }
+<i class="no-highlight">40</i>&nbsp;
+<i class="no-highlight">41</i>&nbsp;  // Contains all the suffixes of the SuffixArray
+<i class="no-highlight">42</i>&nbsp;  Suffix[] suffixes;
+<i class="no-highlight">43</i>&nbsp;
+<i class="no-highlight">44</i>&nbsp;  public SuffixArraySlow(String text) {
+<b class="fc"><i class="no-highlight">45</i>&nbsp;    super(toIntArray(text));</b>
+<b class="fc"><i class="no-highlight">46</i>&nbsp;  }</b>
+<i class="no-highlight">47</i>&nbsp;
+<i class="no-highlight">48</i>&nbsp;  public SuffixArraySlow(int[] text) {
+<b class="nc"><i class="no-highlight">49</i>&nbsp;    super(text);</b>
+<b class="nc"><i class="no-highlight">50</i>&nbsp;  }</b>
+<i class="no-highlight">51</i>&nbsp;
+<i class="no-highlight">52</i>&nbsp;  // Suffix array construction. This actually takes O(n^2log(n)) time since sorting takes on
+<i class="no-highlight">53</i>&nbsp;  // average O(nlog(n)) and each String comparison takes O(n).
+<i class="no-highlight">54</i>&nbsp;  @Override
+<i class="no-highlight">55</i>&nbsp;  protected void construct() {
+<b class="fc"><i class="no-highlight">56</i>&nbsp;    sa = new int[N];</b>
+<b class="fc"><i class="no-highlight">57</i>&nbsp;    suffixes = new Suffix[N];</b>
+<i class="no-highlight">58</i>&nbsp;
+<b class="fc"><i class="no-highlight">59</i>&nbsp;    for (int i = 0; i &lt; N; i++) suffixes[i] = new Suffix(T, i);</b>
+<i class="no-highlight">60</i>&nbsp;
+<b class="fc"><i class="no-highlight">61</i>&nbsp;    java.util.Arrays.sort(suffixes);</b>
+<i class="no-highlight">62</i>&nbsp;
+<b class="fc"><i class="no-highlight">63</i>&nbsp;    for (int i = 0; i &lt; N; i++) {</b>
+<b class="fc"><i class="no-highlight">64</i>&nbsp;      Suffix suffix = suffixes[i];</b>
+<b class="fc"><i class="no-highlight">65</i>&nbsp;      sa[i] = suffix.index;</b>
+<b class="fc"><i class="no-highlight">66</i>&nbsp;      suffixes[i] = null;</b>
+<i class="no-highlight">67</i>&nbsp;    }
+<i class="no-highlight">68</i>&nbsp;
+<b class="fc"><i class="no-highlight">69</i>&nbsp;    suffixes = null;</b>
+<b class="fc"><i class="no-highlight">70</i>&nbsp;  }</b>
+<i class="no-highlight">71</i>&nbsp;
+<i class="no-highlight">72</i>&nbsp;  public static void main(String[] args) {
+<b class="nc"><i class="no-highlight">73</i>&nbsp;    SuffixArraySlow sa = new SuffixArraySlow(&quot;ABBABAABAA&quot;);</b>
+<b class="nc"><i class="no-highlight">74</i>&nbsp;    System.out.println(sa);</b>
+<b class="nc"><i class="no-highlight">75</i>&nbsp;  }</b>
+<i class="no-highlight">76</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-07 12:04</div>
+</div>
+</body>
+</html>

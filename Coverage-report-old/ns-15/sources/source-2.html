@@ -1,0 +1,173 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > SuffixArrayFast</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.datastructures.suffixarray</a>
+</div>
+
+<h1>Coverage Summary for Class: SuffixArrayFast (com.williamfiset.algorithms.datastructures.suffixarray)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SuffixArrayFast</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    60%
+  </span>
+  <span class="absValue">
+    (3/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    85,3%
+  </span>
+  <span class="absValue">
+    (29/34)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/**
+<i class="no-highlight">2</i>&nbsp; * Suffix array construction implementation.
+<i class="no-highlight">3</i>&nbsp; *
+<i class="no-highlight">4</i>&nbsp; * &lt;p&gt;Time Complexity: O(nlog(n))
+<i class="no-highlight">5</i>&nbsp; *
+<i class="no-highlight">6</i>&nbsp; * @author William Fiset, william.alexandre.fiset@gmail.com
+<i class="no-highlight">7</i>&nbsp; */
+<i class="no-highlight">8</i>&nbsp;package com.williamfiset.algorithms.datastructures.suffixarray;
+<i class="no-highlight">9</i>&nbsp;
+<i class="no-highlight">10</i>&nbsp;public class SuffixArrayFast extends SuffixArray {
+<i class="no-highlight">11</i>&nbsp;
+<i class="no-highlight">12</i>&nbsp;  private static final int DEFAULT_ALPHABET_SIZE = 256;
+<i class="no-highlight">13</i>&nbsp;
+<i class="no-highlight">14</i>&nbsp;  int alphabetSize;
+<i class="no-highlight">15</i>&nbsp;  int[] sa2, rank, tmp, c;
+<i class="no-highlight">16</i>&nbsp;
+<i class="no-highlight">17</i>&nbsp;  public SuffixArrayFast(String text) {
+<b class="fc"><i class="no-highlight">18</i>&nbsp;    this(toIntArray(text), DEFAULT_ALPHABET_SIZE);</b>
+<b class="fc"><i class="no-highlight">19</i>&nbsp;  }</b>
+<i class="no-highlight">20</i>&nbsp;
+<i class="no-highlight">21</i>&nbsp;  public SuffixArrayFast(int[] text) {
+<b class="nc"><i class="no-highlight">22</i>&nbsp;    this(text, DEFAULT_ALPHABET_SIZE);</b>
+<b class="nc"><i class="no-highlight">23</i>&nbsp;  }</b>
+<i class="no-highlight">24</i>&nbsp;
+<i class="no-highlight">25</i>&nbsp;  // Designated constructor
+<i class="no-highlight">26</i>&nbsp;  public SuffixArrayFast(int[] text, int alphabetSize) {
+<b class="fc"><i class="no-highlight">27</i>&nbsp;    super(text);</b>
+<b class="fc"><i class="no-highlight">28</i>&nbsp;    this.alphabetSize = alphabetSize;</b>
+<b class="fc"><i class="no-highlight">29</i>&nbsp;  }</b>
+<i class="no-highlight">30</i>&nbsp;
+<i class="no-highlight">31</i>&nbsp;  @Override
+<i class="no-highlight">32</i>&nbsp;  protected void construct() {
+<b class="fc"><i class="no-highlight">33</i>&nbsp;    sa = new int[N];</b>
+<b class="fc"><i class="no-highlight">34</i>&nbsp;    sa2 = new int[N];</b>
+<b class="fc"><i class="no-highlight">35</i>&nbsp;    rank = new int[N];</b>
+<b class="fc"><i class="no-highlight">36</i>&nbsp;    c = new int[Math.max(alphabetSize, N)];</b>
+<i class="no-highlight">37</i>&nbsp;
+<i class="no-highlight">38</i>&nbsp;    int i, p, r;
+<b class="fc"><i class="no-highlight">39</i>&nbsp;    for (i = 0; i &lt; N; ++i) c[rank[i] = T[i]]++;</b>
+<b class="fc"><i class="no-highlight">40</i>&nbsp;    for (i = 1; i &lt; alphabetSize; ++i) c[i] += c[i - 1];</b>
+<b class="fc"><i class="no-highlight">41</i>&nbsp;    for (i = N - 1; i &gt;= 0; --i) sa[--c[T[i]]] = i;</b>
+<b class="fc"><i class="no-highlight">42</i>&nbsp;    for (p = 1; p &lt; N; p &lt;&lt;= 1) {</b>
+<b class="fc"><i class="no-highlight">43</i>&nbsp;      for (r = 0, i = N - p; i &lt; N; ++i) sa2[r++] = i;</b>
+<b class="fc"><i class="no-highlight">44</i>&nbsp;      for (i = 0; i &lt; N; ++i) if (sa[i] &gt;= p) sa2[r++] = sa[i] - p;</b>
+<b class="fc"><i class="no-highlight">45</i>&nbsp;      java.util.Arrays.fill(c, 0, alphabetSize, 0);</b>
+<b class="fc"><i class="no-highlight">46</i>&nbsp;      for (i = 0; i &lt; N; ++i) c[rank[i]]++;</b>
+<b class="fc"><i class="no-highlight">47</i>&nbsp;      for (i = 1; i &lt; alphabetSize; ++i) c[i] += c[i - 1];</b>
+<b class="fc"><i class="no-highlight">48</i>&nbsp;      for (i = N - 1; i &gt;= 0; --i) sa[--c[rank[sa2[i]]]] = sa2[i];</b>
+<b class="fc"><i class="no-highlight">49</i>&nbsp;      for (sa2[sa[0]] = r = 0, i = 1; i &lt; N; ++i) {</b>
+<b class="fc"><i class="no-highlight">50</i>&nbsp;        if (!(rank[sa[i - 1]] == rank[sa[i]]</b>
+<i class="no-highlight">51</i>&nbsp;            &amp;&amp; sa[i - 1] + p &lt; N
+<i class="no-highlight">52</i>&nbsp;            &amp;&amp; sa[i] + p &lt; N
+<b class="fc"><i class="no-highlight">53</i>&nbsp;            &amp;&amp; rank[sa[i - 1] + p] == rank[sa[i] + p])) r++;</b>
+<b class="fc"><i class="no-highlight">54</i>&nbsp;        sa2[sa[i]] = r;</b>
+<i class="no-highlight">55</i>&nbsp;      }
+<b class="fc"><i class="no-highlight">56</i>&nbsp;      tmp = rank;</b>
+<b class="fc"><i class="no-highlight">57</i>&nbsp;      rank = sa2;</b>
+<b class="fc"><i class="no-highlight">58</i>&nbsp;      sa2 = tmp;</b>
+<b class="fc"><i class="no-highlight">59</i>&nbsp;      if (r == N - 1) break;</b>
+<b class="fc"><i class="no-highlight">60</i>&nbsp;      alphabetSize = r + 1;</b>
+<i class="no-highlight">61</i>&nbsp;    }
+<b class="fc"><i class="no-highlight">62</i>&nbsp;  }</b>
+<i class="no-highlight">63</i>&nbsp;
+<i class="no-highlight">64</i>&nbsp;  public static void main(String[] args) {
+<b class="nc"><i class="no-highlight">65</i>&nbsp;    SuffixArrayFast sa = new SuffixArrayFast(&quot;ABBABAABAA&quot;);</b>
+<b class="nc"><i class="no-highlight">66</i>&nbsp;    System.out.println(sa);</b>
+<b class="nc"><i class="no-highlight">67</i>&nbsp;  }</b>
+<i class="no-highlight">68</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-01 13:32</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,244 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Node</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.datastructures.segmenttree</a>
+</div>
+
+<h1>Coverage Summary for Class: Node (com.williamfiset.algorithms.datastructures.segmenttree)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Node</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    87,5%
+  </span>
+  <span class="absValue">
+    (7/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    78,4%
+  </span>
+  <span class="absValue">
+    (40/51)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/**
+<i class="no-highlight">2</i>&nbsp; * Segment Trees are an extremely useful data structure when dealing with ranges or intervals. They
+<i class="no-highlight">3</i>&nbsp; * take O(n) time and space to construct, but they can do range updates or queries in O(log(n))
+<i class="no-highlight">4</i>&nbsp; * time. This data structure is quite flexible; although the code below supports minimum and sum
+<i class="no-highlight">5</i>&nbsp; * queries, these could be modified to perform other types of queries. This implementation uses lazy
+<i class="no-highlight">6</i>&nbsp; * propagation (which allows for O(log(n)) range updates instead of O(n)). It should also be noted
+<i class="no-highlight">7</i>&nbsp; * that this implementation could easily be modified to support coordinate compression (you should
+<i class="no-highlight">8</i>&nbsp; * only have to change a few lines in the constructor).
+<i class="no-highlight">9</i>&nbsp; *
+<i class="no-highlight">10</i>&nbsp; * @author Micah Stairs
+<i class="no-highlight">11</i>&nbsp; */
+<i class="no-highlight">12</i>&nbsp;package com.williamfiset.algorithms.datastructures.segmenttree;
+<i class="no-highlight">13</i>&nbsp;
+<i class="no-highlight">14</i>&nbsp;public class Node {
+<i class="no-highlight">15</i>&nbsp;
+<i class="no-highlight">16</i>&nbsp;  static final int INF = Integer.MAX_VALUE;
+<i class="no-highlight">17</i>&nbsp;
+<i class="no-highlight">18</i>&nbsp;  Node left, right;
+<b class="fc"><i class="no-highlight">19</i>&nbsp;  int minPos, maxPos, min = 0, sum = 0, lazy = 0;</b>
+<i class="no-highlight">20</i>&nbsp;
+<b class="fc"><i class="no-highlight">21</i>&nbsp;  public Node(int[] values) {</b>
+<b class="fc"><i class="no-highlight">22</i>&nbsp;    if (values == null) throw new IllegalArgumentException(&quot;Null input to segment tree.&quot;);</b>
+<b class="fc"><i class="no-highlight">23</i>&nbsp;    buildTree(0, values.length);</b>
+<b class="fc"><i class="no-highlight">24</i>&nbsp;    for (int i = 0; i &lt; values.length; i++) {</b>
+<b class="fc"><i class="no-highlight">25</i>&nbsp;      update(i, i + 1, values[i]);</b>
+<i class="no-highlight">26</i>&nbsp;    }
+<b class="fc"><i class="no-highlight">27</i>&nbsp;  }</b>
+<i class="no-highlight">28</i>&nbsp;
+<b class="fc"><i class="no-highlight">29</i>&nbsp;  public Node(int sz) {</b>
+<b class="fc"><i class="no-highlight">30</i>&nbsp;    buildTree(0, sz);</b>
+<b class="nc"><i class="no-highlight">31</i>&nbsp;  }</b>
+<i class="no-highlight">32</i>&nbsp;
+<b class="fc"><i class="no-highlight">33</i>&nbsp;  private Node(int l, int r) {</b>
+<b class="fc"><i class="no-highlight">34</i>&nbsp;    buildTree(l, r);</b>
+<b class="fc"><i class="no-highlight">35</i>&nbsp;  }</b>
+<i class="no-highlight">36</i>&nbsp;
+<i class="no-highlight">37</i>&nbsp;  // Recursive method that builds the segment tree
+<i class="no-highlight">38</i>&nbsp;  private void buildTree(int l, int r) {
+<i class="no-highlight">39</i>&nbsp;
+<b class="fc"><i class="no-highlight">40</i>&nbsp;    if (l &lt; 0 || r &lt; 0 || r &lt; l)</b>
+<b class="fc"><i class="no-highlight">41</i>&nbsp;      throw new IllegalArgumentException(&quot;Illegal range: (&quot; + l + &quot;,&quot; + r + &quot;)&quot;);</b>
+<i class="no-highlight">42</i>&nbsp;
+<b class="fc"><i class="no-highlight">43</i>&nbsp;    minPos = l;</b>
+<b class="fc"><i class="no-highlight">44</i>&nbsp;    maxPos = r;</b>
+<i class="no-highlight">45</i>&nbsp;
+<i class="no-highlight">46</i>&nbsp;    // Reached leaf
+<b class="fc"><i class="no-highlight">47</i>&nbsp;    if (l == r - 1) {</b>
+<b class="fc"><i class="no-highlight">48</i>&nbsp;      left = right = null;</b>
+<i class="no-highlight">49</i>&nbsp;
+<i class="no-highlight">50</i>&nbsp;      // Add children
+<i class="no-highlight">51</i>&nbsp;    } else {
+<b class="fc"><i class="no-highlight">52</i>&nbsp;      int mid = (l + r) / 2;</b>
+<b class="fc"><i class="no-highlight">53</i>&nbsp;      left = new Node(l, mid);</b>
+<b class="fc"><i class="no-highlight">54</i>&nbsp;      right = new Node(mid, r);</b>
+<i class="no-highlight">55</i>&nbsp;    }
+<b class="fc"><i class="no-highlight">56</i>&nbsp;  }</b>
+<i class="no-highlight">57</i>&nbsp;
+<i class="no-highlight">58</i>&nbsp;  // Adjust all values in the interval [l, r) by a particular amount
+<i class="no-highlight">59</i>&nbsp;  public void update(int l, int r, int change) {
+<i class="no-highlight">60</i>&nbsp;
+<i class="no-highlight">61</i>&nbsp;    // Do lazy updates to children
+<b class="fc"><i class="no-highlight">62</i>&nbsp;    propagate();</b>
+<i class="no-highlight">63</i>&nbsp;
+<i class="no-highlight">64</i>&nbsp;    // Node&#39;s range fits inside query range
+<b class="fc"><i class="no-highlight">65</i>&nbsp;    if (l &lt;= minPos &amp;&amp; maxPos &lt;= r) {</b>
+<i class="no-highlight">66</i>&nbsp;
+<b class="fc"><i class="no-highlight">67</i>&nbsp;      sum += change * (maxPos - minPos);</b>
+<b class="fc"><i class="no-highlight">68</i>&nbsp;      min += change;</b>
+<i class="no-highlight">69</i>&nbsp;
+<i class="no-highlight">70</i>&nbsp;      // Lazily propagate update to children
+<b class="fc"><i class="no-highlight">71</i>&nbsp;      if (left != null) left.lazy += change;</b>
+<b class="fc"><i class="no-highlight">72</i>&nbsp;      if (right != null) right.lazy += change;</b>
+<i class="no-highlight">73</i>&nbsp;
+<i class="no-highlight">74</i>&nbsp;      // Ranges do not overlap
+<b class="fc"><i class="no-highlight">75</i>&nbsp;    } else if (r &lt;= minPos || l &gt;= maxPos) {</b>
+<i class="no-highlight">76</i>&nbsp;
+<i class="no-highlight">77</i>&nbsp;      // Do nothing
+<i class="no-highlight">78</i>&nbsp;
+<i class="no-highlight">79</i>&nbsp;      // Ranges partially overlap
+<i class="no-highlight">80</i>&nbsp;    } else {
+<i class="no-highlight">81</i>&nbsp;
+<b class="fc"><i class="no-highlight">82</i>&nbsp;      if (left != null) left.update(l, r, change);</b>
+<b class="fc"><i class="no-highlight">83</i>&nbsp;      if (right != null) right.update(l, r, change);</b>
+<b class="fc"><i class="no-highlight">84</i>&nbsp;      sum = (left == null ? 0 : left.sum) + (right == null ? 0 : right.sum);</b>
+<b class="fc"><i class="no-highlight">85</i>&nbsp;      min = Math.min((left == null ? INF : left.min), (right == null ? INF : right.min));</b>
+<i class="no-highlight">86</i>&nbsp;    }
+<b class="fc"><i class="no-highlight">87</i>&nbsp;  }</b>
+<i class="no-highlight">88</i>&nbsp;
+<i class="no-highlight">89</i>&nbsp;  // Get the sum in the interval [l, r)
+<i class="no-highlight">90</i>&nbsp;  public int sum(int l, int r) {
+<i class="no-highlight">91</i>&nbsp;
+<i class="no-highlight">92</i>&nbsp;    // Do lazy updates to children
+<b class="fc"><i class="no-highlight">93</i>&nbsp;    propagate();</b>
+<i class="no-highlight">94</i>&nbsp;
+<i class="no-highlight">95</i>&nbsp;    // Node&#39;s range fits inside query range
+<b class="fc"><i class="no-highlight">96</i>&nbsp;    if (l &lt;= minPos &amp;&amp; maxPos &lt;= r) return sum;</b>
+<i class="no-highlight">97</i>&nbsp;
+<i class="no-highlight">98</i>&nbsp;    // Ranges do not overlap
+<b class="fc"><i class="no-highlight">99</i>&nbsp;    else if (r &lt;= minPos || l &gt;= maxPos) return 0;</b>
+<i class="no-highlight">100</i>&nbsp;
+<i class="no-highlight">101</i>&nbsp;    // Ranges partially overlap
+<b class="fc"><i class="no-highlight">102</i>&nbsp;    else return (left == null ? 0 : left.sum(l, r)) + (right == null ? 0 : right.sum(l, r));</b>
+<i class="no-highlight">103</i>&nbsp;  }
+<i class="no-highlight">104</i>&nbsp;
+<i class="no-highlight">105</i>&nbsp;  // Get the minimum value in the interval [l, r)
+<i class="no-highlight">106</i>&nbsp;  public int min(int l, int r) {
+<i class="no-highlight">107</i>&nbsp;
+<i class="no-highlight">108</i>&nbsp;    // Do lazy updates to children
+<b class="nc"><i class="no-highlight">109</i>&nbsp;    propagate();</b>
+<i class="no-highlight">110</i>&nbsp;
+<i class="no-highlight">111</i>&nbsp;    // Node&#39;s range fits inside query range
+<b class="nc"><i class="no-highlight">112</i>&nbsp;    if (l &lt;= minPos &amp;&amp; maxPos &lt;= r) return min;</b>
+<i class="no-highlight">113</i>&nbsp;
+<i class="no-highlight">114</i>&nbsp;    // Ranges do not overlap
+<b class="nc"><i class="no-highlight">115</i>&nbsp;    else if (r &lt;= minPos || l &gt;= maxPos) return INF;</b>
+<i class="no-highlight">116</i>&nbsp;
+<i class="no-highlight">117</i>&nbsp;    // Ranges partially overlap
+<i class="no-highlight">118</i>&nbsp;    else
+<b class="nc"><i class="no-highlight">119</i>&nbsp;      return Math.min(</b>
+<b class="nc"><i class="no-highlight">120</i>&nbsp;          (left == null ? INF : left.min(l, r)), (right == null ? INF : right.min(l, r)));</b>
+<i class="no-highlight">121</i>&nbsp;  }
+<i class="no-highlight">122</i>&nbsp;
+<i class="no-highlight">123</i>&nbsp;  // Does any updates to this node that haven&#39;t been done yet, and lazily updates its children
+<i class="no-highlight">124</i>&nbsp;  // NOTE: This method must be called before updating or accessing a node
+<i class="no-highlight">125</i>&nbsp;  private void propagate() {
+<i class="no-highlight">126</i>&nbsp;
+<b class="fc"><i class="no-highlight">127</i>&nbsp;    if (lazy != 0) {</b>
+<i class="no-highlight">128</i>&nbsp;
+<b class="nc"><i class="no-highlight">129</i>&nbsp;      sum += lazy * (maxPos - minPos);</b>
+<b class="nc"><i class="no-highlight">130</i>&nbsp;      min += lazy;</b>
+<i class="no-highlight">131</i>&nbsp;
+<i class="no-highlight">132</i>&nbsp;      // Lazily propagate updates to children
+<b class="nc"><i class="no-highlight">133</i>&nbsp;      if (left != null) left.lazy += lazy;</b>
+<b class="nc"><i class="no-highlight">134</i>&nbsp;      if (right != null) right.lazy += lazy;</b>
+<i class="no-highlight">135</i>&nbsp;
+<b class="nc"><i class="no-highlight">136</i>&nbsp;      lazy = 0;</b>
+<i class="no-highlight">137</i>&nbsp;    }
+<b class="fc"><i class="no-highlight">138</i>&nbsp;  }</b>
+<i class="no-highlight">139</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-07 12:04</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,168 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > KMP</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.strings</a>
+</div>
+
+<h1>Coverage Summary for Class: KMP (com.williamfiset.algorithms.strings)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">KMP</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/30)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/**
+<i class="no-highlight">2</i>&nbsp; * An implementation of the Knuth-Morris-Pratt algorithm
+<i class="no-highlight">3</i>&nbsp; *
+<i class="no-highlight">4</i>&nbsp; * @author William Fiset, william.alexandre.fiset@gmail.com
+<i class="no-highlight">5</i>&nbsp; */
+<i class="no-highlight">6</i>&nbsp;package com.williamfiset.algorithms.strings;
+<i class="no-highlight">7</i>&nbsp;
+<b class="nc"><i class="no-highlight">8</i>&nbsp;public class KMP {</b>
+<i class="no-highlight">9</i>&nbsp;
+<i class="no-highlight">10</i>&nbsp;  // Given a pattern and a text kmp finds all the places that the pattern
+<i class="no-highlight">11</i>&nbsp;  // is found in the text (even overlapping pattern matches)
+<i class="no-highlight">12</i>&nbsp;  public static java.util.List&lt;Integer&gt; kmp(String txt, String pat) {
+<b class="nc"><i class="no-highlight">13</i>&nbsp;    java.util.List&lt;Integer&gt; matches = new java.util.ArrayList&lt;&gt;();</b>
+<b class="nc"><i class="no-highlight">14</i>&nbsp;    if (txt == null || pat == null) return matches;</b>
+<i class="no-highlight">15</i>&nbsp;
+<b class="nc"><i class="no-highlight">16</i>&nbsp;    int m = pat.length(), n = txt.length(), i = 0, j = 0;</b>
+<b class="nc"><i class="no-highlight">17</i>&nbsp;    if (m &gt; n) return matches;</b>
+<i class="no-highlight">18</i>&nbsp;
+<b class="nc"><i class="no-highlight">19</i>&nbsp;    int[] arr = kmpHelper(pat, m);</b>
+<i class="no-highlight">20</i>&nbsp;
+<b class="nc"><i class="no-highlight">21</i>&nbsp;    while (i &lt; n) {</b>
+<b class="nc"><i class="no-highlight">22</i>&nbsp;      if (pat.charAt(j) == txt.charAt(i)) {</b>
+<b class="nc"><i class="no-highlight">23</i>&nbsp;        j++;</b>
+<b class="nc"><i class="no-highlight">24</i>&nbsp;        i++;</b>
+<i class="no-highlight">25</i>&nbsp;      }
+<b class="nc"><i class="no-highlight">26</i>&nbsp;      if (j == m) {</b>
+<b class="nc"><i class="no-highlight">27</i>&nbsp;        matches.add(i - j);</b>
+<b class="nc"><i class="no-highlight">28</i>&nbsp;        j = arr[j - 1];</b>
+<b class="nc"><i class="no-highlight">29</i>&nbsp;      } else if (i &lt; n &amp;&amp; pat.charAt(j) != txt.charAt(i)) {</b>
+<b class="nc"><i class="no-highlight">30</i>&nbsp;        if (j != 0) j = arr[j - 1];</b>
+<b class="nc"><i class="no-highlight">31</i>&nbsp;        else i = i + 1;</b>
+<i class="no-highlight">32</i>&nbsp;      }
+<i class="no-highlight">33</i>&nbsp;    }
+<i class="no-highlight">34</i>&nbsp;
+<b class="nc"><i class="no-highlight">35</i>&nbsp;    return matches;</b>
+<i class="no-highlight">36</i>&nbsp;  }
+<i class="no-highlight">37</i>&nbsp;
+<i class="no-highlight">38</i>&nbsp;  // For each index i compute the longest match between the proper
+<i class="no-highlight">39</i>&nbsp;  // prefix starting at 0 and the proper suffix starting at i
+<i class="no-highlight">40</i>&nbsp;  private static int[] kmpHelper(String pat, int m) {
+<b class="nc"><i class="no-highlight">41</i>&nbsp;    int[] arr = new int[m];</b>
+<b class="nc"><i class="no-highlight">42</i>&nbsp;    for (int i = 1, len = 0; i &lt; m; ) {</b>
+<b class="nc"><i class="no-highlight">43</i>&nbsp;      if (pat.charAt(i) == pat.charAt(len)) {</b>
+<b class="nc"><i class="no-highlight">44</i>&nbsp;        arr[i++] = ++len;</b>
+<i class="no-highlight">45</i>&nbsp;      } else {
+<b class="nc"><i class="no-highlight">46</i>&nbsp;        if (len &gt; 0) len = arr[len - 1];</b>
+<b class="nc"><i class="no-highlight">47</i>&nbsp;        else i++;</b>
+<i class="no-highlight">48</i>&nbsp;      }
+<i class="no-highlight">49</i>&nbsp;    }
+<b class="nc"><i class="no-highlight">50</i>&nbsp;    return arr;</b>
+<i class="no-highlight">51</i>&nbsp;  }
+<i class="no-highlight">52</i>&nbsp;
+<i class="no-highlight">53</i>&nbsp;  public static void main(String[] args) {
+<b class="nc"><i class="no-highlight">54</i>&nbsp;    java.util.List&lt;Integer&gt; matches = kmp(&quot;abababa&quot;, &quot;aba&quot;);</b>
+<b class="nc"><i class="no-highlight">55</i>&nbsp;    System.out.println(matches); // [0, 2, 4]</b>
+<i class="no-highlight">56</i>&nbsp;
+<b class="nc"><i class="no-highlight">57</i>&nbsp;    matches = kmp(&quot;abc&quot;, &quot;abcdef&quot;);</b>
+<b class="nc"><i class="no-highlight">58</i>&nbsp;    System.out.println(matches); // []</b>
+<i class="no-highlight">59</i>&nbsp;
+<b class="nc"><i class="no-highlight">60</i>&nbsp;    matches = kmp(&quot;P@TTerNabcdefP@TTerNP@TTerNabcdefabcdefabcdefabcdefP@TTerN&quot;, &quot;P@TTerN&quot;);</b>
+<b class="nc"><i class="no-highlight">61</i>&nbsp;    System.out.println(matches); // [0, 13, 20, 51]</b>
+<i class="no-highlight">62</i>&nbsp;  }
+<i class="no-highlight">63</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-07 12:04</div>
+</div>
+</body>
+</html>

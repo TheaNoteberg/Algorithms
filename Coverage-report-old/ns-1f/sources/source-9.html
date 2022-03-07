@@ -1,0 +1,209 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > MinCostMaxFlowWithBellmanFord</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.graphtheory.networkflow</a>
+</div>
+
+<h1>Coverage Summary for Class: MinCostMaxFlowWithBellmanFord (com.williamfiset.algorithms.graphtheory.networkflow)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MinCostMaxFlowWithBellmanFord</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    60%
+  </span>
+  <span class="absValue">
+    (3/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    66,7%
+  </span>
+  <span class="absValue">
+    (26/39)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/**
+<i class="no-highlight">2</i>&nbsp; * Min Cost Max Flow algorithm implemented with Bellman-Ford as a means of finding augmenting paths
+<i class="no-highlight">3</i>&nbsp; * to support negative edge weights.
+<i class="no-highlight">4</i>&nbsp; *
+<i class="no-highlight">5</i>&nbsp; * &lt;p&gt;Time Complexity: O(E²V²)
+<i class="no-highlight">6</i>&nbsp; *
+<i class="no-highlight">7</i>&nbsp; * @author William Fiset, william.alexandre.fiset@gmail.com
+<i class="no-highlight">8</i>&nbsp; */
+<i class="no-highlight">9</i>&nbsp;package com.williamfiset.algorithms.graphtheory.networkflow;
+<i class="no-highlight">10</i>&nbsp;
+<i class="no-highlight">11</i>&nbsp;import static java.lang.Math.min;
+<i class="no-highlight">12</i>&nbsp;
+<i class="no-highlight">13</i>&nbsp;import java.util.Arrays;
+<i class="no-highlight">14</i>&nbsp;import java.util.LinkedList;
+<i class="no-highlight">15</i>&nbsp;import java.util.List;
+<i class="no-highlight">16</i>&nbsp;
+<i class="no-highlight">17</i>&nbsp;public class MinCostMaxFlowWithBellmanFord extends NetworkFlowSolverBase {
+<i class="no-highlight">18</i>&nbsp;
+<i class="no-highlight">19</i>&nbsp;  /**
+<i class="no-highlight">20</i>&nbsp;   * Creates a min-cost maximum flow network solver. To construct the flow network use the {@link
+<i class="no-highlight">21</i>&nbsp;   * NetworkFlowSolverBase#addEdge} method to add edges to the graph.
+<i class="no-highlight">22</i>&nbsp;   *
+<i class="no-highlight">23</i>&nbsp;   * @param n - The number of nodes in the graph including source and sink nodes.
+<i class="no-highlight">24</i>&nbsp;   * @param s - The index of the source node, 0 &lt;= s &lt; n
+<i class="no-highlight">25</i>&nbsp;   * @param t - The index of the sink node, 0 &lt;= t &lt; n, t != s
+<i class="no-highlight">26</i>&nbsp;   */
+<i class="no-highlight">27</i>&nbsp;  public MinCostMaxFlowWithBellmanFord(int n, int s, int t) {
+<b class="fc"><i class="no-highlight">28</i>&nbsp;    super(n, s, t);</b>
+<b class="fc"><i class="no-highlight">29</i>&nbsp;  }</b>
+<i class="no-highlight">30</i>&nbsp;
+<i class="no-highlight">31</i>&nbsp;  @Override
+<i class="no-highlight">32</i>&nbsp;  public void solve() {
+<i class="no-highlight">33</i>&nbsp;
+<i class="no-highlight">34</i>&nbsp;    // Sum up the bottlenecks on each augmenting path to find the max flow and min cost.
+<i class="no-highlight">35</i>&nbsp;    List&lt;Edge&gt; path;
+<b class="fc"><i class="no-highlight">36</i>&nbsp;    while ((path = getAugmentingPath()).size() != 0) {</b>
+<i class="no-highlight">37</i>&nbsp;
+<i class="no-highlight">38</i>&nbsp;      // Find bottle neck edge value along path.
+<b class="fc"><i class="no-highlight">39</i>&nbsp;      long bottleNeck = Long.MAX_VALUE;</b>
+<b class="fc"><i class="no-highlight">40</i>&nbsp;      for (Edge edge : path) bottleNeck = min(bottleNeck, edge.remainingCapacity());</b>
+<i class="no-highlight">41</i>&nbsp;
+<i class="no-highlight">42</i>&nbsp;      // Retrace path while augmenting the flow
+<b class="fc"><i class="no-highlight">43</i>&nbsp;      for (Edge edge : path) {</b>
+<b class="fc"><i class="no-highlight">44</i>&nbsp;        edge.augment(bottleNeck);</b>
+<b class="fc"><i class="no-highlight">45</i>&nbsp;        minCost += bottleNeck * edge.originalCost;</b>
+<b class="fc"><i class="no-highlight">46</i>&nbsp;      }</b>
+<b class="fc"><i class="no-highlight">47</i>&nbsp;      maxFlow += bottleNeck;</b>
+<b class="fc"><i class="no-highlight">48</i>&nbsp;    }</b>
+<i class="no-highlight">49</i>&nbsp;
+<i class="no-highlight">50</i>&nbsp;    // TODO(williamfiset): Compute mincut.
+<b class="fc"><i class="no-highlight">51</i>&nbsp;  }</b>
+<i class="no-highlight">52</i>&nbsp;
+<i class="no-highlight">53</i>&nbsp;  /**
+<i class="no-highlight">54</i>&nbsp;   * Use the Bellman-Ford algorithm (which work with negative edge weights) to find an augmenting
+<i class="no-highlight">55</i>&nbsp;   * path through the flow network.
+<i class="no-highlight">56</i>&nbsp;   */
+<i class="no-highlight">57</i>&nbsp;  private List&lt;Edge&gt; getAugmentingPath() {
+<b class="fc"><i class="no-highlight">58</i>&nbsp;    long[] dist = new long[n];</b>
+<b class="fc"><i class="no-highlight">59</i>&nbsp;    Arrays.fill(dist, INF);</b>
+<b class="fc"><i class="no-highlight">60</i>&nbsp;    dist[s] = 0;</b>
+<i class="no-highlight">61</i>&nbsp;
+<b class="fc"><i class="no-highlight">62</i>&nbsp;    Edge[] prev = new Edge[n];</b>
+<i class="no-highlight">63</i>&nbsp;
+<i class="no-highlight">64</i>&nbsp;    // For each vertex, relax all the edges in the graph, O(VE)
+<b class="fc"><i class="no-highlight">65</i>&nbsp;    for (int i = 0; i &lt; n - 1; i++) {</b>
+<b class="fc"><i class="no-highlight">66</i>&nbsp;      for (int from = 0; from &lt; n; from++) {</b>
+<b class="fc"><i class="no-highlight">67</i>&nbsp;        for (Edge edge : graph[from]) {</b>
+<b class="fc"><i class="no-highlight">68</i>&nbsp;          if (edge.remainingCapacity() &gt; 0 &amp;&amp; dist[from] + edge.cost &lt; dist[edge.to]) {</b>
+<b class="fc"><i class="no-highlight">69</i>&nbsp;            dist[edge.to] = dist[from] + edge.cost;</b>
+<b class="fc"><i class="no-highlight">70</i>&nbsp;            prev[edge.to] = edge;</b>
+<i class="no-highlight">71</i>&nbsp;          }
+<b class="fc"><i class="no-highlight">72</i>&nbsp;        }</b>
+<i class="no-highlight">73</i>&nbsp;      }
+<i class="no-highlight">74</i>&nbsp;    }
+<i class="no-highlight">75</i>&nbsp;
+<i class="no-highlight">76</i>&nbsp;    // Retrace augmenting path from sink back to the source.
+<b class="fc"><i class="no-highlight">77</i>&nbsp;    LinkedList&lt;Edge&gt; path = new LinkedList&lt;&gt;();</b>
+<b class="fc"><i class="no-highlight">78</i>&nbsp;    for (Edge edge = prev[t]; edge != null; edge = prev[edge.from]) path.addFirst(edge);</b>
+<b class="fc"><i class="no-highlight">79</i>&nbsp;    return path;</b>
+<i class="no-highlight">80</i>&nbsp;  }
+<i class="no-highlight">81</i>&nbsp;
+<i class="no-highlight">82</i>&nbsp;  /* Example usage. */
+<i class="no-highlight">83</i>&nbsp;
+<i class="no-highlight">84</i>&nbsp;  public static void main(String[] args) {
+<b class="nc"><i class="no-highlight">85</i>&nbsp;    testSmallNetwork();</b>
+<b class="nc"><i class="no-highlight">86</i>&nbsp;  }</b>
+<i class="no-highlight">87</i>&nbsp;
+<i class="no-highlight">88</i>&nbsp;  private static void testSmallNetwork() {
+<b class="nc"><i class="no-highlight">89</i>&nbsp;    int n = 6;</b>
+<b class="nc"><i class="no-highlight">90</i>&nbsp;    int s = n - 1;</b>
+<b class="nc"><i class="no-highlight">91</i>&nbsp;    int t = n - 2;</b>
+<i class="no-highlight">92</i>&nbsp;    MinCostMaxFlowWithBellmanFord solver;
+<b class="nc"><i class="no-highlight">93</i>&nbsp;    solver = new MinCostMaxFlowWithBellmanFord(n, s, t);</b>
+<i class="no-highlight">94</i>&nbsp;
+<b class="nc"><i class="no-highlight">95</i>&nbsp;    solver.addEdge(s, 1, 4, 10);</b>
+<b class="nc"><i class="no-highlight">96</i>&nbsp;    solver.addEdge(s, 2, 2, 30);</b>
+<b class="nc"><i class="no-highlight">97</i>&nbsp;    solver.addEdge(1, 2, 2, 10);</b>
+<b class="nc"><i class="no-highlight">98</i>&nbsp;    solver.addEdge(1, t, 0, 9999);</b>
+<b class="nc"><i class="no-highlight">99</i>&nbsp;    solver.addEdge(2, t, 4, 10);</b>
+<i class="no-highlight">100</i>&nbsp;
+<i class="no-highlight">101</i>&nbsp;    // Prints: Max flow: 4, Min cost: 140
+<b class="nc"><i class="no-highlight">102</i>&nbsp;    System.out.printf(&quot;Max flow: %d, Min cost: %d\n&quot;, solver.getMaxFlow(), solver.getMinCost());</b>
+<b class="nc"><i class="no-highlight">103</i>&nbsp;  }</b>
+<i class="no-highlight">104</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-01 13:32</div>
+</div>
+</body>
+</html>

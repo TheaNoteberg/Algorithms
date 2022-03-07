@@ -1,0 +1,285 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Trie</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.datastructures.trie</a>
+</div>
+
+<h1>Coverage Summary for Class: Trie (com.williamfiset.algorithms.datastructures.trie)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Trie</td>
+<td class="coverageStat">
+  <span class="percent">
+    88,9%
+  </span>
+  <span class="absValue">
+    (8/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    82,8%
+  </span>
+  <span class="absValue">
+    (48/58)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Trie$Node</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    90,9%
+  </span>
+  <span class="absValue">
+    (10/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    84,8%
+  </span>
+  <span class="absValue">
+    (56/66)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package com.williamfiset.algorithms.datastructures.trie;
+<i class="no-highlight">2</i>&nbsp;
+<b class="fc"><i class="no-highlight">3</i>&nbsp;public class Trie {</b>
+<i class="no-highlight">4</i>&nbsp;
+<i class="no-highlight">5</i>&nbsp;  // The root character is an arbitrarily picked
+<i class="no-highlight">6</i>&nbsp;  // character chosen for the root node.
+<b class="fc"><i class="no-highlight">7</i>&nbsp;  private final char rootCharacter = &#39;\0&#39;;</b>
+<b class="fc"><i class="no-highlight">8</i>&nbsp;  private Node root = new Node(rootCharacter);</b>
+<i class="no-highlight">9</i>&nbsp;
+<i class="no-highlight">10</i>&nbsp;  private static class Node {
+<i class="no-highlight">11</i>&nbsp;
+<i class="no-highlight">12</i>&nbsp;    char ch;
+<b class="fc"><i class="no-highlight">13</i>&nbsp;    int count = 0;</b>
+<b class="fc"><i class="no-highlight">14</i>&nbsp;    boolean isWordEnding = false;</b>
+<b class="fc"><i class="no-highlight">15</i>&nbsp;    java.util.Map&lt;Character, Node&gt; children = new java.util.HashMap&lt;&gt;();</b>
+<i class="no-highlight">16</i>&nbsp;
+<b class="fc"><i class="no-highlight">17</i>&nbsp;    public Node(char ch) {</b>
+<b class="fc"><i class="no-highlight">18</i>&nbsp;      this.ch = ch;</b>
+<b class="fc"><i class="no-highlight">19</i>&nbsp;    }</b>
+<i class="no-highlight">20</i>&nbsp;
+<i class="no-highlight">21</i>&nbsp;    public void addChild(Node node, char c) {
+<b class="fc"><i class="no-highlight">22</i>&nbsp;      children.put(c, node);</b>
+<b class="fc"><i class="no-highlight">23</i>&nbsp;    }</b>
+<i class="no-highlight">24</i>&nbsp;  }
+<i class="no-highlight">25</i>&nbsp;
+<i class="no-highlight">26</i>&nbsp;  // Returns true if the string being inserted
+<i class="no-highlight">27</i>&nbsp;  // contains a prefix already in the trie
+<i class="no-highlight">28</i>&nbsp;  public boolean insert(String key, int numInserts) {
+<i class="no-highlight">29</i>&nbsp;
+<b class="fc"><i class="no-highlight">30</i>&nbsp;    if (key == null) throw new IllegalArgumentException(&quot;Null not permitted in trie&quot;);</b>
+<b class="fc"><i class="no-highlight">31</i>&nbsp;    if (numInserts &lt;= 0)</b>
+<b class="nc"><i class="no-highlight">32</i>&nbsp;      throw new IllegalArgumentException(&quot;numInserts has to be greater than zero&quot;);</b>
+<i class="no-highlight">33</i>&nbsp;
+<b class="fc"><i class="no-highlight">34</i>&nbsp;    Node node = root;</b>
+<b class="fc"><i class="no-highlight">35</i>&nbsp;    boolean created_new_node = false;</b>
+<b class="fc"><i class="no-highlight">36</i>&nbsp;    boolean is_prefix = false;</b>
+<i class="no-highlight">37</i>&nbsp;
+<i class="no-highlight">38</i>&nbsp;    // Process each character one at a time
+<b class="fc"><i class="no-highlight">39</i>&nbsp;    for (int i = 0; i &lt; key.length(); ++i) {</b>
+<i class="no-highlight">40</i>&nbsp;
+<b class="fc"><i class="no-highlight">41</i>&nbsp;      char ch = key.charAt(i);</b>
+<b class="fc"><i class="no-highlight">42</i>&nbsp;      Node nextNode = node.children.get(ch);</b>
+<i class="no-highlight">43</i>&nbsp;
+<i class="no-highlight">44</i>&nbsp;      // The next character in this string does not yet exist in trie
+<b class="fc"><i class="no-highlight">45</i>&nbsp;      if (nextNode == null) {</b>
+<i class="no-highlight">46</i>&nbsp;
+<b class="fc"><i class="no-highlight">47</i>&nbsp;        nextNode = new Node(ch);</b>
+<b class="fc"><i class="no-highlight">48</i>&nbsp;        node.addChild(nextNode, ch);</b>
+<b class="fc"><i class="no-highlight">49</i>&nbsp;        created_new_node = true;</b>
+<i class="no-highlight">50</i>&nbsp;
+<i class="no-highlight">51</i>&nbsp;        // Next character exists in trie.
+<i class="no-highlight">52</i>&nbsp;      } else {
+<b class="fc"><i class="no-highlight">53</i>&nbsp;        if (nextNode.isWordEnding) is_prefix = true;</b>
+<i class="no-highlight">54</i>&nbsp;      }
+<i class="no-highlight">55</i>&nbsp;
+<b class="fc"><i class="no-highlight">56</i>&nbsp;      node = nextNode;</b>
+<b class="fc"><i class="no-highlight">57</i>&nbsp;      node.count += numInserts;</b>
+<i class="no-highlight">58</i>&nbsp;    }
+<i class="no-highlight">59</i>&nbsp;
+<i class="no-highlight">60</i>&nbsp;    // The root itself is not a word ending. It is simply a placeholder.
+<b class="fc"><i class="no-highlight">61</i>&nbsp;    if (node != root) node.isWordEnding = true;</b>
+<i class="no-highlight">62</i>&nbsp;
+<b class="fc"><i class="no-highlight">63</i>&nbsp;    return is_prefix || !created_new_node;</b>
+<i class="no-highlight">64</i>&nbsp;  }
+<i class="no-highlight">65</i>&nbsp;
+<i class="no-highlight">66</i>&nbsp;  // Returns true if the string being inserted
+<i class="no-highlight">67</i>&nbsp;  // contains a prefix already in the trie
+<i class="no-highlight">68</i>&nbsp;  public boolean insert(String key) {
+<b class="fc"><i class="no-highlight">69</i>&nbsp;    return insert(key, 1);</b>
+<i class="no-highlight">70</i>&nbsp;  }
+<i class="no-highlight">71</i>&nbsp;
+<i class="no-highlight">72</i>&nbsp;  // This delete function allows you to delete keys from the trie
+<i class="no-highlight">73</i>&nbsp;  // (even those which were not previously inserted into the trie).
+<i class="no-highlight">74</i>&nbsp;  // This means that it may be the case that you delete a prefix which
+<i class="no-highlight">75</i>&nbsp;  // cuts off the access to numerous other strings starting with
+<i class="no-highlight">76</i>&nbsp;  // that prefix.
+<i class="no-highlight">77</i>&nbsp;  public boolean delete(String key, int numDeletions) {
+<i class="no-highlight">78</i>&nbsp;
+<i class="no-highlight">79</i>&nbsp;    // We cannot delete something that doesn&#39;t exist
+<b class="fc"><i class="no-highlight">80</i>&nbsp;    if (!contains(key)) return false;</b>
+<i class="no-highlight">81</i>&nbsp;
+<b class="fc"><i class="no-highlight">82</i>&nbsp;    if (numDeletions &lt;= 0) throw new IllegalArgumentException(&quot;numDeletions has to be positive&quot;);</b>
+<i class="no-highlight">83</i>&nbsp;
+<b class="fc"><i class="no-highlight">84</i>&nbsp;    Node node = root;</b>
+<b class="fc"><i class="no-highlight">85</i>&nbsp;    for (int i = 0; i &lt; key.length(); i++) {</b>
+<i class="no-highlight">86</i>&nbsp;
+<b class="fc"><i class="no-highlight">87</i>&nbsp;      char ch = key.charAt(i);</b>
+<b class="fc"><i class="no-highlight">88</i>&nbsp;      Node curNode = node.children.get(ch);</b>
+<b class="fc"><i class="no-highlight">89</i>&nbsp;      curNode.count -= numDeletions;</b>
+<i class="no-highlight">90</i>&nbsp;
+<i class="no-highlight">91</i>&nbsp;      // Cut this edge if the current node has a count &lt;= 0
+<i class="no-highlight">92</i>&nbsp;      // This means that all the prefixes below this point are inaccessible
+<b class="fc"><i class="no-highlight">93</i>&nbsp;      if (curNode.count &lt;= 0) {</b>
+<b class="fc"><i class="no-highlight">94</i>&nbsp;        node.children.remove(ch);</b>
+<b class="fc"><i class="no-highlight">95</i>&nbsp;        curNode.children = null;</b>
+<b class="fc"><i class="no-highlight">96</i>&nbsp;        curNode = null;</b>
+<b class="fc"><i class="no-highlight">97</i>&nbsp;        return true;</b>
+<i class="no-highlight">98</i>&nbsp;      }
+<i class="no-highlight">99</i>&nbsp;
+<b class="fc"><i class="no-highlight">100</i>&nbsp;      node = curNode;</b>
+<i class="no-highlight">101</i>&nbsp;    }
+<b class="fc"><i class="no-highlight">102</i>&nbsp;    return true;</b>
+<i class="no-highlight">103</i>&nbsp;  }
+<i class="no-highlight">104</i>&nbsp;
+<i class="no-highlight">105</i>&nbsp;  public boolean delete(String key) {
+<b class="fc"><i class="no-highlight">106</i>&nbsp;    return delete(key, 1);</b>
+<i class="no-highlight">107</i>&nbsp;  }
+<i class="no-highlight">108</i>&nbsp;
+<i class="no-highlight">109</i>&nbsp;  // Returns true if this string is contained inside the trie
+<i class="no-highlight">110</i>&nbsp;  public boolean contains(String key) {
+<b class="fc"><i class="no-highlight">111</i>&nbsp;    return count(key) != 0;</b>
+<i class="no-highlight">112</i>&nbsp;  }
+<i class="no-highlight">113</i>&nbsp;
+<i class="no-highlight">114</i>&nbsp;  // Returns the count of a particular prefix
+<i class="no-highlight">115</i>&nbsp;  public int count(String key) {
+<i class="no-highlight">116</i>&nbsp;
+<b class="fc"><i class="no-highlight">117</i>&nbsp;    if (key == null) throw new IllegalArgumentException(&quot;Null not permitted&quot;);</b>
+<i class="no-highlight">118</i>&nbsp;
+<b class="fc"><i class="no-highlight">119</i>&nbsp;    Node node = root;</b>
+<i class="no-highlight">120</i>&nbsp;
+<i class="no-highlight">121</i>&nbsp;    // Dig down into trie until we reach the bottom or stop
+<i class="no-highlight">122</i>&nbsp;    // early because the string we&#39;re looking for doesn&#39;t exist
+<b class="fc"><i class="no-highlight">123</i>&nbsp;    for (int i = 0; i &lt; key.length(); i++) {</b>
+<b class="fc"><i class="no-highlight">124</i>&nbsp;      char ch = key.charAt(i);</b>
+<b class="fc"><i class="no-highlight">125</i>&nbsp;      if (node == null) return 0;</b>
+<b class="fc"><i class="no-highlight">126</i>&nbsp;      node = node.children.get(ch);</b>
+<i class="no-highlight">127</i>&nbsp;    }
+<i class="no-highlight">128</i>&nbsp;
+<b class="fc"><i class="no-highlight">129</i>&nbsp;    if (node != null) return node.count;</b>
+<b class="fc"><i class="no-highlight">130</i>&nbsp;    return 0;</b>
+<i class="no-highlight">131</i>&nbsp;  }
+<i class="no-highlight">132</i>&nbsp;
+<i class="no-highlight">133</i>&nbsp;  // Recursively clear the trie freeing memory to help GC
+<i class="no-highlight">134</i>&nbsp;  private void clear(Node node) {
+<i class="no-highlight">135</i>&nbsp;
+<b class="nc"><i class="no-highlight">136</i>&nbsp;    if (node == null) return;</b>
+<i class="no-highlight">137</i>&nbsp;
+<b class="nc"><i class="no-highlight">138</i>&nbsp;    for (Character ch : node.children.keySet()) {</b>
+<b class="nc"><i class="no-highlight">139</i>&nbsp;      Node nextNode = node.children.get(ch);</b>
+<b class="nc"><i class="no-highlight">140</i>&nbsp;      clear(nextNode);</b>
+<b class="nc"><i class="no-highlight">141</i>&nbsp;      nextNode = null;</b>
+<b class="nc"><i class="no-highlight">142</i>&nbsp;    }</b>
+<i class="no-highlight">143</i>&nbsp;
+<b class="nc"><i class="no-highlight">144</i>&nbsp;    node.children.clear();</b>
+<b class="nc"><i class="no-highlight">145</i>&nbsp;    node.children = null;</b>
+<b class="nc"><i class="no-highlight">146</i>&nbsp;  }</b>
+<i class="no-highlight">147</i>&nbsp;
+<i class="no-highlight">148</i>&nbsp;  // Clear the trie
+<i class="no-highlight">149</i>&nbsp;  public void clear() {
+<i class="no-highlight">150</i>&nbsp;
+<b class="fc"><i class="no-highlight">151</i>&nbsp;    root.children = null;</b>
+<b class="fc"><i class="no-highlight">152</i>&nbsp;    root = new Node(rootCharacter);</b>
+<b class="fc"><i class="no-highlight">153</i>&nbsp;  }</b>
+<i class="no-highlight">154</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-07 12:04</div>
+</div>
+</body>
+</html>

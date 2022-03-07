@@ -1,0 +1,169 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > QuickSort</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.sorting</a>
+</div>
+
+<h1>Coverage Summary for Class: QuickSort (com.williamfiset.algorithms.sorting)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">QuickSort</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    85,7%
+  </span>
+  <span class="absValue">
+    (6/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    82,1%
+  </span>
+  <span class="absValue">
+    (23/28)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/**
+<i class="no-highlight">2</i>&nbsp; * Quicksort implementation using Hoare partitioning
+<i class="no-highlight">3</i>&nbsp; *
+<i class="no-highlight">4</i>&nbsp; * &lt;p&gt;Run with:
+<i class="no-highlight">5</i>&nbsp; *
+<i class="no-highlight">6</i>&nbsp; * &lt;p&gt;$ ./gradlew run -Palgorithm=sorting.QuickSort
+<i class="no-highlight">7</i>&nbsp; *
+<i class="no-highlight">8</i>&nbsp; * @author William Fiset, william.alexandre.fiset@gmail.com
+<i class="no-highlight">9</i>&nbsp; */
+<i class="no-highlight">10</i>&nbsp;package com.williamfiset.algorithms.sorting;
+<i class="no-highlight">11</i>&nbsp;
+<b class="fc"><i class="no-highlight">12</i>&nbsp;public class QuickSort implements InplaceSort {</b>
+<i class="no-highlight">13</i>&nbsp;
+<i class="no-highlight">14</i>&nbsp;  @Override
+<i class="no-highlight">15</i>&nbsp;  public void sort(int[] values) {
+<b class="fc"><i class="no-highlight">16</i>&nbsp;    QuickSort.quicksort(values);</b>
+<b class="fc"><i class="no-highlight">17</i>&nbsp;  }</b>
+<i class="no-highlight">18</i>&nbsp;
+<i class="no-highlight">19</i>&nbsp;  public static void quicksort(int[] ar) {
+<b class="fc"><i class="no-highlight">20</i>&nbsp;    if (ar == null) return;</b>
+<b class="fc"><i class="no-highlight">21</i>&nbsp;    quicksort(ar, 0, ar.length - 1);</b>
+<b class="fc"><i class="no-highlight">22</i>&nbsp;  }</b>
+<i class="no-highlight">23</i>&nbsp;
+<i class="no-highlight">24</i>&nbsp;  // Sort interval [lo, hi] inplace recursively
+<i class="no-highlight">25</i>&nbsp;  private static void quicksort(int[] ar, int lo, int hi) {
+<b class="fc"><i class="no-highlight">26</i>&nbsp;    if (lo &lt; hi) {</b>
+<b class="fc"><i class="no-highlight">27</i>&nbsp;      int splitPoint = partition(ar, lo, hi);</b>
+<b class="fc"><i class="no-highlight">28</i>&nbsp;      quicksort(ar, lo, splitPoint);</b>
+<b class="fc"><i class="no-highlight">29</i>&nbsp;      quicksort(ar, splitPoint + 1, hi);</b>
+<i class="no-highlight">30</i>&nbsp;    }
+<b class="fc"><i class="no-highlight">31</i>&nbsp;  }</b>
+<i class="no-highlight">32</i>&nbsp;
+<i class="no-highlight">33</i>&nbsp;  // Performs Hoare partition algorithm for quicksort
+<i class="no-highlight">34</i>&nbsp;  private static int partition(int[] ar, int lo, int hi) {
+<b class="fc"><i class="no-highlight">35</i>&nbsp;    int pivot = ar[lo];</b>
+<b class="fc"><i class="no-highlight">36</i>&nbsp;    int i = lo - 1, j = hi + 1;</b>
+<i class="no-highlight">37</i>&nbsp;    while (true) {
+<i class="no-highlight">38</i>&nbsp;      do {
+<b class="fc"><i class="no-highlight">39</i>&nbsp;        i++;</b>
+<b class="fc"><i class="no-highlight">40</i>&nbsp;      } while (ar[i] &lt; pivot);</b>
+<i class="no-highlight">41</i>&nbsp;      do {
+<b class="fc"><i class="no-highlight">42</i>&nbsp;        j--;</b>
+<b class="fc"><i class="no-highlight">43</i>&nbsp;      } while (ar[j] &gt; pivot);</b>
+<b class="fc"><i class="no-highlight">44</i>&nbsp;      if (i &lt; j) swap(ar, i, j);</b>
+<b class="fc"><i class="no-highlight">45</i>&nbsp;      else return j;</b>
+<i class="no-highlight">46</i>&nbsp;    }
+<i class="no-highlight">47</i>&nbsp;  }
+<i class="no-highlight">48</i>&nbsp;
+<i class="no-highlight">49</i>&nbsp;  // Swap two elements
+<i class="no-highlight">50</i>&nbsp;  private static void swap(int[] ar, int i, int j) {
+<b class="fc"><i class="no-highlight">51</i>&nbsp;    int tmp = ar[i];</b>
+<b class="fc"><i class="no-highlight">52</i>&nbsp;    ar[i] = ar[j];</b>
+<b class="fc"><i class="no-highlight">53</i>&nbsp;    ar[j] = tmp;</b>
+<b class="fc"><i class="no-highlight">54</i>&nbsp;  }</b>
+<i class="no-highlight">55</i>&nbsp;
+<i class="no-highlight">56</i>&nbsp;  public static void main(String[] args) {
+<b class="nc"><i class="no-highlight">57</i>&nbsp;    InplaceSort sorter = new QuickSort();</b>
+<b class="nc"><i class="no-highlight">58</i>&nbsp;    int[] array = {10, 4, 6, 4, 8, -13, 2, 3};</b>
+<b class="nc"><i class="no-highlight">59</i>&nbsp;    sorter.sort(array);</b>
+<i class="no-highlight">60</i>&nbsp;    // Prints:
+<i class="no-highlight">61</i>&nbsp;    // [-13, 2, 3, 4, 4, 6, 8, 10]
+<b class="nc"><i class="no-highlight">62</i>&nbsp;    System.out.println(java.util.Arrays.toString(array));</b>
+<b class="nc"><i class="no-highlight">63</i>&nbsp;  }</b>
+<i class="no-highlight">64</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-01 13:32</div>
+</div>
+</body>
+</html>

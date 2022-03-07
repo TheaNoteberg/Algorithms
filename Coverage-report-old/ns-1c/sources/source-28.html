@@ -1,0 +1,245 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > TspDynamicProgrammingRecursive</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.graphtheory</a>
+</div>
+
+<h1>Coverage Summary for Class: TspDynamicProgrammingRecursive (com.williamfiset.algorithms.graphtheory)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TspDynamicProgrammingRecursive</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    85,7%
+  </span>
+  <span class="absValue">
+    (6/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    76,2%
+  </span>
+  <span class="absValue">
+    (48/63)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/**
+<i class="no-highlight">2</i>&nbsp; * This file contains a recursive implementation of the TSP problem using dynamic programming. The
+<i class="no-highlight">3</i>&nbsp; * main idea is that since we need to do all n! permutations of nodes to find the optimal solution
+<i class="no-highlight">4</i>&nbsp; * that caching the results of sub paths can improve performance.
+<i class="no-highlight">5</i>&nbsp; *
+<i class="no-highlight">6</i>&nbsp; * &lt;p&gt;For example, if one permutation is: &#39;... D A B C&#39; then later when we need to compute the value
+<i class="no-highlight">7</i>&nbsp; * of the permutation &#39;... E B A C&#39; we should already have cached the answer for the subgraph
+<i class="no-highlight">8</i>&nbsp; * containing the nodes {A, B, C}.
+<i class="no-highlight">9</i>&nbsp; *
+<i class="no-highlight">10</i>&nbsp; * &lt;p&gt;Time Complexity: O(n^2 * 2^n) Space Complexity: O(n * 2^n)
+<i class="no-highlight">11</i>&nbsp; *
+<i class="no-highlight">12</i>&nbsp; * @author Steven &amp; Felix Halim, William Fiset, Micah Stairs
+<i class="no-highlight">13</i>&nbsp; */
+<i class="no-highlight">14</i>&nbsp;package com.williamfiset.algorithms.graphtheory;
+<i class="no-highlight">15</i>&nbsp;
+<i class="no-highlight">16</i>&nbsp;import java.util.*;
+<i class="no-highlight">17</i>&nbsp;
+<i class="no-highlight">18</i>&nbsp;public class TspDynamicProgrammingRecursive {
+<i class="no-highlight">19</i>&nbsp;
+<i class="no-highlight">20</i>&nbsp;  private final int N;
+<i class="no-highlight">21</i>&nbsp;  private final int START_NODE;
+<i class="no-highlight">22</i>&nbsp;  private final int FINISHED_STATE;
+<i class="no-highlight">23</i>&nbsp;
+<i class="no-highlight">24</i>&nbsp;  private double[][] distance;
+<b class="fc"><i class="no-highlight">25</i>&nbsp;  private double minTourCost = Double.POSITIVE_INFINITY;</b>
+<i class="no-highlight">26</i>&nbsp;
+<b class="fc"><i class="no-highlight">27</i>&nbsp;  private List&lt;Integer&gt; tour = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i class="no-highlight">28</i>&nbsp;  private boolean ranSolver = false;</b>
+<i class="no-highlight">29</i>&nbsp;
+<i class="no-highlight">30</i>&nbsp;  public TspDynamicProgrammingRecursive(double[][] distance) {
+<b class="fc"><i class="no-highlight">31</i>&nbsp;    this(0, distance);</b>
+<b class="fc"><i class="no-highlight">32</i>&nbsp;  }</b>
+<i class="no-highlight">33</i>&nbsp;
+<b class="fc"><i class="no-highlight">34</i>&nbsp;  public TspDynamicProgrammingRecursive(int startNode, double[][] distance) {</b>
+<i class="no-highlight">35</i>&nbsp;
+<b class="fc"><i class="no-highlight">36</i>&nbsp;    this.distance = distance;</b>
+<b class="fc"><i class="no-highlight">37</i>&nbsp;    N = distance.length;</b>
+<b class="fc"><i class="no-highlight">38</i>&nbsp;    START_NODE = startNode;</b>
+<i class="no-highlight">39</i>&nbsp;
+<i class="no-highlight">40</i>&nbsp;    // Validate inputs.
+<b class="fc"><i class="no-highlight">41</i>&nbsp;    if (N &lt;= 2) throw new IllegalStateException(&quot;TSP on 0, 1 or 2 nodes doesn&#39;t make sense.&quot;);</b>
+<b class="fc"><i class="no-highlight">42</i>&nbsp;    if (N != distance[0].length)</b>
+<b class="nc"><i class="no-highlight">43</i>&nbsp;      throw new IllegalArgumentException(&quot;Matrix must be square (N x N)&quot;);</b>
+<b class="fc"><i class="no-highlight">44</i>&nbsp;    if (START_NODE &lt; 0 || START_NODE &gt;= N)</b>
+<b class="fc"><i class="no-highlight">45</i>&nbsp;      throw new IllegalArgumentException(&quot;Starting node must be: 0 &lt;= startNode &lt; N&quot;);</b>
+<b class="fc"><i class="no-highlight">46</i>&nbsp;    if (N &gt; 32)</b>
+<b class="nc"><i class="no-highlight">47</i>&nbsp;      throw new IllegalArgumentException(</b>
+<i class="no-highlight">48</i>&nbsp;          &quot;Matrix too large! A matrix that size for the DP TSP problem with a time complexity of&quot;
+<i class="no-highlight">49</i>&nbsp;              + &quot;O(n^2*2^n) requires way too much computation for any modern home computer to handle&quot;);
+<i class="no-highlight">50</i>&nbsp;
+<i class="no-highlight">51</i>&nbsp;    // The finished state is when the finished state mask has all bits are set to
+<i class="no-highlight">52</i>&nbsp;    // one (meaning all the nodes have been visited).
+<b class="fc"><i class="no-highlight">53</i>&nbsp;    FINISHED_STATE = (1 &lt;&lt; N) - 1;</b>
+<b class="fc"><i class="no-highlight">54</i>&nbsp;  }</b>
+<i class="no-highlight">55</i>&nbsp;
+<i class="no-highlight">56</i>&nbsp;  // Returns the optimal tour for the traveling salesman problem.
+<i class="no-highlight">57</i>&nbsp;  public List&lt;Integer&gt; getTour() {
+<b class="fc"><i class="no-highlight">58</i>&nbsp;    if (!ranSolver) solve();</b>
+<b class="fc"><i class="no-highlight">59</i>&nbsp;    return tour;</b>
+<i class="no-highlight">60</i>&nbsp;  }
+<i class="no-highlight">61</i>&nbsp;
+<i class="no-highlight">62</i>&nbsp;  // Returns the minimal tour cost.
+<i class="no-highlight">63</i>&nbsp;  public double getTourCost() {
+<b class="fc"><i class="no-highlight">64</i>&nbsp;    if (!ranSolver) solve();</b>
+<b class="fc"><i class="no-highlight">65</i>&nbsp;    return minTourCost;</b>
+<i class="no-highlight">66</i>&nbsp;  }
+<i class="no-highlight">67</i>&nbsp;
+<i class="no-highlight">68</i>&nbsp;  public void solve() {
+<i class="no-highlight">69</i>&nbsp;
+<i class="no-highlight">70</i>&nbsp;    // Run the solver
+<b class="fc"><i class="no-highlight">71</i>&nbsp;    int state = 1 &lt;&lt; START_NODE;</b>
+<b class="fc"><i class="no-highlight">72</i>&nbsp;    Double[][] memo = new Double[N][1 &lt;&lt; N];</b>
+<b class="fc"><i class="no-highlight">73</i>&nbsp;    Integer[][] prev = new Integer[N][1 &lt;&lt; N];</b>
+<b class="fc"><i class="no-highlight">74</i>&nbsp;    minTourCost = tsp(START_NODE, state, memo, prev);</b>
+<i class="no-highlight">75</i>&nbsp;
+<i class="no-highlight">76</i>&nbsp;    // Regenerate path
+<b class="fc"><i class="no-highlight">77</i>&nbsp;    int index = START_NODE;</b>
+<i class="no-highlight">78</i>&nbsp;    while (true) {
+<b class="fc"><i class="no-highlight">79</i>&nbsp;      tour.add(index);</b>
+<b class="fc"><i class="no-highlight">80</i>&nbsp;      Integer nextIndex = prev[index][state];</b>
+<b class="fc"><i class="no-highlight">81</i>&nbsp;      if (nextIndex == null) break;</b>
+<b class="fc"><i class="no-highlight">82</i>&nbsp;      int nextState = state | (1 &lt;&lt; nextIndex);</b>
+<b class="fc"><i class="no-highlight">83</i>&nbsp;      state = nextState;</b>
+<b class="fc"><i class="no-highlight">84</i>&nbsp;      index = nextIndex;</b>
+<b class="fc"><i class="no-highlight">85</i>&nbsp;    }</b>
+<b class="fc"><i class="no-highlight">86</i>&nbsp;    tour.add(START_NODE);</b>
+<b class="fc"><i class="no-highlight">87</i>&nbsp;    ranSolver = true;</b>
+<b class="fc"><i class="no-highlight">88</i>&nbsp;  }</b>
+<i class="no-highlight">89</i>&nbsp;
+<i class="no-highlight">90</i>&nbsp;  private double tsp(int i, int state, Double[][] memo, Integer[][] prev) {
+<i class="no-highlight">91</i>&nbsp;
+<i class="no-highlight">92</i>&nbsp;    // Done this tour. Return cost of going back to start node.
+<b class="fc"><i class="no-highlight">93</i>&nbsp;    if (state == FINISHED_STATE) return distance[i][START_NODE];</b>
+<i class="no-highlight">94</i>&nbsp;
+<i class="no-highlight">95</i>&nbsp;    // Return cached answer if already computed.
+<b class="fc"><i class="no-highlight">96</i>&nbsp;    if (memo[i][state] != null) return memo[i][state];</b>
+<i class="no-highlight">97</i>&nbsp;
+<b class="fc"><i class="no-highlight">98</i>&nbsp;    double minCost = Double.POSITIVE_INFINITY;</b>
+<b class="fc"><i class="no-highlight">99</i>&nbsp;    int index = -1;</b>
+<b class="fc"><i class="no-highlight">100</i>&nbsp;    for (int next = 0; next &lt; N; next++) {</b>
+<i class="no-highlight">101</i>&nbsp;
+<i class="no-highlight">102</i>&nbsp;      // Skip if the next node has already been visited.
+<b class="fc"><i class="no-highlight">103</i>&nbsp;      if ((state &amp; (1 &lt;&lt; next)) != 0) continue;</b>
+<i class="no-highlight">104</i>&nbsp;
+<b class="fc"><i class="no-highlight">105</i>&nbsp;      int nextState = state | (1 &lt;&lt; next);</b>
+<b class="fc"><i class="no-highlight">106</i>&nbsp;      double newCost = distance[i][next] + tsp(next, nextState, memo, prev);</b>
+<b class="fc"><i class="no-highlight">107</i>&nbsp;      if (newCost &lt; minCost) {</b>
+<b class="fc"><i class="no-highlight">108</i>&nbsp;        minCost = newCost;</b>
+<b class="fc"><i class="no-highlight">109</i>&nbsp;        index = next;</b>
+<i class="no-highlight">110</i>&nbsp;      }
+<i class="no-highlight">111</i>&nbsp;    }
+<i class="no-highlight">112</i>&nbsp;
+<b class="fc"><i class="no-highlight">113</i>&nbsp;    prev[i][state] = index;</b>
+<b class="fc"><i class="no-highlight">114</i>&nbsp;    return memo[i][state] = minCost;</b>
+<i class="no-highlight">115</i>&nbsp;  }
+<i class="no-highlight">116</i>&nbsp;
+<i class="no-highlight">117</i>&nbsp;  // Example usage:
+<i class="no-highlight">118</i>&nbsp;  public static void main(String[] args) {
+<i class="no-highlight">119</i>&nbsp;
+<i class="no-highlight">120</i>&nbsp;    // Create adjacency matrix
+<b class="nc"><i class="no-highlight">121</i>&nbsp;    int n = 6;</b>
+<b class="nc"><i class="no-highlight">122</i>&nbsp;    double[][] distanceMatrix = new double[n][n];</b>
+<b class="nc"><i class="no-highlight">123</i>&nbsp;    for (double[] row : distanceMatrix) java.util.Arrays.fill(row, 10000);</b>
+<b class="nc"><i class="no-highlight">124</i>&nbsp;    distanceMatrix[1][4] = distanceMatrix[4][1] = 2;</b>
+<b class="nc"><i class="no-highlight">125</i>&nbsp;    distanceMatrix[4][2] = distanceMatrix[2][4] = 4;</b>
+<b class="nc"><i class="no-highlight">126</i>&nbsp;    distanceMatrix[2][3] = distanceMatrix[3][2] = 6;</b>
+<b class="nc"><i class="no-highlight">127</i>&nbsp;    distanceMatrix[3][0] = distanceMatrix[0][3] = 8;</b>
+<b class="nc"><i class="no-highlight">128</i>&nbsp;    distanceMatrix[0][5] = distanceMatrix[5][0] = 10;</b>
+<b class="nc"><i class="no-highlight">129</i>&nbsp;    distanceMatrix[5][1] = distanceMatrix[1][5] = 12;</b>
+<i class="no-highlight">130</i>&nbsp;
+<i class="no-highlight">131</i>&nbsp;    // Run the solver
+<b class="nc"><i class="no-highlight">132</i>&nbsp;    TspDynamicProgrammingRecursive solver = new TspDynamicProgrammingRecursive(distanceMatrix);</b>
+<i class="no-highlight">133</i>&nbsp;
+<i class="no-highlight">134</i>&nbsp;    // Prints: [0, 3, 2, 4, 1, 5, 0]
+<b class="nc"><i class="no-highlight">135</i>&nbsp;    System.out.println(&quot;Tour: &quot; + solver.getTour());</b>
+<i class="no-highlight">136</i>&nbsp;
+<i class="no-highlight">137</i>&nbsp;    // Print: 42.0
+<b class="nc"><i class="no-highlight">138</i>&nbsp;    System.out.println(&quot;Tour cost: &quot; + solver.getTourCost());</b>
+<b class="nc"><i class="no-highlight">139</i>&nbsp;  }</b>
+<i class="no-highlight">140</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-01 13:32</div>
+</div>
+</body>
+</html>

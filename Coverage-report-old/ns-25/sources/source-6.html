@@ -1,0 +1,189 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > PowerSet</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.other</a>
+</div>
+
+<h1>Coverage Summary for Class: PowerSet (com.williamfiset.algorithms.other)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PowerSet</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/21)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/**
+<i class="no-highlight">2</i>&nbsp; * This code snippet shows how to generate the powerset of a set which is the set of all subsets of
+<i class="no-highlight">3</i>&nbsp; * a set. There are two common ways of doing this which are to use the binary representation of
+<i class="no-highlight">4</i>&nbsp; * numbers on a computer or to do it recursively. Both methods are shown here, pick your flavor!
+<i class="no-highlight">5</i>&nbsp; *
+<i class="no-highlight">6</i>&nbsp; * &lt;p&gt;Time Complexity: O( 2^n )
+<i class="no-highlight">7</i>&nbsp; *
+<i class="no-highlight">8</i>&nbsp; * @author William Fiset, william.alexandre.fiset@gmail.com
+<i class="no-highlight">9</i>&nbsp; */
+<i class="no-highlight">10</i>&nbsp;package com.williamfiset.algorithms.other;
+<i class="no-highlight">11</i>&nbsp;
+<b class="nc"><i class="no-highlight">12</i>&nbsp;public class PowerSet {</b>
+<i class="no-highlight">13</i>&nbsp;
+<i class="no-highlight">14</i>&nbsp;  // Use the fact that numbers represented in binary can be
+<i class="no-highlight">15</i>&nbsp;  // used to generate all the subsets of an array
+<i class="no-highlight">16</i>&nbsp;  static void powerSetUsingBinary(int[] set) {
+<i class="no-highlight">17</i>&nbsp;
+<b class="nc"><i class="no-highlight">18</i>&nbsp;    final int N = set.length;</b>
+<b class="nc"><i class="no-highlight">19</i>&nbsp;    final int MAX_VAL = 1 &lt;&lt; N;</b>
+<i class="no-highlight">20</i>&nbsp;
+<b class="nc"><i class="no-highlight">21</i>&nbsp;    for (int subset = 0; subset &lt; MAX_VAL; subset++) {</b>
+<b class="nc"><i class="no-highlight">22</i>&nbsp;      System.out.print(&quot;{ &quot;);</b>
+<b class="nc"><i class="no-highlight">23</i>&nbsp;      for (int i = 0; i &lt; N; i++) {</b>
+<b class="nc"><i class="no-highlight">24</i>&nbsp;        int mask = 1 &lt;&lt; i;</b>
+<b class="nc"><i class="no-highlight">25</i>&nbsp;        if ((subset &amp; mask) == mask) System.out.print(set[i] + &quot; &quot;);</b>
+<i class="no-highlight">26</i>&nbsp;      }
+<b class="nc"><i class="no-highlight">27</i>&nbsp;      System.out.println(&quot;}&quot;);</b>
+<i class="no-highlight">28</i>&nbsp;    }
+<i class="no-highlight">29</i>&nbsp;  }
+<i class="no-highlight">30</i>&nbsp;
+<i class="no-highlight">31</i>&nbsp;  // Recursively generate the powerset (set of all subsets) of an array by maintaining
+<i class="no-highlight">32</i>&nbsp;  // a boolean array used to indicate which element have been selected
+<i class="no-highlight">33</i>&nbsp;  static void powerSetRecursive(int at, int[] set, boolean[] used) {
+<i class="no-highlight">34</i>&nbsp;
+<b class="nc"><i class="no-highlight">35</i>&nbsp;    if (at == set.length) {</b>
+<i class="no-highlight">36</i>&nbsp;
+<i class="no-highlight">37</i>&nbsp;      // Print found subset!
+<b class="nc"><i class="no-highlight">38</i>&nbsp;      System.out.print(&quot;{ &quot;);</b>
+<b class="nc"><i class="no-highlight">39</i>&nbsp;      for (int i = 0; i &lt; set.length; i++) if (used[i]) System.out.print(set[i] + &quot; &quot;);</b>
+<b class="nc"><i class="no-highlight">40</i>&nbsp;      System.out.println(&quot;}&quot;);</b>
+<i class="no-highlight">41</i>&nbsp;
+<i class="no-highlight">42</i>&nbsp;    } else {
+<i class="no-highlight">43</i>&nbsp;
+<i class="no-highlight">44</i>&nbsp;      // Include this element
+<b class="nc"><i class="no-highlight">45</i>&nbsp;      used[at] = true;</b>
+<b class="nc"><i class="no-highlight">46</i>&nbsp;      powerSetRecursive(at + 1, set, used);</b>
+<i class="no-highlight">47</i>&nbsp;
+<i class="no-highlight">48</i>&nbsp;      // Backtrack and don&#39;t include this element
+<b class="nc"><i class="no-highlight">49</i>&nbsp;      used[at] = false;</b>
+<b class="nc"><i class="no-highlight">50</i>&nbsp;      powerSetRecursive(at + 1, set, used);</b>
+<i class="no-highlight">51</i>&nbsp;    }
+<i class="no-highlight">52</i>&nbsp;  }
+<i class="no-highlight">53</i>&nbsp;
+<i class="no-highlight">54</i>&nbsp;  public static void main(String[] args) {
+<i class="no-highlight">55</i>&nbsp;
+<i class="no-highlight">56</i>&nbsp;    // Example usage:
+<b class="nc"><i class="no-highlight">57</i>&nbsp;    int[] set = {1, 2, 3};</b>
+<i class="no-highlight">58</i>&nbsp;
+<b class="nc"><i class="no-highlight">59</i>&nbsp;    powerSetUsingBinary(set);</b>
+<i class="no-highlight">60</i>&nbsp;    // prints:
+<i class="no-highlight">61</i>&nbsp;    // { }
+<i class="no-highlight">62</i>&nbsp;    // { 1 }
+<i class="no-highlight">63</i>&nbsp;    // { 2 }
+<i class="no-highlight">64</i>&nbsp;    // { 1 2 }
+<i class="no-highlight">65</i>&nbsp;    // { 3 }
+<i class="no-highlight">66</i>&nbsp;    // { 1 3 }
+<i class="no-highlight">67</i>&nbsp;    // { 2 3 }
+<i class="no-highlight">68</i>&nbsp;    // { 1 2 3 }
+<i class="no-highlight">69</i>&nbsp;
+<b class="nc"><i class="no-highlight">70</i>&nbsp;    System.out.println();</b>
+<i class="no-highlight">71</i>&nbsp;
+<b class="nc"><i class="no-highlight">72</i>&nbsp;    powerSetRecursive(0, set, new boolean[set.length]);</b>
+<i class="no-highlight">73</i>&nbsp;    // prints:
+<i class="no-highlight">74</i>&nbsp;    // { 1 2 3 }
+<i class="no-highlight">75</i>&nbsp;    // { 1 2 }
+<i class="no-highlight">76</i>&nbsp;    // { 1 3 }
+<i class="no-highlight">77</i>&nbsp;    // { 1 }
+<i class="no-highlight">78</i>&nbsp;    // { 2 3 }
+<i class="no-highlight">79</i>&nbsp;    // { 2 }
+<i class="no-highlight">80</i>&nbsp;    // { 3 }
+<i class="no-highlight">81</i>&nbsp;    // { }
+<i class="no-highlight">82</i>&nbsp;
+<i class="no-highlight">83</i>&nbsp;  }
+<i class="no-highlight">84</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-01 13:32</div>
+</div>
+</body>
+</html>

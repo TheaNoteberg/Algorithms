@@ -1,0 +1,297 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > LinearRecurrenceSolver</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.linearalgebra</a>
+</div>
+
+<h1>Coverage Summary for Class: LinearRecurrenceSolver (com.williamfiset.algorithms.linearalgebra)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">LinearRecurrenceSolver</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/66)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/**
+<i class="no-highlight">2</i>&nbsp; * In this file I present some code to solve a general linear recurrence of the form: f(n) = k +
+<i class="no-highlight">3</i>&nbsp; * c_1*f(n-1) + c_2*f(n-2) + c_3*f(n-3) + ... c_m*f(n-m) in O(m^3log(n)) time where k is a constant,
+<i class="no-highlight">4</i>&nbsp; * c_i is a constant.
+<i class="no-highlight">5</i>&nbsp; *
+<i class="no-highlight">6</i>&nbsp; * &lt;p&gt;Homogeneous linear recurrence relations with constant coefficients (like above) are some of
+<i class="no-highlight">7</i>&nbsp; * the most common types of recurrences. The recurrence for the Fibonacci numbers: f(n) = f(n-1) +
+<i class="no-highlight">8</i>&nbsp; * f(n-2) with f(0) = f(1) = 1 is a classic example of such a recurrence.
+<i class="no-highlight">9</i>&nbsp; *
+<i class="no-highlight">10</i>&nbsp; * &lt;p&gt;To understand how to use this code look at the examples given in the main method
+<i class="no-highlight">11</i>&nbsp; *
+<i class="no-highlight">12</i>&nbsp; * &lt;p&gt;Time Complexity: O(m^3log(n))
+<i class="no-highlight">13</i>&nbsp; *
+<i class="no-highlight">14</i>&nbsp; * @author William Fiset, william.alexandre.fiset@gmail.com
+<i class="no-highlight">15</i>&nbsp; */
+<i class="no-highlight">16</i>&nbsp;package com.williamfiset.algorithms.linearalgebra;
+<i class="no-highlight">17</i>&nbsp;
+<b class="nc"><i class="no-highlight">18</i>&nbsp;class LinearRecurrenceSolver {</b>
+<i class="no-highlight">19</i>&nbsp;
+<i class="no-highlight">20</i>&nbsp;  static long[][] matrixDeepCopy(long[][] M) {
+<b class="nc"><i class="no-highlight">21</i>&nbsp;    final int N = M.length;</b>
+<b class="nc"><i class="no-highlight">22</i>&nbsp;    long[][] newMatrix = new long[N][N];</b>
+<b class="nc"><i class="no-highlight">23</i>&nbsp;    for (int i = 0; i &lt; N; i++) newMatrix[i] = M[i].clone();</b>
+<b class="nc"><i class="no-highlight">24</i>&nbsp;    return newMatrix;</b>
+<i class="no-highlight">25</i>&nbsp;  }
+<i class="no-highlight">26</i>&nbsp;
+<i class="no-highlight">27</i>&nbsp;  // Perform matrix multiplication, O(n^3)
+<i class="no-highlight">28</i>&nbsp;  static long[][] squareMatrixMult(long[][] m1, long[][] m2) {
+<i class="no-highlight">29</i>&nbsp;
+<b class="nc"><i class="no-highlight">30</i>&nbsp;    final int N = m1.length;</b>
+<b class="nc"><i class="no-highlight">31</i>&nbsp;    long[][] newMatrix = new long[N][N];</b>
+<i class="no-highlight">32</i>&nbsp;
+<b class="nc"><i class="no-highlight">33</i>&nbsp;    for (int i = 0; i &lt; N; i++)</b>
+<b class="nc"><i class="no-highlight">34</i>&nbsp;      for (int j = 0; j &lt; N; j++)</b>
+<b class="nc"><i class="no-highlight">35</i>&nbsp;        for (int k = 0; k &lt; N; k++)</b>
+<i class="no-highlight">36</i>&nbsp;          // Overflow can happen here, watch out!
+<b class="nc"><i class="no-highlight">37</i>&nbsp;          newMatrix[i][j] = newMatrix[i][j] + m1[i][k] * m2[k][j];</b>
+<i class="no-highlight">38</i>&nbsp;
+<b class="nc"><i class="no-highlight">39</i>&nbsp;    return newMatrix;</b>
+<i class="no-highlight">40</i>&nbsp;  }
+<i class="no-highlight">41</i>&nbsp;
+<i class="no-highlight">42</i>&nbsp;  // Raise a matrix to the pth power. If p is negative
+<i class="no-highlight">43</i>&nbsp;  // return null and if p is zero return the identity.
+<i class="no-highlight">44</i>&nbsp;  // NOTE: Make sure the matrix is a square matrix and
+<i class="no-highlight">45</i>&nbsp;  // also watch out for overflow as the numbers climb quickly!
+<i class="no-highlight">46</i>&nbsp;  static long[][] matrixPower(long[][] matrix, long p) {
+<i class="no-highlight">47</i>&nbsp;
+<b class="nc"><i class="no-highlight">48</i>&nbsp;    if (p &lt; 0) return null;</b>
+<i class="no-highlight">49</i>&nbsp;
+<b class="nc"><i class="no-highlight">50</i>&nbsp;    final int N = matrix.length;</b>
+<b class="nc"><i class="no-highlight">51</i>&nbsp;    long[][] newMatrix = null;</b>
+<i class="no-highlight">52</i>&nbsp;
+<i class="no-highlight">53</i>&nbsp;    // Return identity matrix
+<b class="nc"><i class="no-highlight">54</i>&nbsp;    if (p == 0) {</b>
+<b class="nc"><i class="no-highlight">55</i>&nbsp;      newMatrix = new long[N][N];</b>
+<b class="nc"><i class="no-highlight">56</i>&nbsp;      for (int i = 0; i &lt; N; i++) newMatrix[i][i] = 1L;</b>
+<i class="no-highlight">57</i>&nbsp;    } else {
+<i class="no-highlight">58</i>&nbsp;
+<b class="nc"><i class="no-highlight">59</i>&nbsp;      long[][] P = matrixDeepCopy(matrix);</b>
+<i class="no-highlight">60</i>&nbsp;
+<b class="nc"><i class="no-highlight">61</i>&nbsp;      while (p &gt; 0) {</b>
+<i class="no-highlight">62</i>&nbsp;
+<b class="nc"><i class="no-highlight">63</i>&nbsp;        if ((p &amp; 1L) == 1L) {</b>
+<b class="nc"><i class="no-highlight">64</i>&nbsp;          if (newMatrix == null) newMatrix = matrixDeepCopy(P);</b>
+<b class="nc"><i class="no-highlight">65</i>&nbsp;          else newMatrix = squareMatrixMult(newMatrix, P);</b>
+<i class="no-highlight">66</i>&nbsp;        }
+<i class="no-highlight">67</i>&nbsp;
+<i class="no-highlight">68</i>&nbsp;        // Repeatedly square P every loop, O(n^3)
+<b class="nc"><i class="no-highlight">69</i>&nbsp;        P = squareMatrixMult(P, P);</b>
+<b class="nc"><i class="no-highlight">70</i>&nbsp;        p &gt;&gt;= 1L;</b>
+<i class="no-highlight">71</i>&nbsp;      }
+<i class="no-highlight">72</i>&nbsp;    }
+<i class="no-highlight">73</i>&nbsp;
+<b class="nc"><i class="no-highlight">74</i>&nbsp;    return newMatrix;</b>
+<i class="no-highlight">75</i>&nbsp;  }
+<i class="no-highlight">76</i>&nbsp;
+<i class="no-highlight">77</i>&nbsp;  // Construct the transformation matrix
+<i class="no-highlight">78</i>&nbsp;  // http://fusharblog.com/solving-linear-recurrence-for-programming-contest/
+<i class="no-highlight">79</i>&nbsp;  static long[][] createTransformationMatrix(long[] coeffs, int size) {
+<i class="no-highlight">80</i>&nbsp;
+<b class="nc"><i class="no-highlight">81</i>&nbsp;    long T[][] = new long[size][size];</b>
+<b class="nc"><i class="no-highlight">82</i>&nbsp;    for (int i = 0; i + 1 &lt; size; i++) T[i][i + 1] = 1L;</b>
+<b class="nc"><i class="no-highlight">83</i>&nbsp;    for (int i = 0; i &lt; size - 1; i++) T[size - 2][i] = coeffs[coeffs.length - i - 1];</b>
+<b class="nc"><i class="no-highlight">84</i>&nbsp;    T[size - 1][size - 1] = T[size - 2][size - 1] = 1L;</b>
+<b class="nc"><i class="no-highlight">85</i>&nbsp;    return T;</b>
+<i class="no-highlight">86</i>&nbsp;  }
+<i class="no-highlight">87</i>&nbsp;
+<i class="no-highlight">88</i>&nbsp;  /**
+<i class="no-highlight">89</i>&nbsp;   * Solve for the nth term in a linear recurrence of the following form f(n) = k + c_1*f(n-1) +
+<i class="no-highlight">90</i>&nbsp;   * c_2*f(n-2) + ... + c_m*f(n-m) in O(m^3log(n)) time
+<i class="no-highlight">91</i>&nbsp;   *
+<i class="no-highlight">92</i>&nbsp;   * @param coefficients - contains the coefficients for the recurrence, so [c_1, c_2, c_3, ... ,
+<i class="no-highlight">93</i>&nbsp;   *     c_m]
+<i class="no-highlight">94</i>&nbsp;   * @param f_0 - The value of the function at f(0). This is usually 1 or k.
+<i class="no-highlight">95</i>&nbsp;   * @param k - The constant k added to the recurrence
+<i class="no-highlight">96</i>&nbsp;   * @param n - The nth term of the recurrence you wish to find
+<i class="no-highlight">97</i>&nbsp;   *     &lt;p&gt;NOTE1: The numbers produced by this method can get VERY LARGE quickly so watch out for
+<i class="no-highlight">98</i>&nbsp;   *     overflow because there is a very high probability it will occur.
+<i class="no-highlight">99</i>&nbsp;   *     &lt;p&gt;NOTE2: Make sure the dimension of coefficients array is no bigger than it needs to be.
+<i class="no-highlight">100</i>&nbsp;   *     For instance do not add any additional zero coefficient terms at the end of the
+<i class="no-highlight">101</i>&nbsp;   *     coefficients array as this is throw off the recurrence.
+<i class="no-highlight">102</i>&nbsp;   *     &lt;p&gt;EXAMPLE: If your recurrence is f(n) = 2 + 3*f(n-1) + 5f(n-4) with f(0) = 2 and you want
+<i class="no-highlight">103</i>&nbsp;   *     to find f(100) call the function like: solveRecurrence([3, 0, 0, 5], 2, 2, 100)
+<i class="no-highlight">104</i>&nbsp;   */
+<i class="no-highlight">105</i>&nbsp;  static long solveRecurrence(long[] coefficients, long f_0, long k, long n) {
+<i class="no-highlight">106</i>&nbsp;
+<b class="nc"><i class="no-highlight">107</i>&nbsp;    if (n &lt; 0) throw new IllegalArgumentException(&quot;n should probably be &gt;= 0&quot;);</b>
+<b class="nc"><i class="no-highlight">108</i>&nbsp;    long[] initialValues = computeInitialValues(coefficients, f_0, k);</b>
+<i class="no-highlight">109</i>&nbsp;
+<i class="no-highlight">110</i>&nbsp;    // We already know the value
+<b class="nc"><i class="no-highlight">111</i>&nbsp;    if (n &lt; initialValues.length) return initialValues[(int) n];</b>
+<i class="no-highlight">112</i>&nbsp;
+<i class="no-highlight">113</i>&nbsp;    // Add 1 to account for the extra constant &#39;k&#39; in the recurrence: f(n) = k + c_1*f(n-1) + ...
+<b class="nc"><i class="no-highlight">114</i>&nbsp;    final int size = initialValues.length + 1;</b>
+<i class="no-highlight">115</i>&nbsp;
+<b class="nc"><i class="no-highlight">116</i>&nbsp;    long[][] T = createTransformationMatrix(coefficients, size);</b>
+<b class="nc"><i class="no-highlight">117</i>&nbsp;    long[][] result = matrixPower(T, n);</b>
+<i class="no-highlight">118</i>&nbsp;
+<i class="no-highlight">119</i>&nbsp;    // Find answer by multiplying resultant matrix with multiplication
+<i class="no-highlight">120</i>&nbsp;    // vector, that is the initial values appended with the constant k
+<b class="nc"><i class="no-highlight">121</i>&nbsp;    long ans = 0L;</b>
+<b class="nc"><i class="no-highlight">122</i>&nbsp;    for (int j = 0; j &lt; size; j++) {</b>
+<b class="nc"><i class="no-highlight">123</i>&nbsp;      if (j == size - 1) {</b>
+<b class="nc"><i class="no-highlight">124</i>&nbsp;        ans = ans + result[0][j] * k;</b>
+<i class="no-highlight">125</i>&nbsp;      } else {
+<b class="nc"><i class="no-highlight">126</i>&nbsp;        ans = ans + result[0][j] * initialValues[j];</b>
+<i class="no-highlight">127</i>&nbsp;      }
+<i class="no-highlight">128</i>&nbsp;    }
+<i class="no-highlight">129</i>&nbsp;
+<b class="nc"><i class="no-highlight">130</i>&nbsp;    return ans;</b>
+<i class="no-highlight">131</i>&nbsp;  }
+<i class="no-highlight">132</i>&nbsp;
+<i class="no-highlight">133</i>&nbsp;  /**
+<i class="no-highlight">134</i>&nbsp;   * You may not always know what the initial values for your recurrence relation are, so sometimes
+<i class="no-highlight">135</i>&nbsp;   * it&#39;s useful to brute force them using dynamic programming.
+<i class="no-highlight">136</i>&nbsp;   *
+<i class="no-highlight">137</i>&nbsp;   * &lt;p&gt;Given the constants [c_1, c_2, c_3, ...] and the constant &#39;k&#39; in the recurrence f(n) = k +
+<i class="no-highlight">138</i>&nbsp;   * c_1*f(n-1) + c_2*f(n-2) + ... + c_m*f(n-m) this function computes and returns the initial
+<i class="no-highlight">139</i>&nbsp;   * values of the function: [f(0), f(1), f(2), ...]
+<i class="no-highlight">140</i>&nbsp;   *
+<i class="no-highlight">141</i>&nbsp;   * @param coeffs - The coefficients on your linear recurrence
+<i class="no-highlight">142</i>&nbsp;   * @param f_0 - The value of the function at f(0), this is usually 1 or k
+<i class="no-highlight">143</i>&nbsp;   * @param k - The constant value in the linear recurrence
+<i class="no-highlight">144</i>&nbsp;   *     &lt;p&gt;NOTE: This method assumes that f(n) = 0 when n &lt; 0
+<i class="no-highlight">145</i>&nbsp;   */
+<i class="no-highlight">146</i>&nbsp;  static long[] computeInitialValues(long[] coeffs, long f_0, long k) {
+<i class="no-highlight">147</i>&nbsp;
+<b class="nc"><i class="no-highlight">148</i>&nbsp;    final int N = coeffs.length;</b>
+<b class="nc"><i class="no-highlight">149</i>&nbsp;    long[] DP = new long[N];</b>
+<b class="nc"><i class="no-highlight">150</i>&nbsp;    DP[0] = f_0;</b>
+<i class="no-highlight">151</i>&nbsp;
+<b class="nc"><i class="no-highlight">152</i>&nbsp;    for (int n = 1; n &lt; N; n++) {</b>
+<b class="nc"><i class="no-highlight">153</i>&nbsp;      for (int i = 1; i &lt;= n; i++) DP[n] += DP[n - i] * coeffs[i - 1];</b>
+<b class="nc"><i class="no-highlight">154</i>&nbsp;      DP[n] += k;</b>
+<i class="no-highlight">155</i>&nbsp;    }
+<i class="no-highlight">156</i>&nbsp;
+<b class="nc"><i class="no-highlight">157</i>&nbsp;    return DP;</b>
+<i class="no-highlight">158</i>&nbsp;  }
+<i class="no-highlight">159</i>&nbsp;
+<i class="no-highlight">160</i>&nbsp;  public static void main(String[] args) {
+<i class="no-highlight">161</i>&nbsp;
+<i class="no-highlight">162</i>&nbsp;    // Setup the Fibonacci recurrence: f(n) = 0 + 1*f(n-1) + 1*f(n-2)
+<b class="nc"><i class="no-highlight">163</i>&nbsp;    long[] coefficients = {1, 1};</b>
+<b class="nc"><i class="no-highlight">164</i>&nbsp;    long k = 0;</b>
+<i class="no-highlight">165</i>&nbsp;
+<b class="nc"><i class="no-highlight">166</i>&nbsp;    for (int i = 0; i &lt;= 10; i++) {</b>
+<b class="nc"><i class="no-highlight">167</i>&nbsp;      long fib = solveRecurrence(coefficients, 1, k, i);</b>
+<b class="nc"><i class="no-highlight">168</i>&nbsp;      System.out.println(fib);</b>
+<i class="no-highlight">169</i>&nbsp;    }
+<i class="no-highlight">170</i>&nbsp;
+<i class="no-highlight">171</i>&nbsp;    // Suppose we have the following recurrence:
+<i class="no-highlight">172</i>&nbsp;    // f(n) = 2 + 2f(n-1) + f(n-3) with f(0) = 2 and f(n) = 0 if n &lt; 0
+<i class="no-highlight">173</i>&nbsp;    // and we want to know what f(25) is here is what we would do:
+<b class="nc"><i class="no-highlight">174</i>&nbsp;    long[] coefficients2 = {2, 0, 1};</b>
+<b class="nc"><i class="no-highlight">175</i>&nbsp;    k = 2;</b>
+<i class="no-highlight">176</i>&nbsp;
+<b class="nc"><i class="no-highlight">177</i>&nbsp;    final int N = 25;</b>
+<b class="nc"><i class="no-highlight">178</i>&nbsp;    long[] DP = new long[N + 1];</b>
+<i class="no-highlight">179</i>&nbsp;
+<i class="no-highlight">180</i>&nbsp;    // Compute the answers for the recurrence using dynamic programming (DP)
+<i class="no-highlight">181</i>&nbsp;    // then use these generated answers to verify we got the right answer
+<b class="nc"><i class="no-highlight">182</i>&nbsp;    for (int n = 0; n &lt;= N; n++) {</b>
+<b class="nc"><i class="no-highlight">183</i>&nbsp;      if (n - 1 &gt;= 0) DP[n] += 2 * DP[n - 1];</b>
+<b class="nc"><i class="no-highlight">184</i>&nbsp;      if (n - 3 &gt;= 0) DP[n] += DP[n - 3];</b>
+<b class="nc"><i class="no-highlight">185</i>&nbsp;      DP[n] += k;</b>
+<i class="no-highlight">186</i>&nbsp;    }
+<i class="no-highlight">187</i>&nbsp;
+<b class="nc"><i class="no-highlight">188</i>&nbsp;    long answer = solveRecurrence(coefficients2, k, k, N);</b>
+<b class="nc"><i class="no-highlight">189</i>&nbsp;    if (DP[N] != answer) throw new RuntimeException(&quot;Wrong answer!&quot;);</b>
+<b class="nc"><i class="no-highlight">190</i>&nbsp;    System.out.printf(&quot;f(%d) = %d\n&quot;, N, answer);</b>
+<i class="no-highlight">191</i>&nbsp;  }
+<i class="no-highlight">192</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-07 12:04</div>
+</div>
+</body>
+</html>

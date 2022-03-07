@@ -1,0 +1,162 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > SlidingWindowMaximum</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.other</a>
+</div>
+
+<h1>Coverage Summary for Class: SlidingWindowMaximum (com.williamfiset.algorithms.other)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SlidingWindowMaximum</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (16/16)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/**
+<i class="no-highlight">2</i>&nbsp; * This file contain an implementation of the maximum sliding window problem. This code has been
+<i class="no-highlight">3</i>&nbsp; * tested against the judge data on:
+<i class="no-highlight">4</i>&nbsp; *
+<i class="no-highlight">5</i>&nbsp; * &lt;p&gt;https://leetcode.com/problems/sliding-window-maximum/description/
+<i class="no-highlight">6</i>&nbsp; *
+<i class="no-highlight">7</i>&nbsp; * @author William Fiset, william.alexandre.fiset@gmail.com
+<i class="no-highlight">8</i>&nbsp; */
+<i class="no-highlight">9</i>&nbsp;package com.williamfiset.algorithms.other;
+<i class="no-highlight">10</i>&nbsp;
+<i class="no-highlight">11</i>&nbsp;import java.util.ArrayDeque;
+<i class="no-highlight">12</i>&nbsp;import java.util.Deque;
+<i class="no-highlight">13</i>&nbsp;
+<i class="no-highlight">14</i>&nbsp;public class SlidingWindowMaximum {
+<i class="no-highlight">15</i>&nbsp;
+<i class="no-highlight">16</i>&nbsp;  int[] values;
+<i class="no-highlight">17</i>&nbsp;  public int N, lo, hi;
+<i class="no-highlight">18</i>&nbsp;
+<b class="fc"><i class="no-highlight">19</i>&nbsp;  Deque&lt;Integer&gt; deque = new ArrayDeque&lt;&gt;();</b>
+<i class="no-highlight">20</i>&nbsp;
+<b class="fc"><i class="no-highlight">21</i>&nbsp;  public SlidingWindowMaximum(int[] values) {</b>
+<b class="fc"><i class="no-highlight">22</i>&nbsp;    if (values == null) throw new IllegalArgumentException();</b>
+<b class="fc"><i class="no-highlight">23</i>&nbsp;    this.values = values;</b>
+<b class="fc"><i class="no-highlight">24</i>&nbsp;    N = values.length;</b>
+<b class="fc"><i class="no-highlight">25</i>&nbsp;  }</b>
+<i class="no-highlight">26</i>&nbsp;
+<i class="no-highlight">27</i>&nbsp;  // Advances the front of the window by one unit
+<i class="no-highlight">28</i>&nbsp;  public void advance() {
+<i class="no-highlight">29</i>&nbsp;
+<i class="no-highlight">30</i>&nbsp;    // Remove all the worse values in the back of the deque
+<b class="fc"><i class="no-highlight">31</i>&nbsp;    while (!deque.isEmpty() &amp;&amp; values[deque.peekLast()] &lt; values[hi])</b>
+<b class="fc"><i class="no-highlight">32</i>&nbsp;      deque.removeLast(); // Change the &#39;&lt;&#39; sign here ^^^ to &#39;&gt;&#39; for minimum sliding window</b>
+<i class="no-highlight">33</i>&nbsp;
+<i class="no-highlight">34</i>&nbsp;    // Add the next index to the back of the deque
+<b class="fc"><i class="no-highlight">35</i>&nbsp;    deque.addLast(hi);</b>
+<i class="no-highlight">36</i>&nbsp;
+<i class="no-highlight">37</i>&nbsp;    // Increase the window size
+<b class="fc"><i class="no-highlight">38</i>&nbsp;    hi++;</b>
+<b class="fc"><i class="no-highlight">39</i>&nbsp;  }</b>
+<i class="no-highlight">40</i>&nbsp;
+<i class="no-highlight">41</i>&nbsp;  // Retracks the back of the window by one unit
+<i class="no-highlight">42</i>&nbsp;  public void shrink() {
+<i class="no-highlight">43</i>&nbsp;
+<i class="no-highlight">44</i>&nbsp;    // Decrease window size by pushing it forward
+<b class="fc"><i class="no-highlight">45</i>&nbsp;    lo++;</b>
+<i class="no-highlight">46</i>&nbsp;
+<i class="no-highlight">47</i>&nbsp;    // Remove elements in the front of the queue whom are no longer
+<i class="no-highlight">48</i>&nbsp;    // valid in the reduced window.
+<b class="fc"><i class="no-highlight">49</i>&nbsp;    while (!deque.isEmpty() &amp;&amp; deque.peekFirst() &lt; lo) deque.removeFirst();</b>
+<b class="fc"><i class="no-highlight">50</i>&nbsp;  }</b>
+<i class="no-highlight">51</i>&nbsp;
+<i class="no-highlight">52</i>&nbsp;  // Query the current maximum value in the window
+<i class="no-highlight">53</i>&nbsp;  public int getMax() {
+<b class="fc"><i class="no-highlight">54</i>&nbsp;    if (lo &gt;= hi) throw new IllegalStateException(&quot;Make sure lo &lt; hi&quot;);</b>
+<b class="fc"><i class="no-highlight">55</i>&nbsp;    return values[deque.peekFirst()];</b>
+<i class="no-highlight">56</i>&nbsp;  }
+<i class="no-highlight">57</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-01 13:32</div>
+</div>
+</body>
+</html>

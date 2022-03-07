@@ -1,0 +1,272 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ConvexPolygonCutWithLineSegment</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.geometry</a>
+</div>
+
+<h1>Coverage Summary for Class: ConvexPolygonCutWithLineSegment (com.williamfiset.algorithms.geometry)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ConvexPolygonCutWithLineSegment</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/56)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">ConvexPolygonCutWithLineSegment$Pt</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/60)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/**
+<i class="no-highlight">2</i>&nbsp; * This algorithm cuts a ordered convex polygon with a line segment and returns the two resulting
+<i class="no-highlight">3</i>&nbsp; * pieces.
+<i class="no-highlight">4</i>&nbsp; *
+<i class="no-highlight">5</i>&nbsp; * &lt;p&gt;Time Complexity: O(nlogn)
+<i class="no-highlight">6</i>&nbsp; *
+<i class="no-highlight">7</i>&nbsp; * @author Finn Lidbetter
+<i class="no-highlight">8</i>&nbsp; */
+<i class="no-highlight">9</i>&nbsp;package com.williamfiset.algorithms.geometry;
+<i class="no-highlight">10</i>&nbsp;
+<i class="no-highlight">11</i>&nbsp;import java.util.*;
+<i class="no-highlight">12</i>&nbsp;
+<b class="nc"><i class="no-highlight">13</i>&nbsp;public class ConvexPolygonCutWithLineSegment {</b>
+<i class="no-highlight">14</i>&nbsp;
+<i class="no-highlight">15</i>&nbsp;  private static final double EPS = 1e-9;
+<i class="no-highlight">16</i>&nbsp;
+<i class="no-highlight">17</i>&nbsp;  // Simple 2D point class.
+<i class="no-highlight">18</i>&nbsp;  public static class Pt {
+<i class="no-highlight">19</i>&nbsp;    double x, y;
+<i class="no-highlight">20</i>&nbsp;
+<b class="nc"><i class="no-highlight">21</i>&nbsp;    public Pt(double x, double y) {</b>
+<b class="nc"><i class="no-highlight">22</i>&nbsp;      this.x = x;</b>
+<b class="nc"><i class="no-highlight">23</i>&nbsp;      this.y = y;</b>
+<i class="no-highlight">24</i>&nbsp;    }
+<i class="no-highlight">25</i>&nbsp;
+<i class="no-highlight">26</i>&nbsp;    @Override
+<i class="no-highlight">27</i>&nbsp;    public String toString() {
+<b class="nc"><i class="no-highlight">28</i>&nbsp;      return &quot;(&quot; + x + &quot;,&quot; + y + &quot;)&quot;;</b>
+<i class="no-highlight">29</i>&nbsp;    }
+<i class="no-highlight">30</i>&nbsp;  }
+<i class="no-highlight">31</i>&nbsp;
+<i class="no-highlight">32</i>&nbsp;  // sorts the points in CW direction.
+<i class="no-highlight">33</i>&nbsp;  public static List&lt;Pt&gt; sortCW(List&lt;Pt&gt; poly) {
+<i class="no-highlight">34</i>&nbsp;
+<b class="nc"><i class="no-highlight">35</i>&nbsp;    int l = poly.size();</b>
+<b class="nc"><i class="no-highlight">36</i>&nbsp;    double centroidX = 0;</b>
+<b class="nc"><i class="no-highlight">37</i>&nbsp;    double centroidY = 0;</b>
+<b class="nc"><i class="no-highlight">38</i>&nbsp;    for (int i = 0; i &lt; l; i++) {</b>
+<b class="nc"><i class="no-highlight">39</i>&nbsp;      centroidX += poly.get(i).x;</b>
+<b class="nc"><i class="no-highlight">40</i>&nbsp;      centroidY += poly.get(i).y;</b>
+<i class="no-highlight">41</i>&nbsp;    }
+<b class="nc"><i class="no-highlight">42</i>&nbsp;    centroidX = centroidX / l;</b>
+<b class="nc"><i class="no-highlight">43</i>&nbsp;    centroidY = centroidY / l;</b>
+<b class="nc"><i class="no-highlight">44</i>&nbsp;    Pt center = new Pt(centroidX, centroidY);</b>
+<i class="no-highlight">45</i>&nbsp;
+<b class="nc"><i class="no-highlight">46</i>&nbsp;    Collections.sort(</b>
+<i class="no-highlight">47</i>&nbsp;        poly,
+<i class="no-highlight">48</i>&nbsp;        (a, b) -&gt; {
+<b class="nc"><i class="no-highlight">49</i>&nbsp;          double a1 = (Math.toDegrees(Math.atan2(a.x - center.x, a.y - center.y)) + 360) % 360;</b>
+<b class="nc"><i class="no-highlight">50</i>&nbsp;          double a2 = (Math.toDegrees(Math.atan2(b.x - center.x, b.y - center.y)) + 360) % 360;</b>
+<b class="nc"><i class="no-highlight">51</i>&nbsp;          return (int) (a1 - a2);</b>
+<i class="no-highlight">52</i>&nbsp;        });
+<b class="nc"><i class="no-highlight">53</i>&nbsp;    return poly;</b>
+<i class="no-highlight">54</i>&nbsp;  }
+<i class="no-highlight">55</i>&nbsp;
+<i class="no-highlight">56</i>&nbsp;  // Cuts a convex polygon by a specified line and returns one part
+<i class="no-highlight">57</i>&nbsp;  // of the polygon (swapping the endpoints p1 and p2 of the line
+<i class="no-highlight">58</i>&nbsp;  // will return the other part of the polygon).
+<i class="no-highlight">59</i>&nbsp;  public static Pt[] cut(Pt[] poly, Pt p1, Pt p2) {
+<b class="nc"><i class="no-highlight">60</i>&nbsp;    int n = poly.length;</b>
+<b class="nc"><i class="no-highlight">61</i>&nbsp;    List&lt;Pt&gt; res = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i class="no-highlight">62</i>&nbsp;    for (int i = 0, j = n - 1; i &lt; n; j = i++) {</b>
+<b class="nc"><i class="no-highlight">63</i>&nbsp;      int d1 = orientation(p1.x, p1.y, p2.x, p2.y, poly[j].x, poly[j].y);</b>
+<b class="nc"><i class="no-highlight">64</i>&nbsp;      int d2 = orientation(p1.x, p1.y, p2.x, p2.y, poly[i].x, poly[i].y);</b>
+<b class="nc"><i class="no-highlight">65</i>&nbsp;      if (d1 &gt;= 0) res.add(poly[j]);</b>
+<b class="nc"><i class="no-highlight">66</i>&nbsp;      if (d1 * d2 &lt; 0)</b>
+<b class="nc"><i class="no-highlight">67</i>&nbsp;        res.add(intersect(p1.x, p1.y, p2.x, p2.y, poly[j].x, poly[j].y, poly[i].x, poly[i].y));</b>
+<i class="no-highlight">68</i>&nbsp;    }
+<b class="nc"><i class="no-highlight">69</i>&nbsp;    return res.toArray(new Pt[res.size()]);</b>
+<i class="no-highlight">70</i>&nbsp;  }
+<i class="no-highlight">71</i>&nbsp;
+<i class="no-highlight">72</i>&nbsp;  private static Pt intersect(
+<i class="no-highlight">73</i>&nbsp;      double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
+<b class="nc"><i class="no-highlight">74</i>&nbsp;    double a1 = y2 - y1, a2 = y4 - y3, b1 = x1 - x2, b2 = x3 - x4;</b>
+<b class="nc"><i class="no-highlight">75</i>&nbsp;    double c1 = -(x1 * y2 - x2 * y1), c2 = -(x3 * y4 - x4 * y3);</b>
+<b class="nc"><i class="no-highlight">76</i>&nbsp;    double det = a1 * b2 - a2 * b1;</b>
+<b class="nc"><i class="no-highlight">77</i>&nbsp;    double x = -(c1 * b2 - c2 * b1) / det, y = -(a1 * c2 - a2 * c1) / det;</b>
+<b class="nc"><i class="no-highlight">78</i>&nbsp;    return new Pt(x, y);</b>
+<i class="no-highlight">79</i>&nbsp;  }
+<i class="no-highlight">80</i>&nbsp;
+<i class="no-highlight">81</i>&nbsp;  private static int orientation(double ax, double ay, double bx, double by, double cx, double cy) {
+<b class="nc"><i class="no-highlight">82</i>&nbsp;    bx -= ax;</b>
+<b class="nc"><i class="no-highlight">83</i>&nbsp;    by -= ay;</b>
+<b class="nc"><i class="no-highlight">84</i>&nbsp;    cx -= ax;</b>
+<b class="nc"><i class="no-highlight">85</i>&nbsp;    cy -= ay;</b>
+<b class="nc"><i class="no-highlight">86</i>&nbsp;    double cross = bx * cy - by * cx;</b>
+<b class="nc"><i class="no-highlight">87</i>&nbsp;    return cross &lt; -EPS ? -1 : cross &gt; EPS ? 1 : 0;</b>
+<i class="no-highlight">88</i>&nbsp;  }
+<i class="no-highlight">89</i>&nbsp;
+<i class="no-highlight">90</i>&nbsp;  // takes Pt[] as an argument and returns List&lt;Pt&gt;
+<i class="no-highlight">91</i>&nbsp;  public static List&lt;Pt&gt; makeList(Pt[] squarePolygon) {
+<b class="nc"><i class="no-highlight">92</i>&nbsp;    List&lt;Pt&gt; list = new ArrayList&lt;Pt&gt;();</b>
+<b class="nc"><i class="no-highlight">93</i>&nbsp;    for (int i = 0; i &lt; squarePolygon.length; i++) {</b>
+<b class="nc"><i class="no-highlight">94</i>&nbsp;      list.add(squarePolygon[i]);</b>
+<i class="no-highlight">95</i>&nbsp;    }
+<b class="nc"><i class="no-highlight">96</i>&nbsp;    return list;</b>
+<i class="no-highlight">97</i>&nbsp;  }
+<i class="no-highlight">98</i>&nbsp;
+<i class="no-highlight">99</i>&nbsp;  // takes List&lt;Pt&gt; as an argument and returns Pt[]
+<i class="no-highlight">100</i>&nbsp;  public static Pt[] makeArray(List&lt;Pt&gt; list) {
+<b class="nc"><i class="no-highlight">101</i>&nbsp;    int l = list.size();</b>
+<b class="nc"><i class="no-highlight">102</i>&nbsp;    Pt[] temp = new Pt[l];</b>
+<b class="nc"><i class="no-highlight">103</i>&nbsp;    for (int i = 0; i &lt; l; i++) {</b>
+<b class="nc"><i class="no-highlight">104</i>&nbsp;      temp[i] = list.get(i);</b>
+<i class="no-highlight">105</i>&nbsp;    }
+<b class="nc"><i class="no-highlight">106</i>&nbsp;    return temp;</b>
+<i class="no-highlight">107</i>&nbsp;  }
+<i class="no-highlight">108</i>&nbsp;
+<i class="no-highlight">109</i>&nbsp;  // Example usage
+<i class="no-highlight">110</i>&nbsp;  public static void main(String[] args) {
+<i class="no-highlight">111</i>&nbsp;
+<b class="nc"><i class="no-highlight">112</i>&nbsp;    Pt[] squarePolygon = {new Pt(0, 0), new Pt(0, 4), new Pt(4, 0), new Pt(4, 4), new Pt(0, 2)};</b>
+<b class="nc"><i class="no-highlight">113</i>&nbsp;    Pt p1 = new Pt(-1, -1);</b>
+<b class="nc"><i class="no-highlight">114</i>&nbsp;    Pt p2 = new Pt(5, 5);</b>
+<i class="no-highlight">115</i>&nbsp;
+<b class="nc"><i class="no-highlight">116</i>&nbsp;    List&lt;Pt&gt; list = makeList(squarePolygon);</b>
+<b class="nc"><i class="no-highlight">117</i>&nbsp;    list = sortCW(list);</b>
+<b class="nc"><i class="no-highlight">118</i>&nbsp;    squarePolygon = makeArray(list);</b>
+<i class="no-highlight">119</i>&nbsp;
+<b class="nc"><i class="no-highlight">120</i>&nbsp;    Pt[] poly1 = cut(squarePolygon, p1, p2);</b>
+<b class="nc"><i class="no-highlight">121</i>&nbsp;    Pt[] poly2 = cut(squarePolygon, p2, p1);</b>
+<i class="no-highlight">122</i>&nbsp;
+<b class="nc"><i class="no-highlight">123</i>&nbsp;    System.out.println(&quot;First polygon:&quot;);</b>
+<b class="nc"><i class="no-highlight">124</i>&nbsp;    for (Pt pt : poly1) System.out.println(pt);</b>
+<i class="no-highlight">125</i>&nbsp;    // Prints:
+<i class="no-highlight">126</i>&nbsp;    // First polygon:
+<i class="no-highlight">127</i>&nbsp;    // (0.0,4.0)
+<i class="no-highlight">128</i>&nbsp;    // (4.0,4.0)
+<i class="no-highlight">129</i>&nbsp;    // (0.0,0.0)
+<i class="no-highlight">130</i>&nbsp;    // (0.0,2.0)
+<i class="no-highlight">131</i>&nbsp;
+<b class="nc"><i class="no-highlight">132</i>&nbsp;    System.out.println(&quot;\nSecond polygon:&quot;);</b>
+<b class="nc"><i class="no-highlight">133</i>&nbsp;    for (Pt pt : poly2) System.out.println(pt);</b>
+<i class="no-highlight">134</i>&nbsp;    // Prints:
+<i class="no-highlight">135</i>&nbsp;    // Second polygon:
+<i class="no-highlight">136</i>&nbsp;    // (4.0,4.0)
+<i class="no-highlight">137</i>&nbsp;    // (4.0,0.0)
+<i class="no-highlight">138</i>&nbsp;    // (0.0,0.0)
+<i class="no-highlight">139</i>&nbsp;
+<i class="no-highlight">140</i>&nbsp;  }
+<i class="no-highlight">141</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-01 13:32</div>
+</div>
+</body>
+</html>

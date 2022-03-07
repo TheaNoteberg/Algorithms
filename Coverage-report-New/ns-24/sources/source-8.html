@@ -1,0 +1,135 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > GCD</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.math</a>
+</div>
+
+<h1>Coverage Summary for Class: GCD (com.williamfiset.algorithms.math)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GCD</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/11)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/**
+<i class="no-highlight">2</i>&nbsp; * An implementation of finding the GCD of two numbers
+<i class="no-highlight">3</i>&nbsp; *
+<i class="no-highlight">4</i>&nbsp; * &lt;p&gt;Time Complexity ~O(log(a + b))
+<i class="no-highlight">5</i>&nbsp; *
+<i class="no-highlight">6</i>&nbsp; * @author William Fiset, william.alexandre.fiset@gmail.com
+<i class="no-highlight">7</i>&nbsp; */
+<i class="no-highlight">8</i>&nbsp;package com.williamfiset.algorithms.math;
+<i class="no-highlight">9</i>&nbsp;
+<b class="nc"><i class="no-highlight">10</i>&nbsp;public class GCD {</b>
+<i class="no-highlight">11</i>&nbsp;
+<i class="no-highlight">12</i>&nbsp;  // Computes the Greatest Common Divisor (GCD) of a &amp; b
+<i class="no-highlight">13</i>&nbsp;  // This method ensures that the value returned is non negative
+<i class="no-highlight">14</i>&nbsp;  public static long gcd(long a, long b) {
+<b class="nc"><i class="no-highlight">15</i>&nbsp;    return b == 0 ? (a &lt; 0 ? -a : a) : gcd(b, a % b);</b>
+<i class="no-highlight">16</i>&nbsp;  }
+<i class="no-highlight">17</i>&nbsp;
+<i class="no-highlight">18</i>&nbsp;  public static void main(String[] args) {
+<b class="nc"><i class="no-highlight">19</i>&nbsp;    System.out.println(gcd(12, 18)); // 6</b>
+<b class="nc"><i class="no-highlight">20</i>&nbsp;    System.out.println(gcd(-12, 18)); // 6</b>
+<b class="nc"><i class="no-highlight">21</i>&nbsp;    System.out.println(gcd(12, -18)); // 6</b>
+<b class="nc"><i class="no-highlight">22</i>&nbsp;    System.out.println(gcd(-12, -18)); // 6</b>
+<i class="no-highlight">23</i>&nbsp;
+<b class="nc"><i class="no-highlight">24</i>&nbsp;    System.out.println(gcd(5, 0)); // 5</b>
+<b class="nc"><i class="no-highlight">25</i>&nbsp;    System.out.println(gcd(0, 5)); // 5</b>
+<b class="nc"><i class="no-highlight">26</i>&nbsp;    System.out.println(gcd(-5, 0)); // 5</b>
+<b class="nc"><i class="no-highlight">27</i>&nbsp;    System.out.println(gcd(0, -5)); // 5</b>
+<b class="nc"><i class="no-highlight">28</i>&nbsp;    System.out.println(gcd(0, 0)); // 0</b>
+<i class="no-highlight">29</i>&nbsp;  }
+<i class="no-highlight">30</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-07 12:04</div>
+</div>
+</body>
+</html>

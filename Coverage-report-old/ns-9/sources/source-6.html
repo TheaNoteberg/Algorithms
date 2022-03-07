@@ -1,0 +1,165 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > HashTableQuadraticProbing</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.datastructures.hashtable</a>
+</div>
+
+<h1>Coverage Summary for Class: HashTableQuadraticProbing (com.williamfiset.algorithms.datastructures.hashtable)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">HashTableQuadraticProbing</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (15/15)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/**
+<i class="no-highlight">2</i>&nbsp; * An implementation of a hash-table using open addressing with quadratic probing as a collision
+<i class="no-highlight">3</i>&nbsp; * resolution method.
+<i class="no-highlight">4</i>&nbsp; *
+<i class="no-highlight">5</i>&nbsp; * &lt;p&gt;In this implementation we are using the following probing function: H(k, x) = h(k) + f(x) mod
+<i class="no-highlight">6</i>&nbsp; * 2^n
+<i class="no-highlight">7</i>&nbsp; *
+<i class="no-highlight">8</i>&nbsp; * &lt;p&gt;Where h(k) is the hash for the given key, f(x) = (x + x^2) / 2 and n is a natural number. We
+<i class="no-highlight">9</i>&nbsp; * are using this probing function because it is guaranteed to find an empty cell (i.e it generates
+<i class="no-highlight">10</i>&nbsp; * all the numbers in the range [0, 2^n) without repetition for the first 2^n numbers).
+<i class="no-highlight">11</i>&nbsp; *
+<i class="no-highlight">12</i>&nbsp; * @author William Fiset, william.alexandre.fiset@gmail.com
+<i class="no-highlight">13</i>&nbsp; */
+<i class="no-highlight">14</i>&nbsp;package com.williamfiset.algorithms.datastructures.hashtable;
+<i class="no-highlight">15</i>&nbsp;
+<i class="no-highlight">16</i>&nbsp;public class HashTableQuadraticProbing&lt;K, V&gt; extends HashTableOpenAddressingBase&lt;K, V&gt; {
+<i class="no-highlight">17</i>&nbsp;
+<i class="no-highlight">18</i>&nbsp;  public HashTableQuadraticProbing() {
+<b class="fc"><i class="no-highlight">19</i>&nbsp;    super();</b>
+<b class="fc"><i class="no-highlight">20</i>&nbsp;  }</b>
+<i class="no-highlight">21</i>&nbsp;
+<i class="no-highlight">22</i>&nbsp;  public HashTableQuadraticProbing(int capacity) {
+<b class="fc"><i class="no-highlight">23</i>&nbsp;    super(capacity);</b>
+<b class="fc"><i class="no-highlight">24</i>&nbsp;  }</b>
+<i class="no-highlight">25</i>&nbsp;
+<i class="no-highlight">26</i>&nbsp;  // Designated constructor
+<i class="no-highlight">27</i>&nbsp;  public HashTableQuadraticProbing(int capacity, double loadFactor) {
+<b class="fc"><i class="no-highlight">28</i>&nbsp;    super(capacity, loadFactor);</b>
+<b class="fc"><i class="no-highlight">29</i>&nbsp;  }</b>
+<i class="no-highlight">30</i>&nbsp;
+<i class="no-highlight">31</i>&nbsp;  // Given a number this method finds the next
+<i class="no-highlight">32</i>&nbsp;  // power of two above this value.
+<i class="no-highlight">33</i>&nbsp;  private static int nextPowerOfTwo(int n) {
+<b class="fc"><i class="no-highlight">34</i>&nbsp;    return Integer.highestOneBit(n) &lt;&lt; 1;</b>
+<i class="no-highlight">35</i>&nbsp;  }
+<i class="no-highlight">36</i>&nbsp;
+<i class="no-highlight">37</i>&nbsp;  // No setup required for quadratic probing.
+<i class="no-highlight">38</i>&nbsp;  @Override
+<b class="fc"><i class="no-highlight">39</i>&nbsp;  protected void setupProbing(K key) {}</b>
+<i class="no-highlight">40</i>&nbsp;
+<i class="no-highlight">41</i>&nbsp;  @Override
+<i class="no-highlight">42</i>&nbsp;  protected int probe(int x) {
+<i class="no-highlight">43</i>&nbsp;    // Quadratic probing function (x^2+x)/2
+<b class="fc"><i class="no-highlight">44</i>&nbsp;    return (x * x + x) &gt;&gt; 1;</b>
+<i class="no-highlight">45</i>&nbsp;  }
+<i class="no-highlight">46</i>&nbsp;
+<i class="no-highlight">47</i>&nbsp;  // Increase the capacity of the hashtable to the next power of two.
+<i class="no-highlight">48</i>&nbsp;  @Override
+<i class="no-highlight">49</i>&nbsp;  protected void increaseCapacity() {
+<b class="fc"><i class="no-highlight">50</i>&nbsp;    capacity = nextPowerOfTwo(capacity);</b>
+<b class="fc"><i class="no-highlight">51</i>&nbsp;  }</b>
+<i class="no-highlight">52</i>&nbsp;
+<i class="no-highlight">53</i>&nbsp;  // Adjust the capacity of the hashtable to be a power of two.
+<i class="no-highlight">54</i>&nbsp;  @Override
+<i class="no-highlight">55</i>&nbsp;  protected void adjustCapacity() {
+<b class="fc"><i class="no-highlight">56</i>&nbsp;    int pow2 = Integer.highestOneBit(capacity);</b>
+<b class="fc"><i class="no-highlight">57</i>&nbsp;    if (capacity == pow2) return;</b>
+<b class="fc"><i class="no-highlight">58</i>&nbsp;    increaseCapacity();</b>
+<b class="fc"><i class="no-highlight">59</i>&nbsp;  }</b>
+<i class="no-highlight">60</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-01 13:32</div>
+</div>
+</body>
+</html>

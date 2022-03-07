@@ -1,0 +1,228 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > MatrixPower</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.linearalgebra</a>
+</div>
+
+<h1>Coverage Summary for Class: MatrixPower (com.williamfiset.algorithms.linearalgebra)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MatrixPower</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/44)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/**
+<i class="no-highlight">2</i>&nbsp; * Raise an nxn square matrix to a certain power p.
+<i class="no-highlight">3</i>&nbsp; *
+<i class="no-highlight">4</i>&nbsp; * &lt;p&gt;Time Complexity: O(n^3log(p))
+<i class="no-highlight">5</i>&nbsp; *
+<i class="no-highlight">6</i>&nbsp; * @author William Fiset, william.alexandre.fiset@gmail.com
+<i class="no-highlight">7</i>&nbsp; */
+<i class="no-highlight">8</i>&nbsp;package com.williamfiset.algorithms.linearalgebra;
+<i class="no-highlight">9</i>&nbsp;
+<b class="nc"><i class="no-highlight">10</i>&nbsp;public class MatrixPower {</b>
+<i class="no-highlight">11</i>&nbsp;
+<i class="no-highlight">12</i>&nbsp;  static long[][] matrixDeepCopy(long[][] M) {
+<b class="nc"><i class="no-highlight">13</i>&nbsp;    final int N = M.length;</b>
+<b class="nc"><i class="no-highlight">14</i>&nbsp;    long[][] newMatrix = new long[N][N];</b>
+<b class="nc"><i class="no-highlight">15</i>&nbsp;    for (int i = 0; i &lt; N; i++) newMatrix[i] = M[i].clone();</b>
+<b class="nc"><i class="no-highlight">16</i>&nbsp;    return newMatrix;</b>
+<i class="no-highlight">17</i>&nbsp;  }
+<i class="no-highlight">18</i>&nbsp;
+<i class="no-highlight">19</i>&nbsp;  // Perform matrix multiplication, O(n^3)
+<i class="no-highlight">20</i>&nbsp;  static long[][] squareMatrixMult(long[][] m1, long[][] m2) {
+<i class="no-highlight">21</i>&nbsp;
+<b class="nc"><i class="no-highlight">22</i>&nbsp;    final int N = m1.length;</b>
+<b class="nc"><i class="no-highlight">23</i>&nbsp;    long[][] newMatrix = new long[N][N];</b>
+<i class="no-highlight">24</i>&nbsp;
+<b class="nc"><i class="no-highlight">25</i>&nbsp;    for (int i = 0; i &lt; N; i++)</b>
+<b class="nc"><i class="no-highlight">26</i>&nbsp;      for (int j = 0; j &lt; N; j++)</b>
+<b class="nc"><i class="no-highlight">27</i>&nbsp;        for (int k = 0; k &lt; N; k++)</b>
+<i class="no-highlight">28</i>&nbsp;          // Overflow can happen here, watch out!
+<b class="nc"><i class="no-highlight">29</i>&nbsp;          newMatrix[i][j] = newMatrix[i][j] + m1[i][k] * m2[k][j];</b>
+<i class="no-highlight">30</i>&nbsp;
+<b class="nc"><i class="no-highlight">31</i>&nbsp;    return newMatrix;</b>
+<i class="no-highlight">32</i>&nbsp;  }
+<i class="no-highlight">33</i>&nbsp;
+<i class="no-highlight">34</i>&nbsp;  // Raise a matrix to the pth power. If p is negative
+<i class="no-highlight">35</i>&nbsp;  // return null and if p is zero return the identity.
+<i class="no-highlight">36</i>&nbsp;  // NOTE: Make sure the matrix is a square matrix and
+<i class="no-highlight">37</i>&nbsp;  // also watch out for overflow as the numbers climb quickly!
+<i class="no-highlight">38</i>&nbsp;  static long[][] matrixPower(long[][] matrix, long p) {
+<i class="no-highlight">39</i>&nbsp;
+<b class="nc"><i class="no-highlight">40</i>&nbsp;    if (p &lt; 0) return null;</b>
+<i class="no-highlight">41</i>&nbsp;
+<b class="nc"><i class="no-highlight">42</i>&nbsp;    final int N = matrix.length;</b>
+<b class="nc"><i class="no-highlight">43</i>&nbsp;    long[][] newMatrix = null;</b>
+<i class="no-highlight">44</i>&nbsp;
+<i class="no-highlight">45</i>&nbsp;    // Return identity matrix
+<b class="nc"><i class="no-highlight">46</i>&nbsp;    if (p == 0) {</b>
+<b class="nc"><i class="no-highlight">47</i>&nbsp;      newMatrix = new long[N][N];</b>
+<b class="nc"><i class="no-highlight">48</i>&nbsp;      for (int i = 0; i &lt; N; i++) newMatrix[i][i] = 1L;</b>
+<i class="no-highlight">49</i>&nbsp;    } else {
+<i class="no-highlight">50</i>&nbsp;
+<b class="nc"><i class="no-highlight">51</i>&nbsp;      long[][] P = matrixDeepCopy(matrix);</b>
+<i class="no-highlight">52</i>&nbsp;
+<b class="nc"><i class="no-highlight">53</i>&nbsp;      while (p &gt; 0) {</b>
+<i class="no-highlight">54</i>&nbsp;
+<b class="nc"><i class="no-highlight">55</i>&nbsp;        if ((p &amp; 1L) == 1L) {</b>
+<b class="nc"><i class="no-highlight">56</i>&nbsp;          if (newMatrix == null) newMatrix = matrixDeepCopy(P);</b>
+<b class="nc"><i class="no-highlight">57</i>&nbsp;          else newMatrix = squareMatrixMult(newMatrix, P);</b>
+<i class="no-highlight">58</i>&nbsp;        }
+<i class="no-highlight">59</i>&nbsp;
+<i class="no-highlight">60</i>&nbsp;        // Repeatedly square P every loop, O(n^3)
+<b class="nc"><i class="no-highlight">61</i>&nbsp;        P = squareMatrixMult(P, P);</b>
+<b class="nc"><i class="no-highlight">62</i>&nbsp;        p &gt;&gt;= 1L;</b>
+<i class="no-highlight">63</i>&nbsp;      }
+<i class="no-highlight">64</i>&nbsp;    }
+<i class="no-highlight">65</i>&nbsp;
+<b class="nc"><i class="no-highlight">66</i>&nbsp;    return newMatrix;</b>
+<i class="no-highlight">67</i>&nbsp;  }
+<i class="no-highlight">68</i>&nbsp;
+<i class="no-highlight">69</i>&nbsp;  public static void main(String[] args) {
+<i class="no-highlight">70</i>&nbsp;
+<b class="nc"><i class="no-highlight">71</i>&nbsp;    long[][] matrix = {{2}};</b>
+<i class="no-highlight">72</i>&nbsp;
+<b class="nc"><i class="no-highlight">73</i>&nbsp;    System.out.println(matrixPower(matrix, 0)[0][0]); // 1</b>
+<b class="nc"><i class="no-highlight">74</i>&nbsp;    System.out.println(matrixPower(matrix, 1)[0][0]); // 2</b>
+<b class="nc"><i class="no-highlight">75</i>&nbsp;    System.out.println(matrixPower(matrix, 2)[0][0]); // 4</b>
+<b class="nc"><i class="no-highlight">76</i>&nbsp;    System.out.println(matrixPower(matrix, 3)[0][0]); // 8</b>
+<b class="nc"><i class="no-highlight">77</i>&nbsp;    System.out.println(matrixPower(matrix, 4)[0][0]); // 16</b>
+<b class="nc"><i class="no-highlight">78</i>&nbsp;    System.out.println(matrixPower(matrix, 5)[0][0]); // 32</b>
+<b class="nc"><i class="no-highlight">79</i>&nbsp;    System.out.println(matrixPower(matrix, 6)[0][0]); // 64</b>
+<i class="no-highlight">80</i>&nbsp;
+<b class="nc"><i class="no-highlight">81</i>&nbsp;    long[][] matrix2 = {</b>
+<i class="no-highlight">82</i>&nbsp;      {1, 2},
+<i class="no-highlight">83</i>&nbsp;      {3, 4}
+<i class="no-highlight">84</i>&nbsp;    };
+<i class="no-highlight">85</i>&nbsp;
+<b class="nc"><i class="no-highlight">86</i>&nbsp;    long[][] result = matrixPower(matrix2, 5);</b>
+<b class="nc"><i class="no-highlight">87</i>&nbsp;    print2DMatrix(result);</b>
+<i class="no-highlight">88</i>&nbsp;    // prints:
+<i class="no-highlight">89</i>&nbsp;    // [1069, 1558]
+<i class="no-highlight">90</i>&nbsp;    // [2337, 3406]
+<i class="no-highlight">91</i>&nbsp;
+<b class="nc"><i class="no-highlight">92</i>&nbsp;    result = matrixPower(matrix2, 23);</b>
+<b class="nc"><i class="no-highlight">93</i>&nbsp;    print2DMatrix(result);</b>
+<i class="no-highlight">94</i>&nbsp;    // prints:
+<i class="no-highlight">95</i>&nbsp;    // [14853792659417413, 21648320074827046]
+<i class="no-highlight">96</i>&nbsp;    // [32472480112240569, 47326272771657982]
+<i class="no-highlight">97</i>&nbsp;
+<b class="nc"><i class="no-highlight">98</i>&nbsp;    long[][] identity = {</b>
+<i class="no-highlight">99</i>&nbsp;      {1, 0, 0, 0, 0, 0},
+<i class="no-highlight">100</i>&nbsp;      {0, 1, 0, 0, 0, 0},
+<i class="no-highlight">101</i>&nbsp;      {0, 0, 1, 0, 0, 0},
+<i class="no-highlight">102</i>&nbsp;      {0, 0, 0, 1, 0, 0},
+<i class="no-highlight">103</i>&nbsp;      {0, 0, 0, 0, 1, 0},
+<i class="no-highlight">104</i>&nbsp;      {0, 0, 0, 0, 0, 1}
+<i class="no-highlight">105</i>&nbsp;    };
+<i class="no-highlight">106</i>&nbsp;
+<b class="nc"><i class="no-highlight">107</i>&nbsp;    result = matrixPower(identity, 987654321987654321L);</b>
+<b class="nc"><i class="no-highlight">108</i>&nbsp;    print2DMatrix(result);</b>
+<i class="no-highlight">109</i>&nbsp;    // prints:
+<i class="no-highlight">110</i>&nbsp;    // [1, 0, 0, 0, 0, 0]
+<i class="no-highlight">111</i>&nbsp;    // [0, 1, 0, 0, 0, 0]
+<i class="no-highlight">112</i>&nbsp;    // [0, 0, 1, 0, 0, 0]
+<i class="no-highlight">113</i>&nbsp;    // [0, 0, 0, 1, 0, 0]
+<i class="no-highlight">114</i>&nbsp;    // [0, 0, 0, 0, 1, 0]
+<i class="no-highlight">115</i>&nbsp;    // [0, 0, 0, 0, 0, 1]
+<i class="no-highlight">116</i>&nbsp;
+<i class="no-highlight">117</i>&nbsp;  }
+<i class="no-highlight">118</i>&nbsp;
+<i class="no-highlight">119</i>&nbsp;  static void print2DMatrix(long[][] M) {
+<b class="nc"><i class="no-highlight">120</i>&nbsp;    for (long[] m : M) System.out.println(java.util.Arrays.toString(m));</b>
+<b class="nc"><i class="no-highlight">121</i>&nbsp;    System.out.println();</b>
+<i class="no-highlight">122</i>&nbsp;  }
+<i class="no-highlight">123</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-01 13:32</div>
+</div>
+</body>
+</html>

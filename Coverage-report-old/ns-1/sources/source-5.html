@@ -1,0 +1,166 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Scenes</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">&lt;empty package name&gt;</a>
+</div>
+
+<h1>Coverage Summary for Class: Scenes (&lt;empty package name&gt;)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Scenes</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/23)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/**
+<i class="no-highlight">2</i>&nbsp; * Solution to the Mountain Scenes problem (https://open.kattis.com/problems/scenes)
+<i class="no-highlight">3</i>&nbsp; *
+<i class="no-highlight">4</i>&nbsp; * &lt;p&gt;Solution by: William Fiset
+<i class="no-highlight">5</i>&nbsp; */
+<i class="no-highlight">6</i>&nbsp;import java.io.*;
+<i class="no-highlight">7</i>&nbsp;import java.util.*;
+<i class="no-highlight">8</i>&nbsp;
+<b class="nc"><i class="no-highlight">9</i>&nbsp;public class Scenes {</b>
+<i class="no-highlight">10</i>&nbsp;
+<i class="no-highlight">11</i>&nbsp;  static Long[][] dp;
+<i class="no-highlight">12</i>&nbsp;  static int N, W, H;
+<b class="nc"><i class="no-highlight">13</i>&nbsp;  static long MOD = 1_000_000_007;</b>
+<i class="no-highlight">14</i>&nbsp;
+<b class="nc"><i class="no-highlight">15</i>&nbsp;  static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));</b>
+<i class="no-highlight">16</i>&nbsp;
+<i class="no-highlight">17</i>&nbsp;  public static void main(String[] args) throws IOException {
+<b class="nc"><i class="no-highlight">18</i>&nbsp;    String[] ln = br.readLine().split(&quot; &quot;);</b>
+<b class="nc"><i class="no-highlight">19</i>&nbsp;    N = Integer.parseInt(ln[0]); // Total ribbon length</b>
+<b class="nc"><i class="no-highlight">20</i>&nbsp;    W = Integer.parseInt(ln[1]); // Width</b>
+<b class="nc"><i class="no-highlight">21</i>&nbsp;    H = Integer.parseInt(ln[2]); // Height</b>
+<i class="no-highlight">22</i>&nbsp;
+<b class="nc"><i class="no-highlight">23</i>&nbsp;    solution1();</b>
+<i class="no-highlight">24</i>&nbsp;  }
+<i class="no-highlight">25</i>&nbsp;
+<i class="no-highlight">26</i>&nbsp;  // Recursive solution implementation
+<i class="no-highlight">27</i>&nbsp;  static void solution1() {
+<i class="no-highlight">28</i>&nbsp;    // Count the number of plain mountains. Be sure to account for having more
+<i class="no-highlight">29</i>&nbsp;    // ribbon than can possible be placed.
+<b class="nc"><i class="no-highlight">30</i>&nbsp;    int ribbonSquares = Math.min(W * H, N);</b>
+<b class="nc"><i class="no-highlight">31</i>&nbsp;    int plains = (ribbonSquares / W) + 1;</b>
+<i class="no-highlight">32</i>&nbsp;
+<b class="nc"><i class="no-highlight">33</i>&nbsp;    dp = new Long[W + 1][N + 1];</b>
+<b class="nc"><i class="no-highlight">34</i>&nbsp;    long ans = ((f(1, N) - plains) + MOD) % MOD;</b>
+<b class="nc"><i class="no-highlight">35</i>&nbsp;    System.out.println(ans);</b>
+<i class="no-highlight">36</i>&nbsp;  }
+<i class="no-highlight">37</i>&nbsp;
+<i class="no-highlight">38</i>&nbsp;  static long f(int w, int ribbon) {
+<i class="no-highlight">39</i>&nbsp;    // We&#39;re trying to create a mountain scene for which we don&#39;t have enough ribbon material for.
+<b class="nc"><i class="no-highlight">40</i>&nbsp;    if (ribbon &lt; 0) {</b>
+<b class="nc"><i class="no-highlight">41</i>&nbsp;      return 0;</b>
+<i class="no-highlight">42</i>&nbsp;    }
+<i class="no-highlight">43</i>&nbsp;    // When the width value exceeds the frame width, we know we’ve finished creating a unique
+<i class="no-highlight">44</i>&nbsp;    // mountain scene!
+<b class="nc"><i class="no-highlight">45</i>&nbsp;    if (w &gt; W) {</b>
+<b class="nc"><i class="no-highlight">46</i>&nbsp;      return 1;</b>
+<i class="no-highlight">47</i>&nbsp;    }
+<b class="nc"><i class="no-highlight">48</i>&nbsp;    if (dp[w][ribbon] != null) {</b>
+<b class="nc"><i class="no-highlight">49</i>&nbsp;      return dp[w][ribbon];</b>
+<i class="no-highlight">50</i>&nbsp;    }
+<b class="nc"><i class="no-highlight">51</i>&nbsp;    long scenes = 0L;</b>
+<i class="no-highlight">52</i>&nbsp;    // Try placing all possible ribbon lengths at this column/width
+<b class="nc"><i class="no-highlight">53</i>&nbsp;    for (int len = 0; len &lt;= H; len++) {</b>
+<b class="nc"><i class="no-highlight">54</i>&nbsp;      scenes = (scenes + f(w + 1, ribbon - len));</b>
+<i class="no-highlight">55</i>&nbsp;    }
+<i class="no-highlight">56</i>&nbsp;    // Store and return the number of scenes for this sub-problem.
+<i class="no-highlight">57</i>&nbsp;    // Applying the MOD after the loop is safe since H is at most 100 and
+<i class="no-highlight">58</i>&nbsp;    // the MOD is 10^9+7 which cannot overflow a signed 64bit integer.
+<b class="nc"><i class="no-highlight">59</i>&nbsp;    return dp[w][ribbon] = scenes % MOD;</b>
+<i class="no-highlight">60</i>&nbsp;  }
+<i class="no-highlight">61</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-01 13:32</div>
+</div>
+</body>
+</html>

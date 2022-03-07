@@ -1,0 +1,586 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > BinarySearchTree</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.datastructures.binarysearchtree</a>
+</div>
+
+<h1>Coverage Summary for Class: BinarySearchTree (com.williamfiset.algorithms.datastructures.binarysearchtree)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">BinarySearchTree</td>
+<td class="coverageStat">
+  <span class="percent">
+    94,4%
+  </span>
+  <span class="absValue">
+    (17/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    96,2%
+  </span>
+  <span class="absValue">
+    (75/78)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">BinarySearchTree$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (3/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    88,9%
+  </span>
+  <span class="absValue">
+    (8/9)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">BinarySearchTree$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (3/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    92,9%
+  </span>
+  <span class="absValue">
+    (13/14)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">BinarySearchTree$3</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (3/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    83,3%
+  </span>
+  <span class="absValue">
+    (5/6)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">BinarySearchTree$4</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (3/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    88,9%
+  </span>
+  <span class="absValue">
+    (8/9)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">BinarySearchTree$5</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">BinarySearchTree$Node</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/5)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    86,1%
+  </span>
+  <span class="absValue">
+    (31/36)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    94,3%
+  </span>
+  <span class="absValue">
+    (115/122)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/**
+<i class="no-highlight">2</i>&nbsp; * This file contains an implementation of a Binary Search Tree (BST) Any comparable data is allowed
+<i class="no-highlight">3</i>&nbsp; * within this tree (numbers, strings, comparable Objects, etc...). Supported operations include
+<i class="no-highlight">4</i>&nbsp; * adding, removing, height, and containment checks. Furthermore, multiple tree traversal Iterators
+<i class="no-highlight">5</i>&nbsp; * are provided including: 1) Preorder traversal 2) Inorder traversal 3) Postorder traversal 4)
+<i class="no-highlight">6</i>&nbsp; * Levelorder traversal
+<i class="no-highlight">7</i>&nbsp; *
+<i class="no-highlight">8</i>&nbsp; * @author William Fiset, william.alexandre.fiset@gmail.com
+<i class="no-highlight">9</i>&nbsp; */
+<i class="no-highlight">10</i>&nbsp;package com.williamfiset.algorithms.datastructures.binarysearchtree;
+<i class="no-highlight">11</i>&nbsp;
+<b class="fc"><i class="no-highlight">12</i>&nbsp;public class BinarySearchTree&lt;T extends Comparable&lt;T&gt;&gt; {</b>
+<i class="no-highlight">13</i>&nbsp;
+<i class="no-highlight">14</i>&nbsp;  // Tracks the number of nodes in this BST
+<b class="fc"><i class="no-highlight">15</i>&nbsp;  private int nodeCount = 0;</b>
+<i class="no-highlight">16</i>&nbsp;
+<i class="no-highlight">17</i>&nbsp;  // This BST is a rooted tree so we maintain a handle on the root node
+<b class="fc"><i class="no-highlight">18</i>&nbsp;  private Node root = null;</b>
+<i class="no-highlight">19</i>&nbsp;
+<i class="no-highlight">20</i>&nbsp;  // Internal node containing node references
+<i class="no-highlight">21</i>&nbsp;  // and the actual node data
+<i class="no-highlight">22</i>&nbsp;  private class Node {
+<i class="no-highlight">23</i>&nbsp;    T data;
+<i class="no-highlight">24</i>&nbsp;    Node left, right;
+<i class="no-highlight">25</i>&nbsp;
+<b class="fc"><i class="no-highlight">26</i>&nbsp;    public Node(Node left, Node right, T elem) {</b>
+<b class="fc"><i class="no-highlight">27</i>&nbsp;      this.data = elem;</b>
+<b class="fc"><i class="no-highlight">28</i>&nbsp;      this.left = left;</b>
+<b class="fc"><i class="no-highlight">29</i>&nbsp;      this.right = right;</b>
+<b class="fc"><i class="no-highlight">30</i>&nbsp;    }</b>
+<i class="no-highlight">31</i>&nbsp;  }
+<i class="no-highlight">32</i>&nbsp;
+<i class="no-highlight">33</i>&nbsp;  // Check if this binary tree is empty
+<i class="no-highlight">34</i>&nbsp;  public boolean isEmpty() {
+<b class="fc"><i class="no-highlight">35</i>&nbsp;    return size() == 0;</b>
+<i class="no-highlight">36</i>&nbsp;  }
+<i class="no-highlight">37</i>&nbsp;
+<i class="no-highlight">38</i>&nbsp;  // Get the number of nodes in this binary tree
+<i class="no-highlight">39</i>&nbsp;  public int size() {
+<b class="fc"><i class="no-highlight">40</i>&nbsp;    return nodeCount;</b>
+<i class="no-highlight">41</i>&nbsp;  }
+<i class="no-highlight">42</i>&nbsp;
+<i class="no-highlight">43</i>&nbsp;  // Add an element to this binary tree. Returns true
+<i class="no-highlight">44</i>&nbsp;  // if we successfully perform an insertion
+<i class="no-highlight">45</i>&nbsp;  public boolean add(T elem) {
+<i class="no-highlight">46</i>&nbsp;
+<i class="no-highlight">47</i>&nbsp;    // Check if the value already exists in this
+<i class="no-highlight">48</i>&nbsp;    // binary tree, if it does ignore adding it
+<b class="fc"><i class="no-highlight">49</i>&nbsp;    if (contains(elem)) {</b>
+<b class="fc"><i class="no-highlight">50</i>&nbsp;      return false;</b>
+<i class="no-highlight">51</i>&nbsp;
+<i class="no-highlight">52</i>&nbsp;      // Otherwise add this element to the binary tree
+<i class="no-highlight">53</i>&nbsp;    } else {
+<b class="fc"><i class="no-highlight">54</i>&nbsp;      root = add(root, elem);</b>
+<b class="fc"><i class="no-highlight">55</i>&nbsp;      nodeCount++;</b>
+<b class="fc"><i class="no-highlight">56</i>&nbsp;      return true;</b>
+<i class="no-highlight">57</i>&nbsp;    }
+<i class="no-highlight">58</i>&nbsp;  }
+<i class="no-highlight">59</i>&nbsp;
+<i class="no-highlight">60</i>&nbsp;  // Private method to recursively add a value in the binary tree
+<i class="no-highlight">61</i>&nbsp;  private Node add(Node node, T elem) {
+<i class="no-highlight">62</i>&nbsp;
+<i class="no-highlight">63</i>&nbsp;    // Base case: found a leaf node
+<b class="fc"><i class="no-highlight">64</i>&nbsp;    if (node == null) {</b>
+<b class="fc"><i class="no-highlight">65</i>&nbsp;      node = new Node(null, null, elem);</b>
+<i class="no-highlight">66</i>&nbsp;
+<i class="no-highlight">67</i>&nbsp;    } else {
+<i class="no-highlight">68</i>&nbsp;      // Pick a subtree to insert element
+<b class="fc"><i class="no-highlight">69</i>&nbsp;      if (elem.compareTo(node.data) &lt; 0) {</b>
+<b class="fc"><i class="no-highlight">70</i>&nbsp;        node.left = add(node.left, elem);</b>
+<i class="no-highlight">71</i>&nbsp;      } else {
+<b class="fc"><i class="no-highlight">72</i>&nbsp;        node.right = add(node.right, elem);</b>
+<i class="no-highlight">73</i>&nbsp;      }
+<i class="no-highlight">74</i>&nbsp;    }
+<i class="no-highlight">75</i>&nbsp;
+<b class="fc"><i class="no-highlight">76</i>&nbsp;    return node;</b>
+<i class="no-highlight">77</i>&nbsp;  }
+<i class="no-highlight">78</i>&nbsp;
+<i class="no-highlight">79</i>&nbsp;  // Remove a value from this binary tree if it exists, O(n)
+<i class="no-highlight">80</i>&nbsp;  public boolean remove(T elem) {
+<i class="no-highlight">81</i>&nbsp;
+<i class="no-highlight">82</i>&nbsp;    // Make sure the node we want to remove
+<i class="no-highlight">83</i>&nbsp;    // actually exists before we remove it
+<b class="fc"><i class="no-highlight">84</i>&nbsp;    if (contains(elem)) {</b>
+<b class="fc"><i class="no-highlight">85</i>&nbsp;      root = remove(root, elem);</b>
+<b class="fc"><i class="no-highlight">86</i>&nbsp;      nodeCount--;</b>
+<b class="fc"><i class="no-highlight">87</i>&nbsp;      return true;</b>
+<i class="no-highlight">88</i>&nbsp;    }
+<b class="fc"><i class="no-highlight">89</i>&nbsp;    return false;</b>
+<i class="no-highlight">90</i>&nbsp;  }
+<i class="no-highlight">91</i>&nbsp;
+<i class="no-highlight">92</i>&nbsp;  private Node remove(Node node, T elem) {
+<i class="no-highlight">93</i>&nbsp;
+<b class="fc"><i class="no-highlight">94</i>&nbsp;    if (node == null) return null;</b>
+<i class="no-highlight">95</i>&nbsp;
+<b class="fc"><i class="no-highlight">96</i>&nbsp;    int cmp = elem.compareTo(node.data);</b>
+<i class="no-highlight">97</i>&nbsp;
+<i class="no-highlight">98</i>&nbsp;    // Dig into left subtree, the value we&#39;re looking
+<i class="no-highlight">99</i>&nbsp;    // for is smaller than the current value
+<b class="fc"><i class="no-highlight">100</i>&nbsp;    if (cmp &lt; 0) {</b>
+<b class="fc"><i class="no-highlight">101</i>&nbsp;      node.left = remove(node.left, elem);</b>
+<i class="no-highlight">102</i>&nbsp;
+<i class="no-highlight">103</i>&nbsp;      // Dig into right subtree, the value we&#39;re looking
+<i class="no-highlight">104</i>&nbsp;      // for is greater than the current value
+<b class="fc"><i class="no-highlight">105</i>&nbsp;    } else if (cmp &gt; 0) {</b>
+<b class="fc"><i class="no-highlight">106</i>&nbsp;      node.right = remove(node.right, elem);</b>
+<i class="no-highlight">107</i>&nbsp;
+<i class="no-highlight">108</i>&nbsp;      // Found the node we wish to remove
+<i class="no-highlight">109</i>&nbsp;    } else {
+<i class="no-highlight">110</i>&nbsp;
+<i class="no-highlight">111</i>&nbsp;      // This is the case with only a right subtree or
+<i class="no-highlight">112</i>&nbsp;      // no subtree at all. In this situation just
+<i class="no-highlight">113</i>&nbsp;      // swap the node we wish to remove with its right child.
+<b class="fc"><i class="no-highlight">114</i>&nbsp;      if (node.left == null) {</b>
+<b class="fc"><i class="no-highlight">115</i>&nbsp;        return node.right;</b>
+<i class="no-highlight">116</i>&nbsp;
+<i class="no-highlight">117</i>&nbsp;        // This is the case with only a left subtree or
+<i class="no-highlight">118</i>&nbsp;        // no subtree at all. In this situation just
+<i class="no-highlight">119</i>&nbsp;        // swap the node we wish to remove with its left child.
+<b class="fc"><i class="no-highlight">120</i>&nbsp;      } else if (node.right == null) {</b>
+<i class="no-highlight">121</i>&nbsp;
+<b class="fc"><i class="no-highlight">122</i>&nbsp;        return node.left;</b>
+<i class="no-highlight">123</i>&nbsp;
+<i class="no-highlight">124</i>&nbsp;        // When removing a node from a binary tree with two links the
+<i class="no-highlight">125</i>&nbsp;        // successor of the node being removed can either be the largest
+<i class="no-highlight">126</i>&nbsp;        // value in the left subtree or the smallest value in the right
+<i class="no-highlight">127</i>&nbsp;        // subtree. In this implementation I have decided to find the
+<i class="no-highlight">128</i>&nbsp;        // smallest value in the right subtree which can be found by
+<i class="no-highlight">129</i>&nbsp;        // traversing as far left as possible in the right subtree.
+<i class="no-highlight">130</i>&nbsp;      } else {
+<i class="no-highlight">131</i>&nbsp;
+<i class="no-highlight">132</i>&nbsp;        // Find the leftmost node in the right subtree
+<b class="fc"><i class="no-highlight">133</i>&nbsp;        Node tmp = findMin(node.right);</b>
+<i class="no-highlight">134</i>&nbsp;
+<i class="no-highlight">135</i>&nbsp;        // Swap the data
+<b class="fc"><i class="no-highlight">136</i>&nbsp;        node.data = tmp.data;</b>
+<i class="no-highlight">137</i>&nbsp;
+<i class="no-highlight">138</i>&nbsp;        // Go into the right subtree and remove the leftmost node we
+<i class="no-highlight">139</i>&nbsp;        // found and swapped data with. This prevents us from having
+<i class="no-highlight">140</i>&nbsp;        // two nodes in our tree with the same value.
+<b class="fc"><i class="no-highlight">141</i>&nbsp;        node.right = remove(node.right, tmp.data);</b>
+<i class="no-highlight">142</i>&nbsp;
+<i class="no-highlight">143</i>&nbsp;        // If instead we wanted to find the largest node in the left
+<i class="no-highlight">144</i>&nbsp;        // subtree as opposed to smallest node in the right subtree
+<i class="no-highlight">145</i>&nbsp;        // here is what we would do:
+<i class="no-highlight">146</i>&nbsp;        // Node tmp = findMax(node.left);
+<i class="no-highlight">147</i>&nbsp;        // node.data = tmp.data;
+<i class="no-highlight">148</i>&nbsp;        // node.left = remove(node.left, tmp.data);
+<i class="no-highlight">149</i>&nbsp;
+<i class="no-highlight">150</i>&nbsp;      }
+<i class="no-highlight">151</i>&nbsp;    }
+<i class="no-highlight">152</i>&nbsp;
+<b class="fc"><i class="no-highlight">153</i>&nbsp;    return node;</b>
+<i class="no-highlight">154</i>&nbsp;  }
+<i class="no-highlight">155</i>&nbsp;
+<i class="no-highlight">156</i>&nbsp;  // Helper method to find the leftmost node (which has the smallest value)
+<i class="no-highlight">157</i>&nbsp;  private Node findMin(Node node) {
+<b class="fc"><i class="no-highlight">158</i>&nbsp;    while (node.left != null) node = node.left;</b>
+<b class="fc"><i class="no-highlight">159</i>&nbsp;    return node;</b>
+<i class="no-highlight">160</i>&nbsp;  }
+<i class="no-highlight">161</i>&nbsp;
+<i class="no-highlight">162</i>&nbsp;  // Helper method to find the rightmost node (which has the largest value)
+<i class="no-highlight">163</i>&nbsp;  private Node findMax(Node node) {
+<b class="nc"><i class="no-highlight">164</i>&nbsp;    while (node.right != null) node = node.right;</b>
+<b class="nc"><i class="no-highlight">165</i>&nbsp;    return node;</b>
+<i class="no-highlight">166</i>&nbsp;  }
+<i class="no-highlight">167</i>&nbsp;
+<i class="no-highlight">168</i>&nbsp;  // returns true is the element exists in the tree
+<i class="no-highlight">169</i>&nbsp;  public boolean contains(T elem) {
+<b class="fc"><i class="no-highlight">170</i>&nbsp;    return contains(root, elem);</b>
+<i class="no-highlight">171</i>&nbsp;  }
+<i class="no-highlight">172</i>&nbsp;
+<i class="no-highlight">173</i>&nbsp;  // private recursive method to find an element in the tree
+<i class="no-highlight">174</i>&nbsp;  private boolean contains(Node node, T elem) {
+<i class="no-highlight">175</i>&nbsp;
+<i class="no-highlight">176</i>&nbsp;    // Base case: reached bottom, value not found
+<b class="fc"><i class="no-highlight">177</i>&nbsp;    if (node == null) return false;</b>
+<i class="no-highlight">178</i>&nbsp;
+<b class="fc"><i class="no-highlight">179</i>&nbsp;    int cmp = elem.compareTo(node.data);</b>
+<i class="no-highlight">180</i>&nbsp;
+<i class="no-highlight">181</i>&nbsp;    // Dig into the left subtree because the value we&#39;re
+<i class="no-highlight">182</i>&nbsp;    // looking for is smaller than the current value
+<b class="fc"><i class="no-highlight">183</i>&nbsp;    if (cmp &lt; 0) return contains(node.left, elem);</b>
+<i class="no-highlight">184</i>&nbsp;
+<i class="no-highlight">185</i>&nbsp;    // Dig into the right subtree because the value we&#39;re
+<i class="no-highlight">186</i>&nbsp;    // looking for is greater than the current value
+<b class="fc"><i class="no-highlight">187</i>&nbsp;    else if (cmp &gt; 0) return contains(node.right, elem);</b>
+<i class="no-highlight">188</i>&nbsp;
+<i class="no-highlight">189</i>&nbsp;    // We found the value we were looking for
+<b class="fc"><i class="no-highlight">190</i>&nbsp;    else return true;</b>
+<i class="no-highlight">191</i>&nbsp;  }
+<i class="no-highlight">192</i>&nbsp;
+<i class="no-highlight">193</i>&nbsp;  // Computes the height of the tree, O(n)
+<i class="no-highlight">194</i>&nbsp;  public int height() {
+<b class="fc"><i class="no-highlight">195</i>&nbsp;    return height(root);</b>
+<i class="no-highlight">196</i>&nbsp;  }
+<i class="no-highlight">197</i>&nbsp;
+<i class="no-highlight">198</i>&nbsp;  // Recursive helper method to compute the height of the tree
+<i class="no-highlight">199</i>&nbsp;  private int height(Node node) {
+<b class="fc"><i class="no-highlight">200</i>&nbsp;    if (node == null) return 0;</b>
+<b class="fc"><i class="no-highlight">201</i>&nbsp;    return Math.max(height(node.left), height(node.right)) + 1;</b>
+<i class="no-highlight">202</i>&nbsp;  }
+<i class="no-highlight">203</i>&nbsp;
+<i class="no-highlight">204</i>&nbsp;  // This method returns an iterator for a given TreeTraversalOrder.
+<i class="no-highlight">205</i>&nbsp;  // The ways in which you can traverse the tree are in four different ways:
+<i class="no-highlight">206</i>&nbsp;  // preorder, inorder, postorder and levelorder.
+<i class="no-highlight">207</i>&nbsp;  public java.util.Iterator&lt;T&gt; traverse(TreeTraversalOrder order) {
+<b class="fc"><i class="no-highlight">208</i>&nbsp;    switch (order) {</b>
+<i class="no-highlight">209</i>&nbsp;      case PRE_ORDER:
+<b class="fc"><i class="no-highlight">210</i>&nbsp;        return preOrderTraversal();</b>
+<i class="no-highlight">211</i>&nbsp;      case IN_ORDER:
+<b class="fc"><i class="no-highlight">212</i>&nbsp;        return inOrderTraversal();</b>
+<i class="no-highlight">213</i>&nbsp;      case POST_ORDER:
+<b class="fc"><i class="no-highlight">214</i>&nbsp;        return postOrderTraversal();</b>
+<i class="no-highlight">215</i>&nbsp;      case LEVEL_ORDER:
+<b class="fc"><i class="no-highlight">216</i>&nbsp;        return levelOrderTraversal();</b>
+<i class="no-highlight">217</i>&nbsp;      default:
+<b class="nc"><i class="no-highlight">218</i>&nbsp;        return null;</b>
+<i class="no-highlight">219</i>&nbsp;    }
+<i class="no-highlight">220</i>&nbsp;  }
+<i class="no-highlight">221</i>&nbsp;
+<i class="no-highlight">222</i>&nbsp;  // Returns as iterator to traverse the tree in pre order
+<i class="no-highlight">223</i>&nbsp;  private java.util.Iterator&lt;T&gt; preOrderTraversal() {
+<i class="no-highlight">224</i>&nbsp;
+<b class="fc"><i class="no-highlight">225</i>&nbsp;    final int expectedNodeCount = nodeCount;</b>
+<b class="fc"><i class="no-highlight">226</i>&nbsp;    final java.util.Stack&lt;Node&gt; stack = new java.util.Stack&lt;&gt;();</b>
+<b class="fc"><i class="no-highlight">227</i>&nbsp;    stack.push(root);</b>
+<i class="no-highlight">228</i>&nbsp;
+<b class="fc"><i class="no-highlight">229</i>&nbsp;    return new java.util.Iterator&lt;T&gt;() {</b>
+<i class="no-highlight">230</i>&nbsp;      @Override
+<i class="no-highlight">231</i>&nbsp;      public boolean hasNext() {
+<b class="fc"><i class="no-highlight">232</i>&nbsp;        if (expectedNodeCount != nodeCount) throw new java.util.ConcurrentModificationException();</b>
+<b class="fc"><i class="no-highlight">233</i>&nbsp;        return root != null &amp;&amp; !stack.isEmpty();</b>
+<i class="no-highlight">234</i>&nbsp;      }
+<i class="no-highlight">235</i>&nbsp;
+<i class="no-highlight">236</i>&nbsp;      @Override
+<i class="no-highlight">237</i>&nbsp;      public T next() {
+<b class="fc"><i class="no-highlight">238</i>&nbsp;        if (expectedNodeCount != nodeCount) throw new java.util.ConcurrentModificationException();</b>
+<b class="fc"><i class="no-highlight">239</i>&nbsp;        Node node = stack.pop();</b>
+<b class="fc"><i class="no-highlight">240</i>&nbsp;        if (node.right != null) stack.push(node.right);</b>
+<b class="fc"><i class="no-highlight">241</i>&nbsp;        if (node.left != null) stack.push(node.left);</b>
+<b class="fc"><i class="no-highlight">242</i>&nbsp;        return node.data;</b>
+<i class="no-highlight">243</i>&nbsp;      }
+<i class="no-highlight">244</i>&nbsp;
+<i class="no-highlight">245</i>&nbsp;      @Override
+<i class="no-highlight">246</i>&nbsp;      public void remove() {
+<b class="nc"><i class="no-highlight">247</i>&nbsp;        throw new UnsupportedOperationException();</b>
+<i class="no-highlight">248</i>&nbsp;      }
+<i class="no-highlight">249</i>&nbsp;    };
+<i class="no-highlight">250</i>&nbsp;  }
+<i class="no-highlight">251</i>&nbsp;
+<i class="no-highlight">252</i>&nbsp;  // Returns as iterator to traverse the tree in order
+<i class="no-highlight">253</i>&nbsp;  private java.util.Iterator&lt;T&gt; inOrderTraversal() {
+<i class="no-highlight">254</i>&nbsp;
+<b class="fc"><i class="no-highlight">255</i>&nbsp;    final int expectedNodeCount = nodeCount;</b>
+<b class="fc"><i class="no-highlight">256</i>&nbsp;    final java.util.Stack&lt;Node&gt; stack = new java.util.Stack&lt;&gt;();</b>
+<b class="fc"><i class="no-highlight">257</i>&nbsp;    stack.push(root);</b>
+<i class="no-highlight">258</i>&nbsp;
+<b class="fc"><i class="no-highlight">259</i>&nbsp;    return new java.util.Iterator&lt;T&gt;() {</b>
+<b class="fc"><i class="no-highlight">260</i>&nbsp;      Node trav = root;</b>
+<i class="no-highlight">261</i>&nbsp;
+<i class="no-highlight">262</i>&nbsp;      @Override
+<i class="no-highlight">263</i>&nbsp;      public boolean hasNext() {
+<b class="fc"><i class="no-highlight">264</i>&nbsp;        if (expectedNodeCount != nodeCount) throw new java.util.ConcurrentModificationException();</b>
+<b class="fc"><i class="no-highlight">265</i>&nbsp;        return root != null &amp;&amp; !stack.isEmpty();</b>
+<i class="no-highlight">266</i>&nbsp;      }
+<i class="no-highlight">267</i>&nbsp;
+<i class="no-highlight">268</i>&nbsp;      @Override
+<i class="no-highlight">269</i>&nbsp;      public T next() {
+<i class="no-highlight">270</i>&nbsp;
+<b class="fc"><i class="no-highlight">271</i>&nbsp;        if (expectedNodeCount != nodeCount) throw new java.util.ConcurrentModificationException();</b>
+<i class="no-highlight">272</i>&nbsp;
+<i class="no-highlight">273</i>&nbsp;        // Dig left
+<b class="fc"><i class="no-highlight">274</i>&nbsp;        while (trav != null &amp;&amp; trav.left != null) {</b>
+<b class="fc"><i class="no-highlight">275</i>&nbsp;          stack.push(trav.left);</b>
+<b class="fc"><i class="no-highlight">276</i>&nbsp;          trav = trav.left;</b>
+<i class="no-highlight">277</i>&nbsp;        }
+<i class="no-highlight">278</i>&nbsp;
+<b class="fc"><i class="no-highlight">279</i>&nbsp;        Node node = stack.pop();</b>
+<i class="no-highlight">280</i>&nbsp;
+<i class="no-highlight">281</i>&nbsp;        // Try moving down right once
+<b class="fc"><i class="no-highlight">282</i>&nbsp;        if (node.right != null) {</b>
+<b class="fc"><i class="no-highlight">283</i>&nbsp;          stack.push(node.right);</b>
+<b class="fc"><i class="no-highlight">284</i>&nbsp;          trav = node.right;</b>
+<i class="no-highlight">285</i>&nbsp;        }
+<i class="no-highlight">286</i>&nbsp;
+<b class="fc"><i class="no-highlight">287</i>&nbsp;        return node.data;</b>
+<i class="no-highlight">288</i>&nbsp;      }
+<i class="no-highlight">289</i>&nbsp;
+<i class="no-highlight">290</i>&nbsp;      @Override
+<i class="no-highlight">291</i>&nbsp;      public void remove() {
+<b class="nc"><i class="no-highlight">292</i>&nbsp;        throw new UnsupportedOperationException();</b>
+<i class="no-highlight">293</i>&nbsp;      }
+<i class="no-highlight">294</i>&nbsp;    };
+<i class="no-highlight">295</i>&nbsp;  }
+<i class="no-highlight">296</i>&nbsp;
+<i class="no-highlight">297</i>&nbsp;  // Returns as iterator to traverse the tree in post order
+<i class="no-highlight">298</i>&nbsp;  private java.util.Iterator&lt;T&gt; postOrderTraversal() {
+<b class="fc"><i class="no-highlight">299</i>&nbsp;    final int expectedNodeCount = nodeCount;</b>
+<b class="fc"><i class="no-highlight">300</i>&nbsp;    final java.util.Stack&lt;Node&gt; stack1 = new java.util.Stack&lt;&gt;();</b>
+<b class="fc"><i class="no-highlight">301</i>&nbsp;    final java.util.Stack&lt;Node&gt; stack2 = new java.util.Stack&lt;&gt;();</b>
+<b class="fc"><i class="no-highlight">302</i>&nbsp;    stack1.push(root);</b>
+<b class="fc"><i class="no-highlight">303</i>&nbsp;    while (!stack1.isEmpty()) {</b>
+<b class="fc"><i class="no-highlight">304</i>&nbsp;      Node node = stack1.pop();</b>
+<b class="fc"><i class="no-highlight">305</i>&nbsp;      if (node != null) {</b>
+<b class="fc"><i class="no-highlight">306</i>&nbsp;        stack2.push(node);</b>
+<b class="fc"><i class="no-highlight">307</i>&nbsp;        if (node.left != null) stack1.push(node.left);</b>
+<b class="fc"><i class="no-highlight">308</i>&nbsp;        if (node.right != null) stack1.push(node.right);</b>
+<i class="no-highlight">309</i>&nbsp;      }
+<b class="fc"><i class="no-highlight">310</i>&nbsp;    }</b>
+<b class="fc"><i class="no-highlight">311</i>&nbsp;    return new java.util.Iterator&lt;T&gt;() {</b>
+<i class="no-highlight">312</i>&nbsp;      @Override
+<i class="no-highlight">313</i>&nbsp;      public boolean hasNext() {
+<b class="fc"><i class="no-highlight">314</i>&nbsp;        if (expectedNodeCount != nodeCount) throw new java.util.ConcurrentModificationException();</b>
+<b class="fc"><i class="no-highlight">315</i>&nbsp;        return root != null &amp;&amp; !stack2.isEmpty();</b>
+<i class="no-highlight">316</i>&nbsp;      }
+<i class="no-highlight">317</i>&nbsp;
+<i class="no-highlight">318</i>&nbsp;      @Override
+<i class="no-highlight">319</i>&nbsp;      public T next() {
+<b class="fc"><i class="no-highlight">320</i>&nbsp;        if (expectedNodeCount != nodeCount) throw new java.util.ConcurrentModificationException();</b>
+<b class="fc"><i class="no-highlight">321</i>&nbsp;        return stack2.pop().data;</b>
+<i class="no-highlight">322</i>&nbsp;      }
+<i class="no-highlight">323</i>&nbsp;
+<i class="no-highlight">324</i>&nbsp;      @Override
+<i class="no-highlight">325</i>&nbsp;      public void remove() {
+<b class="nc"><i class="no-highlight">326</i>&nbsp;        throw new UnsupportedOperationException();</b>
+<i class="no-highlight">327</i>&nbsp;      }
+<i class="no-highlight">328</i>&nbsp;    };
+<i class="no-highlight">329</i>&nbsp;  }
+<i class="no-highlight">330</i>&nbsp;
+<i class="no-highlight">331</i>&nbsp;  // Returns as iterator to traverse the tree in level order
+<i class="no-highlight">332</i>&nbsp;  private java.util.Iterator&lt;T&gt; levelOrderTraversal() {
+<i class="no-highlight">333</i>&nbsp;
+<b class="fc"><i class="no-highlight">334</i>&nbsp;    final int expectedNodeCount = nodeCount;</b>
+<b class="fc"><i class="no-highlight">335</i>&nbsp;    final java.util.Queue&lt;Node&gt; queue = new java.util.LinkedList&lt;&gt;();</b>
+<b class="fc"><i class="no-highlight">336</i>&nbsp;    queue.offer(root);</b>
+<i class="no-highlight">337</i>&nbsp;
+<b class="fc"><i class="no-highlight">338</i>&nbsp;    return new java.util.Iterator&lt;T&gt;() {</b>
+<i class="no-highlight">339</i>&nbsp;      @Override
+<i class="no-highlight">340</i>&nbsp;      public boolean hasNext() {
+<b class="fc"><i class="no-highlight">341</i>&nbsp;        if (expectedNodeCount != nodeCount) throw new java.util.ConcurrentModificationException();</b>
+<b class="fc"><i class="no-highlight">342</i>&nbsp;        return root != null &amp;&amp; !queue.isEmpty();</b>
+<i class="no-highlight">343</i>&nbsp;      }
+<i class="no-highlight">344</i>&nbsp;
+<i class="no-highlight">345</i>&nbsp;      @Override
+<i class="no-highlight">346</i>&nbsp;      public T next() {
+<b class="fc"><i class="no-highlight">347</i>&nbsp;        if (expectedNodeCount != nodeCount) throw new java.util.ConcurrentModificationException();</b>
+<b class="fc"><i class="no-highlight">348</i>&nbsp;        Node node = queue.poll();</b>
+<b class="fc"><i class="no-highlight">349</i>&nbsp;        if (node.left != null) queue.offer(node.left);</b>
+<b class="fc"><i class="no-highlight">350</i>&nbsp;        if (node.right != null) queue.offer(node.right);</b>
+<b class="fc"><i class="no-highlight">351</i>&nbsp;        return node.data;</b>
+<i class="no-highlight">352</i>&nbsp;      }
+<i class="no-highlight">353</i>&nbsp;
+<i class="no-highlight">354</i>&nbsp;      @Override
+<i class="no-highlight">355</i>&nbsp;      public void remove() {
+<b class="nc"><i class="no-highlight">356</i>&nbsp;        throw new UnsupportedOperationException();</b>
+<i class="no-highlight">357</i>&nbsp;      }
+<i class="no-highlight">358</i>&nbsp;    };
+<i class="no-highlight">359</i>&nbsp;  }
+<i class="no-highlight">360</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-07 12:04</div>
+</div>
+</body>
+</html>

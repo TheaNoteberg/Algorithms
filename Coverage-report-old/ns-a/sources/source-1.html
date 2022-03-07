@@ -1,0 +1,328 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > GeneralKDTree</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.datastructures.kdtree</a>
+</div>
+
+<h1>Coverage Summary for Class: GeneralKDTree (com.williamfiset.algorithms.datastructures.kdtree)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GeneralKDTree</td>
+<td class="coverageStat">
+  <span class="percent">
+    92,9%
+  </span>
+  <span class="absValue">
+    (13/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    98,7%
+  </span>
+  <span class="absValue">
+    (76/77)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">GeneralKDTree$KDNode</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/10)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    93,8%
+  </span>
+  <span class="absValue">
+    (15/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    98,9%
+  </span>
+  <span class="absValue">
+    (86/87)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/**
+<i class="no-highlight">2</i>&nbsp; * A generic k-dimensional tree implementation.
+<i class="no-highlight">3</i>&nbsp; *
+<i class="no-highlight">4</i>&nbsp; * @author David Jagnow
+<i class="no-highlight">5</i>&nbsp; */
+<i class="no-highlight">6</i>&nbsp;package com.williamfiset.algorithms.datastructures.kdtree;
+<i class="no-highlight">7</i>&nbsp;
+<b class="fc"><i class="no-highlight">8</i>&nbsp;public class GeneralKDTree&lt;T extends Comparable&lt;T&gt;&gt; {</b>
+<i class="no-highlight">9</i>&nbsp;
+<i class="no-highlight">10</i>&nbsp;  private int k;
+<i class="no-highlight">11</i>&nbsp;  private KDNode&lt;T&gt; root;
+<i class="no-highlight">12</i>&nbsp;
+<i class="no-highlight">13</i>&nbsp;  /* KDTREE DEFINITION */
+<b class="fc"><i class="no-highlight">14</i>&nbsp;  public GeneralKDTree(int dimensions) {</b>
+<b class="fc"><i class="no-highlight">15</i>&nbsp;    if (dimensions &lt;= 0)</b>
+<b class="fc"><i class="no-highlight">16</i>&nbsp;      throw new IllegalArgumentException(&quot;Error: GeneralKDTree must have positive dimensions&quot;);</b>
+<b class="fc"><i class="no-highlight">17</i>&nbsp;    k = dimensions;</b>
+<b class="fc"><i class="no-highlight">18</i>&nbsp;    root = null;</b>
+<b class="fc"><i class="no-highlight">19</i>&nbsp;  }</b>
+<i class="no-highlight">20</i>&nbsp;
+<i class="no-highlight">21</i>&nbsp;  /* ATTRIBUTE METHODS */
+<i class="no-highlight">22</i>&nbsp;  public int getDimensions() {
+<b class="nc"><i class="no-highlight">23</i>&nbsp;    return k;</b>
+<i class="no-highlight">24</i>&nbsp;  }
+<i class="no-highlight">25</i>&nbsp;
+<i class="no-highlight">26</i>&nbsp;  public T[] getRootPoint() {
+<b class="fc"><i class="no-highlight">27</i>&nbsp;    return (root == null) ? null : root.point;</b>
+<i class="no-highlight">28</i>&nbsp;  }
+<i class="no-highlight">29</i>&nbsp;
+<i class="no-highlight">30</i>&nbsp;  /* TREE METHODS */
+<i class="no-highlight">31</i>&nbsp;  // Insert Method
+<i class="no-highlight">32</i>&nbsp;  public void insert(T[] toAdd) {
+<i class="no-highlight">33</i>&nbsp;    // Create the new node and make it the root if the root is null
+<b class="fc"><i class="no-highlight">34</i>&nbsp;    KDNode&lt;T&gt; newNode = new KDNode&lt;T&gt;(toAdd);</b>
+<b class="fc"><i class="no-highlight">35</i>&nbsp;    if (root == null) root = newNode;</b>
+<i class="no-highlight">36</i>&nbsp;    // Otherwise, insert the node recursively
+<b class="fc"><i class="no-highlight">37</i>&nbsp;    else insertRecursive(newNode, root, 0);</b>
+<b class="fc"><i class="no-highlight">38</i>&nbsp;  }</b>
+<i class="no-highlight">39</i>&nbsp;
+<i class="no-highlight">40</i>&nbsp;  private void insertRecursive(KDNode&lt;T&gt; toAdd, KDNode&lt;T&gt; curr, int axis) {
+<i class="no-highlight">41</i>&nbsp;    // If the new point should go to the left, go left and insert where a spot is available
+<b class="fc"><i class="no-highlight">42</i>&nbsp;    if ((toAdd.point[axis]).compareTo(curr.point[axis]) &lt; 0) {</b>
+<b class="fc"><i class="no-highlight">43</i>&nbsp;      if (curr.left == null) curr.left = toAdd;</b>
+<b class="fc"><i class="no-highlight">44</i>&nbsp;      else insertRecursive(toAdd, curr.left, (++axis) % k);</b>
+<i class="no-highlight">45</i>&nbsp;    }
+<i class="no-highlight">46</i>&nbsp;    // Otherwise, go right and insert where a spot is available
+<i class="no-highlight">47</i>&nbsp;    else {
+<b class="fc"><i class="no-highlight">48</i>&nbsp;      if (curr.right == null) curr.right = toAdd;</b>
+<b class="fc"><i class="no-highlight">49</i>&nbsp;      else insertRecursive(toAdd, curr.right, (++axis) % k);</b>
+<i class="no-highlight">50</i>&nbsp;    }
+<b class="fc"><i class="no-highlight">51</i>&nbsp;  }</b>
+<i class="no-highlight">52</i>&nbsp;
+<i class="no-highlight">53</i>&nbsp;  // Search Method
+<i class="no-highlight">54</i>&nbsp;  public boolean search(T[] element) {
+<b class="fc"><i class="no-highlight">55</i>&nbsp;    KDNode&lt;T&gt; elemNode = new KDNode&lt;T&gt;(element);</b>
+<b class="fc"><i class="no-highlight">56</i>&nbsp;    return searchRecursive(elemNode, root, 0);</b>
+<i class="no-highlight">57</i>&nbsp;  }
+<i class="no-highlight">58</i>&nbsp;
+<i class="no-highlight">59</i>&nbsp;  private boolean searchRecursive(KDNode&lt;T&gt; toSearch, KDNode&lt;T&gt; curr, int axis) {
+<i class="no-highlight">60</i>&nbsp;    // If the search fails, the point is not in the tree
+<b class="fc"><i class="no-highlight">61</i>&nbsp;    if (curr == null) return false;</b>
+<i class="no-highlight">62</i>&nbsp;    // If the search succeeds, the point is in the tree
+<b class="fc"><i class="no-highlight">63</i>&nbsp;    if ((curr.point).equals(toSearch.point)) return true;</b>
+<i class="no-highlight">64</i>&nbsp;    // Otherwise, go where the point would go if it was inserted into the tree
+<i class="no-highlight">65</i>&nbsp;    KDNode&lt;T&gt; nextNode =
+<b class="fc"><i class="no-highlight">66</i>&nbsp;        ((toSearch.point[axis]).compareTo(curr.point[axis]) &lt; 0) ? curr.left : curr.right;</b>
+<b class="fc"><i class="no-highlight">67</i>&nbsp;    return searchRecursive(toSearch, nextNode, (++axis) % k);</b>
+<i class="no-highlight">68</i>&nbsp;  }
+<i class="no-highlight">69</i>&nbsp;
+<i class="no-highlight">70</i>&nbsp;  // FindMin Method
+<i class="no-highlight">71</i>&nbsp;  public T[] findMin(int dim) {
+<b class="fc"><i class="no-highlight">72</i>&nbsp;    if (dim &lt; 0 || dim &gt;= k) throw new IllegalArgumentException(&quot;Error: Dimension out of bounds&quot;);</b>
+<b class="fc"><i class="no-highlight">73</i>&nbsp;    return findMinRecursive(dim, root, 0);</b>
+<i class="no-highlight">74</i>&nbsp;  }
+<i class="no-highlight">75</i>&nbsp;
+<i class="no-highlight">76</i>&nbsp;  private T[] findMinRecursive(int dim, KDNode&lt;T&gt; curr, int axis) {
+<i class="no-highlight">77</i>&nbsp;    // If nothing is found, return nothing
+<b class="fc"><i class="no-highlight">78</i>&nbsp;    if (curr == null) return null;</b>
+<i class="no-highlight">79</i>&nbsp;    // If the axis and dimension match, follow typical search procedure
+<b class="fc"><i class="no-highlight">80</i>&nbsp;    if (dim == axis) {</b>
+<b class="fc"><i class="no-highlight">81</i>&nbsp;      if (curr.left == null) return curr.point;</b>
+<b class="fc"><i class="no-highlight">82</i>&nbsp;      return findMinRecursive(dim, curr.left, (axis + 1) % k);</b>
+<i class="no-highlight">83</i>&nbsp;    }
+<i class="no-highlight">84</i>&nbsp;    // If there are no children, return what you have
+<b class="fc"><i class="no-highlight">85</i>&nbsp;    if (curr.left == null &amp;&amp; curr.right == null) return curr.point;</b>
+<i class="no-highlight">86</i>&nbsp;    // If there is at least one child, search the children of the current node
+<b class="fc"><i class="no-highlight">87</i>&nbsp;    T[] leftSubTree = findMinRecursive(dim, curr.left, (axis + 1) % k);</b>
+<b class="fc"><i class="no-highlight">88</i>&nbsp;    T[] rightSubTree = findMinRecursive(dim, curr.right, (axis + 1) % k);</b>
+<i class="no-highlight">89</i>&nbsp;    T[] minSubTree;
+<i class="no-highlight">90</i>&nbsp;    // If a child is null, pick the non-null child
+<b class="fc"><i class="no-highlight">91</i>&nbsp;    if (leftSubTree == null || rightSubTree == null) {</b>
+<b class="fc"><i class="no-highlight">92</i>&nbsp;      minSubTree = (rightSubTree == null) ? leftSubTree : rightSubTree;</b>
+<i class="no-highlight">93</i>&nbsp;    }
+<i class="no-highlight">94</i>&nbsp;    // Otherwise, compare them
+<i class="no-highlight">95</i>&nbsp;    else {
+<i class="no-highlight">96</i>&nbsp;      minSubTree =
+<b class="fc"><i class="no-highlight">97</i>&nbsp;          ((leftSubTree[dim]).compareTo(rightSubTree[dim]) &lt; 0) ? leftSubTree : rightSubTree;</b>
+<i class="no-highlight">98</i>&nbsp;    }
+<i class="no-highlight">99</i>&nbsp;    // Compare with the value in the current node and return the point with the smallest value in
+<i class="no-highlight">100</i>&nbsp;    // the given dimension
+<b class="fc"><i class="no-highlight">101</i>&nbsp;    T[] min = ((curr.point[dim]).compareTo(minSubTree[dim]) &lt; 0) ? curr.point : minSubTree;</b>
+<b class="fc"><i class="no-highlight">102</i>&nbsp;    return min;</b>
+<i class="no-highlight">103</i>&nbsp;  }
+<i class="no-highlight">104</i>&nbsp;
+<i class="no-highlight">105</i>&nbsp;  // Remove Method
+<i class="no-highlight">106</i>&nbsp;  public T[] delete(T[] toRemove) {
+<i class="no-highlight">107</i>&nbsp;    // Return nothing if the point is not present
+<b class="fc"><i class="no-highlight">108</i>&nbsp;    if (!search(toRemove)) return null;</b>
+<i class="no-highlight">109</i>&nbsp;    // Delete and return root if it should be removed
+<b class="fc"><i class="no-highlight">110</i>&nbsp;    if (toRemove.equals(root.point)) return deleteRecursiveRoot();</b>
+<i class="no-highlight">111</i>&nbsp;    // Create the comparison point to delete and remove recursively
+<b class="fc"><i class="no-highlight">112</i>&nbsp;    KDNode&lt;T&gt; removeElem = new KDNode&lt;T&gt;(toRemove);</b>
+<b class="fc"><i class="no-highlight">113</i>&nbsp;    return deleteRecursiveSearch(removeElem, root, 0);</b>
+<i class="no-highlight">114</i>&nbsp;  }
+<i class="no-highlight">115</i>&nbsp;
+<i class="no-highlight">116</i>&nbsp;  private T[] deleteRecursiveRoot() {
+<i class="no-highlight">117</i>&nbsp;    // Store the point to remove
+<b class="fc"><i class="no-highlight">118</i>&nbsp;    T[] replacedPoint = root.point;</b>
+<i class="no-highlight">119</i>&nbsp;    // Set the root to null if it has no children
+<b class="fc"><i class="no-highlight">120</i>&nbsp;    if (root.left == null &amp;&amp; root.right == null) {</b>
+<b class="fc"><i class="no-highlight">121</i>&nbsp;      root = null;</b>
+<b class="fc"><i class="no-highlight">122</i>&nbsp;      return replacedPoint;</b>
+<i class="no-highlight">123</i>&nbsp;    }
+<i class="no-highlight">124</i>&nbsp;    // If a right child exists, find a minimum to replace the root point
+<b class="fc"><i class="no-highlight">125</i>&nbsp;    else if (root.right != null) {</b>
+<b class="fc"><i class="no-highlight">126</i>&nbsp;      root.point = findMinRecursive(0, root.right, 1 % k);</b>
+<b class="fc"><i class="no-highlight">127</i>&nbsp;      deleteRecursiveSearch(new KDNode&lt;T&gt;(root.point), root, 0);</b>
+<b class="fc"><i class="no-highlight">128</i>&nbsp;      return replacedPoint;</b>
+<i class="no-highlight">129</i>&nbsp;    }
+<i class="no-highlight">130</i>&nbsp;    // Otherwise, get the minimum from the left subtree and make it the right subtree
+<i class="no-highlight">131</i>&nbsp;    else {
+<b class="fc"><i class="no-highlight">132</i>&nbsp;      root.point = findMinRecursive(0, root.left, 1 % k);</b>
+<b class="fc"><i class="no-highlight">133</i>&nbsp;      deleteRecursiveSearch(new KDNode&lt;T&gt;(root.point), root, 0);</b>
+<b class="fc"><i class="no-highlight">134</i>&nbsp;      root.right = root.left;</b>
+<b class="fc"><i class="no-highlight">135</i>&nbsp;      root.left = null;</b>
+<b class="fc"><i class="no-highlight">136</i>&nbsp;      return replacedPoint;</b>
+<i class="no-highlight">137</i>&nbsp;    }
+<i class="no-highlight">138</i>&nbsp;  }
+<i class="no-highlight">139</i>&nbsp;
+<i class="no-highlight">140</i>&nbsp;  private T[] deleteRecursiveSearch(KDNode&lt;T&gt; toRemove, KDNode&lt;T&gt; curr, int axis) {
+<i class="no-highlight">141</i>&nbsp;    // If the node to remove is a direct child, extract it and remove it
+<b class="fc"><i class="no-highlight">142</i>&nbsp;    if (curr.right != null &amp;&amp; (toRemove.point).equals(curr.right.point)) {</b>
+<b class="fc"><i class="no-highlight">143</i>&nbsp;      T[] removed = deleteRecursiveExtract(toRemove, curr.right, (axis + 1) % k);</b>
+<b class="fc"><i class="no-highlight">144</i>&nbsp;      if (removed == null) curr.right = null;</b>
+<b class="fc"><i class="no-highlight">145</i>&nbsp;      return toRemove.point;</b>
+<b class="fc"><i class="no-highlight">146</i>&nbsp;    } else if (curr.left != null &amp;&amp; (toRemove.point).equals(curr.left.point)) {</b>
+<b class="fc"><i class="no-highlight">147</i>&nbsp;      T[] removed = deleteRecursiveExtract(toRemove, curr.left, (axis + 1) % k);</b>
+<b class="fc"><i class="no-highlight">148</i>&nbsp;      if (removed == null) curr.left = null;</b>
+<b class="fc"><i class="no-highlight">149</i>&nbsp;      return toRemove.point;</b>
+<i class="no-highlight">150</i>&nbsp;    }
+<i class="no-highlight">151</i>&nbsp;    // Otherwise, search again at the child that the node would be a child of
+<i class="no-highlight">152</i>&nbsp;    else {
+<i class="no-highlight">153</i>&nbsp;      KDNode&lt;T&gt; nextNode =
+<b class="fc"><i class="no-highlight">154</i>&nbsp;          ((toRemove.point[axis]).compareTo(curr.point[axis]) &lt; 0) ? curr.left : curr.right;</b>
+<b class="fc"><i class="no-highlight">155</i>&nbsp;      return deleteRecursiveSearch(toRemove, nextNode, (axis + 1) % k);</b>
+<i class="no-highlight">156</i>&nbsp;    }
+<i class="no-highlight">157</i>&nbsp;  }
+<i class="no-highlight">158</i>&nbsp;
+<i class="no-highlight">159</i>&nbsp;  private T[] deleteRecursiveExtract(KDNode&lt;T&gt; toRemove, KDNode&lt;T&gt; curr, int axis) {
+<i class="no-highlight">160</i>&nbsp;    // Store the point to remove
+<b class="fc"><i class="no-highlight">161</i>&nbsp;    T[] replacedPoint = curr.point;</b>
+<i class="no-highlight">162</i>&nbsp;    // Set the node to null if it has no children
+<b class="fc"><i class="no-highlight">163</i>&nbsp;    if (curr.left == null &amp;&amp; curr.right == null) return null;</b>
+<i class="no-highlight">164</i>&nbsp;    // If a right child exists, find a minimum to replace the root point
+<b class="fc"><i class="no-highlight">165</i>&nbsp;    else if (curr.right != null) {</b>
+<b class="fc"><i class="no-highlight">166</i>&nbsp;      curr.point = findMinRecursive(axis, curr.right, (axis + 1) % k);</b>
+<b class="fc"><i class="no-highlight">167</i>&nbsp;      deleteRecursiveSearch(new KDNode&lt;T&gt;(curr.point), curr, axis);</b>
+<b class="fc"><i class="no-highlight">168</i>&nbsp;      return replacedPoint;</b>
+<i class="no-highlight">169</i>&nbsp;    }
+<i class="no-highlight">170</i>&nbsp;    // Otherwise, get the minimum from the left subtree and make it the right subtree
+<i class="no-highlight">171</i>&nbsp;    else {
+<b class="fc"><i class="no-highlight">172</i>&nbsp;      curr.point = findMinRecursive(axis, curr.left, (axis + 1) % k);</b>
+<b class="fc"><i class="no-highlight">173</i>&nbsp;      deleteRecursiveSearch(new KDNode&lt;T&gt;(curr.point), curr, axis);</b>
+<b class="fc"><i class="no-highlight">174</i>&nbsp;      curr.right = curr.left;</b>
+<b class="fc"><i class="no-highlight">175</i>&nbsp;      curr.left = null;</b>
+<b class="fc"><i class="no-highlight">176</i>&nbsp;      return replacedPoint;</b>
+<i class="no-highlight">177</i>&nbsp;    }
+<i class="no-highlight">178</i>&nbsp;  }
+<i class="no-highlight">179</i>&nbsp;
+<i class="no-highlight">180</i>&nbsp;  /* KDTREE NODE DEFINITION */
+<b class="fc"><i class="no-highlight">181</i>&nbsp;  private class KDNode&lt;E extends Comparable&lt;E&gt;&gt; {</b>
+<i class="no-highlight">182</i>&nbsp;
+<i class="no-highlight">183</i>&nbsp;    private E[] point;
+<i class="no-highlight">184</i>&nbsp;    private KDNode&lt;E&gt; left;
+<i class="no-highlight">185</i>&nbsp;    private KDNode&lt;E&gt; right;
+<i class="no-highlight">186</i>&nbsp;
+<b class="fc"><i class="no-highlight">187</i>&nbsp;    public KDNode(E[] coords) {</b>
+<b class="fc"><i class="no-highlight">188</i>&nbsp;      if (coords == null) throw new IllegalArgumentException(&quot;Error: Null coordinate set passed&quot;);</b>
+<b class="fc"><i class="no-highlight">189</i>&nbsp;      if (coords.length != k)</b>
+<b class="fc"><i class="no-highlight">190</i>&nbsp;        throw new IllegalArgumentException(</b>
+<b class="fc"><i class="no-highlight">191</i>&nbsp;            &quot;Error: Expected &quot; + k + &quot;dimensions, but given &quot; + coords.length);</b>
+<b class="fc"><i class="no-highlight">192</i>&nbsp;      point = coords;</b>
+<b class="fc"><i class="no-highlight">193</i>&nbsp;      left = null;</b>
+<b class="fc"><i class="no-highlight">194</i>&nbsp;      right = null;</b>
+<b class="fc"><i class="no-highlight">195</i>&nbsp;    }</b>
+<i class="no-highlight">196</i>&nbsp;  }
+<i class="no-highlight">197</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-01 13:32</div>
+</div>
+</body>
+</html>

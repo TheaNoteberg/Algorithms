@@ -1,0 +1,228 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > TreeDiameter</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.graphtheory.treealgorithms</a>
+</div>
+
+<h1>Coverage Summary for Class: TreeDiameter (com.williamfiset.algorithms.graphtheory.treealgorithms)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TreeDiameter</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/60)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/**
+<i class="no-highlight">2</i>&nbsp; * Determining the diameter of a tree is a special case of the graph diameter problem which can be
+<i class="no-highlight">3</i>&nbsp; * solved in linear time :)
+<i class="no-highlight">4</i>&nbsp; *
+<i class="no-highlight">5</i>&nbsp; * &lt;p&gt;Time Complexity: O(V + E)
+<i class="no-highlight">6</i>&nbsp; *
+<i class="no-highlight">7</i>&nbsp; * @author William Fiset, william.alexandre.fiset@gmail.com
+<i class="no-highlight">8</i>&nbsp; */
+<i class="no-highlight">9</i>&nbsp;package com.williamfiset.algorithms.graphtheory.treealgorithms;
+<i class="no-highlight">10</i>&nbsp;
+<i class="no-highlight">11</i>&nbsp;import java.util.*;
+<i class="no-highlight">12</i>&nbsp;
+<b class="nc"><i class="no-highlight">13</i>&nbsp;public class TreeDiameter {</b>
+<i class="no-highlight">14</i>&nbsp;
+<i class="no-highlight">15</i>&nbsp;  // Set MAX_NUM_NODES to be the maximum number of nodes that will ever
+<i class="no-highlight">16</i>&nbsp;  // be present in the tree you wish to find the diameter of. Also, you must make
+<i class="no-highlight">17</i>&nbsp;  // sure you label the tree nodes in the range [0, MAX_NUM_NODES)
+<b class="nc"><i class="no-highlight">18</i>&nbsp;  static int MAX_NUM_NODES = 10;</b>
+<i class="no-highlight">19</i>&nbsp;
+<b class="nc"><i class="no-highlight">20</i>&nbsp;  static Integer VISITED_TOKEN = 0;</b>
+<b class="nc"><i class="no-highlight">21</i>&nbsp;  static int[] visited = new int[MAX_NUM_NODES];</b>
+<i class="no-highlight">22</i>&nbsp;
+<i class="no-highlight">23</i>&nbsp;  // Do a DFS and return a tuple (#nodes seen, index) to/of furthest node
+<i class="no-highlight">24</i>&nbsp;  private static int[] dfs(List&lt;List&lt;Integer&gt;&gt; graph, int at, int parent) {
+<i class="no-highlight">25</i>&nbsp;
+<i class="no-highlight">26</i>&nbsp;    // Already visited this node
+<b class="nc"><i class="no-highlight">27</i>&nbsp;    if (visited[at] == VISITED_TOKEN) return new int[] {0, parent};</b>
+<i class="no-highlight">28</i>&nbsp;
+<i class="no-highlight">29</i>&nbsp;    // Visit this node
+<b class="nc"><i class="no-highlight">30</i>&nbsp;    visited[at] = VISITED_TOKEN;</b>
+<i class="no-highlight">31</i>&nbsp;
+<b class="nc"><i class="no-highlight">32</i>&nbsp;    int bestDist = 0, index = -1;</b>
+<b class="nc"><i class="no-highlight">33</i>&nbsp;    List&lt;Integer&gt; edges = graph.get(at);</b>
+<i class="no-highlight">34</i>&nbsp;
+<b class="nc"><i class="no-highlight">35</i>&nbsp;    if (edges != null) {</b>
+<b class="nc"><i class="no-highlight">36</i>&nbsp;      for (Integer to : edges) {</b>
+<b class="nc"><i class="no-highlight">37</i>&nbsp;        int[] tuple = dfs(graph, to, at);</b>
+<b class="nc"><i class="no-highlight">38</i>&nbsp;        int dist = tuple[0] + 1;</b>
+<b class="nc"><i class="no-highlight">39</i>&nbsp;        if (dist &gt; bestDist) {</b>
+<b class="nc"><i class="no-highlight">40</i>&nbsp;          bestDist = dist;</b>
+<b class="nc"><i class="no-highlight">41</i>&nbsp;          index = tuple[1];</b>
+<i class="no-highlight">42</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">43</i>&nbsp;      }</b>
+<i class="no-highlight">44</i>&nbsp;    }
+<i class="no-highlight">45</i>&nbsp;
+<b class="nc"><i class="no-highlight">46</i>&nbsp;    return new int[] {bestDist, index};</b>
+<i class="no-highlight">47</i>&nbsp;  }
+<i class="no-highlight">48</i>&nbsp;
+<i class="no-highlight">49</i>&nbsp;  // Given an undirected tree setup as an adjacency and a
+<i class="no-highlight">50</i>&nbsp;  // starting node list determine the diameter of this tree.
+<i class="no-highlight">51</i>&nbsp;  public static int treeDiameter(List&lt;List&lt;Integer&gt;&gt; graph, int start) {
+<i class="no-highlight">52</i>&nbsp;
+<b class="nc"><i class="no-highlight">53</i>&nbsp;    if (graph == null) return 0;</b>
+<i class="no-highlight">54</i>&nbsp;
+<i class="no-highlight">55</i>&nbsp;    // Do DFS to find furthest node from the start
+<b class="nc"><i class="no-highlight">56</i>&nbsp;    VISITED_TOKEN++;</b>
+<b class="nc"><i class="no-highlight">57</i>&nbsp;    int furthestIndex = dfs(graph, start, -1)[1];</b>
+<i class="no-highlight">58</i>&nbsp;
+<i class="no-highlight">59</i>&nbsp;    // Singleton
+<b class="nc"><i class="no-highlight">60</i>&nbsp;    if (furthestIndex == -1) return 0;</b>
+<i class="no-highlight">61</i>&nbsp;
+<i class="no-highlight">62</i>&nbsp;    // Do another DFS, but this time from the furthest
+<i class="no-highlight">63</i>&nbsp;    // node and record the distance to that node.
+<b class="nc"><i class="no-highlight">64</i>&nbsp;    VISITED_TOKEN++;</b>
+<b class="nc"><i class="no-highlight">65</i>&nbsp;    int diameter = dfs(graph, furthestIndex, -1)[0] - 1;</b>
+<i class="no-highlight">66</i>&nbsp;
+<b class="nc"><i class="no-highlight">67</i>&nbsp;    return diameter;</b>
+<i class="no-highlight">68</i>&nbsp;  }
+<i class="no-highlight">69</i>&nbsp;
+<i class="no-highlight">70</i>&nbsp;  public static void main(String[] args) {
+<i class="no-highlight">71</i>&nbsp;
+<b class="nc"><i class="no-highlight">72</i>&nbsp;    List&lt;List&lt;Integer&gt;&gt; graph = createGraph(MAX_NUM_NODES);</b>
+<i class="no-highlight">73</i>&nbsp;
+<b class="nc"><i class="no-highlight">74</i>&nbsp;    int numNodes = 8;</b>
+<b class="nc"><i class="no-highlight">75</i>&nbsp;    addUndirectedEdge(graph, 0, 1);</b>
+<b class="nc"><i class="no-highlight">76</i>&nbsp;    addUndirectedEdge(graph, 1, 2);</b>
+<b class="nc"><i class="no-highlight">77</i>&nbsp;    addUndirectedEdge(graph, 2, 3);</b>
+<b class="nc"><i class="no-highlight">78</i>&nbsp;    addUndirectedEdge(graph, 2, 4);</b>
+<b class="nc"><i class="no-highlight">79</i>&nbsp;    addUndirectedEdge(graph, 4, 5);</b>
+<b class="nc"><i class="no-highlight">80</i>&nbsp;    addUndirectedEdge(graph, 4, 6);</b>
+<b class="nc"><i class="no-highlight">81</i>&nbsp;    addUndirectedEdge(graph, 6, 7);</b>
+<i class="no-highlight">82</i>&nbsp;
+<b class="nc"><i class="no-highlight">83</i>&nbsp;    int diameter = treeDiameter(graph, 0);</b>
+<b class="nc"><i class="no-highlight">84</i>&nbsp;    System.out.println(&quot;Tree diameter: &quot; + diameter);</b>
+<b class="nc"><i class="no-highlight">85</i>&nbsp;    if (diameter != 5) System.out.println(&quot;ERROR&quot;);</b>
+<b class="nc"><i class="no-highlight">86</i>&nbsp;    resetGraph(graph, numNodes);</b>
+<i class="no-highlight">87</i>&nbsp;
+<b class="nc"><i class="no-highlight">88</i>&nbsp;    numNodes = 10;</b>
+<b class="nc"><i class="no-highlight">89</i>&nbsp;    addUndirectedEdge(graph, 0, 1);</b>
+<b class="nc"><i class="no-highlight">90</i>&nbsp;    addUndirectedEdge(graph, 1, 2);</b>
+<b class="nc"><i class="no-highlight">91</i>&nbsp;    addUndirectedEdge(graph, 2, 3);</b>
+<b class="nc"><i class="no-highlight">92</i>&nbsp;    addUndirectedEdge(graph, 2, 4);</b>
+<b class="nc"><i class="no-highlight">93</i>&nbsp;    addUndirectedEdge(graph, 4, 5);</b>
+<b class="nc"><i class="no-highlight">94</i>&nbsp;    addUndirectedEdge(graph, 4, 6);</b>
+<b class="nc"><i class="no-highlight">95</i>&nbsp;    addUndirectedEdge(graph, 6, 7);</b>
+<b class="nc"><i class="no-highlight">96</i>&nbsp;    addUndirectedEdge(graph, 6, 9);</b>
+<b class="nc"><i class="no-highlight">97</i>&nbsp;    addUndirectedEdge(graph, 7, 8);</b>
+<i class="no-highlight">98</i>&nbsp;
+<b class="nc"><i class="no-highlight">99</i>&nbsp;    diameter = treeDiameter(graph, 5);</b>
+<b class="nc"><i class="no-highlight">100</i>&nbsp;    System.out.println(&quot;Tree diameter: &quot; + diameter);</b>
+<b class="nc"><i class="no-highlight">101</i>&nbsp;    if (diameter != 6) System.out.println(&quot;ERROR&quot;);</b>
+<b class="nc"><i class="no-highlight">102</i>&nbsp;    resetGraph(graph, numNodes);</b>
+<i class="no-highlight">103</i>&nbsp;
+<b class="nc"><i class="no-highlight">104</i>&nbsp;    diameter = treeDiameter(graph, 3);</b>
+<b class="nc"><i class="no-highlight">105</i>&nbsp;    System.out.println(&quot;Tree diameter: &quot; + diameter);</b>
+<b class="nc"><i class="no-highlight">106</i>&nbsp;    if (diameter != 0) System.out.println(&quot;ERROR&quot;);</b>
+<i class="no-highlight">107</i>&nbsp;  }
+<i class="no-highlight">108</i>&nbsp;
+<i class="no-highlight">109</i>&nbsp;  private static List&lt;List&lt;Integer&gt;&gt; createGraph(int size) {
+<b class="nc"><i class="no-highlight">110</i>&nbsp;    List&lt;List&lt;Integer&gt;&gt; graph = new ArrayList&lt;&gt;(size);</b>
+<b class="nc"><i class="no-highlight">111</i>&nbsp;    for (int i = 0; i &lt; size; i++) graph.add(new ArrayList&lt;&gt;());</b>
+<b class="nc"><i class="no-highlight">112</i>&nbsp;    return graph;</b>
+<i class="no-highlight">113</i>&nbsp;  }
+<i class="no-highlight">114</i>&nbsp;
+<i class="no-highlight">115</i>&nbsp;  private static void resetGraph(List&lt;List&lt;Integer&gt;&gt; graph, int size) {
+<b class="nc"><i class="no-highlight">116</i>&nbsp;    for (int i = 0; i &lt; size; i++) graph.get(i).clear();</b>
+<i class="no-highlight">117</i>&nbsp;  }
+<i class="no-highlight">118</i>&nbsp;
+<i class="no-highlight">119</i>&nbsp;  private static void addUndirectedEdge(List&lt;List&lt;Integer&gt;&gt; graph, int from, int to) {
+<b class="nc"><i class="no-highlight">120</i>&nbsp;    graph.get(from).add(to);</b>
+<b class="nc"><i class="no-highlight">121</i>&nbsp;    graph.get(to).add(from);</b>
+<i class="no-highlight">122</i>&nbsp;  }
+<i class="no-highlight">123</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-01 13:32</div>
+</div>
+</body>
+</html>

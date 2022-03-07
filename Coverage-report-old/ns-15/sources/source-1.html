@@ -1,0 +1,209 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > SuffixArray</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.datastructures.suffixarray</a>
+</div>
+
+<h1>Coverage Summary for Class: SuffixArray (com.williamfiset.algorithms.datastructures.suffixarray)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SuffixArray</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    77,8%
+  </span>
+  <span class="absValue">
+    (7/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    75,6%
+  </span>
+  <span class="absValue">
+    (34/45)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/**
+<i class="no-highlight">2</i>&nbsp; * Abstract class that captures the behavior of a suffix array.
+<i class="no-highlight">3</i>&nbsp; *
+<i class="no-highlight">4</i>&nbsp; * @author William Fiset, william.alexandre.fiset@gmail.com
+<i class="no-highlight">5</i>&nbsp; */
+<i class="no-highlight">6</i>&nbsp;package com.williamfiset.algorithms.datastructures.suffixarray;
+<i class="no-highlight">7</i>&nbsp;
+<i class="no-highlight">8</i>&nbsp;public abstract class SuffixArray {
+<i class="no-highlight">9</i>&nbsp;
+<i class="no-highlight">10</i>&nbsp;  // Length of the suffix array
+<i class="no-highlight">11</i>&nbsp;  protected final int N;
+<i class="no-highlight">12</i>&nbsp;
+<i class="no-highlight">13</i>&nbsp;  // T is the text
+<i class="no-highlight">14</i>&nbsp;  protected int[] T;
+<i class="no-highlight">15</i>&nbsp;
+<i class="no-highlight">16</i>&nbsp;  // The sorted suffix array values.
+<i class="no-highlight">17</i>&nbsp;  protected int[] sa;
+<i class="no-highlight">18</i>&nbsp;
+<i class="no-highlight">19</i>&nbsp;  // Longest Common Prefix array
+<i class="no-highlight">20</i>&nbsp;  protected int[] lcp;
+<i class="no-highlight">21</i>&nbsp;
+<b class="fc"><i class="no-highlight">22</i>&nbsp;  private boolean constructedSa = false;</b>
+<b class="fc"><i class="no-highlight">23</i>&nbsp;  private boolean constructedLcpArray = false;</b>
+<i class="no-highlight">24</i>&nbsp;
+<b class="fc"><i class="no-highlight">25</i>&nbsp;  public SuffixArray(int[] text) {</b>
+<b class="fc"><i class="no-highlight">26</i>&nbsp;    if (text == null) throw new IllegalArgumentException(&quot;Text cannot be null.&quot;);</b>
+<b class="fc"><i class="no-highlight">27</i>&nbsp;    this.T = text;</b>
+<b class="fc"><i class="no-highlight">28</i>&nbsp;    this.N = text.length;</b>
+<b class="fc"><i class="no-highlight">29</i>&nbsp;  }</b>
+<i class="no-highlight">30</i>&nbsp;
+<i class="no-highlight">31</i>&nbsp;  public int getTextLength() {
+<b class="nc"><i class="no-highlight">32</i>&nbsp;    return T.length;</b>
+<i class="no-highlight">33</i>&nbsp;  }
+<i class="no-highlight">34</i>&nbsp;
+<i class="no-highlight">35</i>&nbsp;  // Returns the suffix array.
+<i class="no-highlight">36</i>&nbsp;  public int[] getSa() {
+<b class="fc"><i class="no-highlight">37</i>&nbsp;    buildSuffixArray();</b>
+<b class="fc"><i class="no-highlight">38</i>&nbsp;    return sa;</b>
+<i class="no-highlight">39</i>&nbsp;  }
+<i class="no-highlight">40</i>&nbsp;
+<i class="no-highlight">41</i>&nbsp;  // Returns the LCP array.
+<i class="no-highlight">42</i>&nbsp;  public int[] getLcpArray() {
+<b class="fc"><i class="no-highlight">43</i>&nbsp;    buildLcpArray();</b>
+<b class="fc"><i class="no-highlight">44</i>&nbsp;    return lcp;</b>
+<i class="no-highlight">45</i>&nbsp;  }
+<i class="no-highlight">46</i>&nbsp;
+<i class="no-highlight">47</i>&nbsp;  // Builds the suffix array by calling the construct() method.
+<i class="no-highlight">48</i>&nbsp;  protected void buildSuffixArray() {
+<b class="fc"><i class="no-highlight">49</i>&nbsp;    if (constructedSa) return;</b>
+<b class="fc"><i class="no-highlight">50</i>&nbsp;    construct();</b>
+<b class="fc"><i class="no-highlight">51</i>&nbsp;    constructedSa = true;</b>
+<b class="fc"><i class="no-highlight">52</i>&nbsp;  }</b>
+<i class="no-highlight">53</i>&nbsp;
+<i class="no-highlight">54</i>&nbsp;  // Builds the LCP array by first creating the SA and then running the kasai algorithm.
+<i class="no-highlight">55</i>&nbsp;  protected void buildLcpArray() {
+<b class="fc"><i class="no-highlight">56</i>&nbsp;    if (constructedLcpArray) return;</b>
+<b class="fc"><i class="no-highlight">57</i>&nbsp;    buildSuffixArray();</b>
+<b class="fc"><i class="no-highlight">58</i>&nbsp;    kasai();</b>
+<b class="fc"><i class="no-highlight">59</i>&nbsp;    constructedLcpArray = true;</b>
+<b class="fc"><i class="no-highlight">60</i>&nbsp;  }</b>
+<i class="no-highlight">61</i>&nbsp;
+<i class="no-highlight">62</i>&nbsp;  protected static int[] toIntArray(String s) {
+<b class="fc"><i class="no-highlight">63</i>&nbsp;    if (s == null) return null;</b>
+<b class="fc"><i class="no-highlight">64</i>&nbsp;    int[] t = new int[s.length()];</b>
+<b class="fc"><i class="no-highlight">65</i>&nbsp;    for (int i = 0; i &lt; s.length(); i++) t[i] = s.charAt(i);</b>
+<b class="fc"><i class="no-highlight">66</i>&nbsp;    return t;</b>
+<i class="no-highlight">67</i>&nbsp;  }
+<i class="no-highlight">68</i>&nbsp;
+<i class="no-highlight">69</i>&nbsp;  // The suffix array construction algorithm is left undefined
+<i class="no-highlight">70</i>&nbsp;  // as there are multiple ways to do this.
+<i class="no-highlight">71</i>&nbsp;  protected abstract void construct();
+<i class="no-highlight">72</i>&nbsp;
+<i class="no-highlight">73</i>&nbsp;  // Use Kasai algorithm to build LCP array
+<i class="no-highlight">74</i>&nbsp;  // http://www.mi.fu-berlin.de/wiki/pub/ABI/RnaSeqP4/suffix-array.pdf
+<i class="no-highlight">75</i>&nbsp;  private void kasai() {
+<b class="fc"><i class="no-highlight">76</i>&nbsp;    lcp = new int[N];</b>
+<b class="fc"><i class="no-highlight">77</i>&nbsp;    int[] inv = new int[N];</b>
+<b class="fc"><i class="no-highlight">78</i>&nbsp;    for (int i = 0; i &lt; N; i++) inv[sa[i]] = i;</b>
+<b class="fc"><i class="no-highlight">79</i>&nbsp;    for (int i = 0, len = 0; i &lt; N; i++) {</b>
+<b class="fc"><i class="no-highlight">80</i>&nbsp;      if (inv[i] &gt; 0) {</b>
+<b class="fc"><i class="no-highlight">81</i>&nbsp;        int k = sa[inv[i] - 1];</b>
+<b class="fc"><i class="no-highlight">82</i>&nbsp;        while ((i + len &lt; N) &amp;&amp; (k + len &lt; N) &amp;&amp; T[i + len] == T[k + len]) len++;</b>
+<b class="fc"><i class="no-highlight">83</i>&nbsp;        lcp[inv[i]] = len;</b>
+<b class="fc"><i class="no-highlight">84</i>&nbsp;        if (len &gt; 0) len--;</b>
+<i class="no-highlight">85</i>&nbsp;      }
+<i class="no-highlight">86</i>&nbsp;    }
+<b class="fc"><i class="no-highlight">87</i>&nbsp;  }</b>
+<i class="no-highlight">88</i>&nbsp;
+<i class="no-highlight">89</i>&nbsp;  @Override
+<i class="no-highlight">90</i>&nbsp;  public String toString() {
+<b class="nc"><i class="no-highlight">91</i>&nbsp;    StringBuilder sb = new StringBuilder();</b>
+<b class="nc"><i class="no-highlight">92</i>&nbsp;    sb.append(&quot;-----i-----SA-----LCP---Suffix\n&quot;);</b>
+<i class="no-highlight">93</i>&nbsp;
+<b class="nc"><i class="no-highlight">94</i>&nbsp;    for (int i = 0; i &lt; N; i++) {</b>
+<b class="nc"><i class="no-highlight">95</i>&nbsp;      int suffixLen = N - sa[i];</b>
+<b class="nc"><i class="no-highlight">96</i>&nbsp;      char[] suffixArray = new char[suffixLen];</b>
+<b class="nc"><i class="no-highlight">97</i>&nbsp;      for (int j = sa[i], k = 0; j &lt; N; j++, k++) suffixArray[k] = (char) T[j];</b>
+<b class="nc"><i class="no-highlight">98</i>&nbsp;      String suffix = new String(suffixArray);</b>
+<b class="nc"><i class="no-highlight">99</i>&nbsp;      String formattedStr = String.format(&quot;% 7d % 7d % 7d %s\n&quot;, i, sa[i], lcp[i], suffix);</b>
+<b class="nc"><i class="no-highlight">100</i>&nbsp;      sb.append(formattedStr);</b>
+<i class="no-highlight">101</i>&nbsp;    }
+<b class="nc"><i class="no-highlight">102</i>&nbsp;    return sb.toString();</b>
+<i class="no-highlight">103</i>&nbsp;  }
+<i class="no-highlight">104</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-01 13:32</div>
+</div>
+</body>
+</html>

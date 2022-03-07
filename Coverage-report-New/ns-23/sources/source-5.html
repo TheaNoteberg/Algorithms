@@ -1,0 +1,201 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > MatrixInverse</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.linearalgebra</a>
+</div>
+
+<h1>Coverage Summary for Class: MatrixInverse (com.williamfiset.algorithms.linearalgebra)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MatrixInverse</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/43)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/**
+<i class="no-highlight">2</i>&nbsp; * Use Gaussian elimination on an augmented matrix to find the inverse of a matrix.
+<i class="no-highlight">3</i>&nbsp; *
+<i class="no-highlight">4</i>&nbsp; * &lt;p&gt;Time Complexity: O(n^3)
+<i class="no-highlight">5</i>&nbsp; */
+<i class="no-highlight">6</i>&nbsp;package com.williamfiset.algorithms.linearalgebra;
+<i class="no-highlight">7</i>&nbsp;
+<b class="nc"><i class="no-highlight">8</i>&nbsp;public class MatrixInverse {</b>
+<i class="no-highlight">9</i>&nbsp;
+<i class="no-highlight">10</i>&nbsp;  // Define a small value of epsilon to compare double values
+<i class="no-highlight">11</i>&nbsp;  static final double EPS = 0.00000001;
+<i class="no-highlight">12</i>&nbsp;
+<i class="no-highlight">13</i>&nbsp;  // Invert the specified matrix. Assumes invertibility. Time Complexity: O(r²c)
+<i class="no-highlight">14</i>&nbsp;  public static double[][] inverse(double[][] matrix) {
+<b class="nc"><i class="no-highlight">15</i>&nbsp;    if (matrix.length != matrix[0].length) return null;</b>
+<b class="nc"><i class="no-highlight">16</i>&nbsp;    int n = matrix.length;</b>
+<b class="nc"><i class="no-highlight">17</i>&nbsp;    double[][] augmented = new double[n][n * 2];</b>
+<b class="nc"><i class="no-highlight">18</i>&nbsp;    for (int i = 0; i &lt; n; i++) {</b>
+<b class="nc"><i class="no-highlight">19</i>&nbsp;      for (int j = 0; j &lt; n; j++) augmented[i][j] = matrix[i][j];</b>
+<b class="nc"><i class="no-highlight">20</i>&nbsp;      augmented[i][i + n] = 1;</b>
+<i class="no-highlight">21</i>&nbsp;    }
+<b class="nc"><i class="no-highlight">22</i>&nbsp;    solve(augmented);</b>
+<b class="nc"><i class="no-highlight">23</i>&nbsp;    double[][] inv = new double[n][n];</b>
+<b class="nc"><i class="no-highlight">24</i>&nbsp;    for (int i = 0; i &lt; n; i++) for (int j = 0; j &lt; n; j++) inv[i][j] = augmented[i][j + n];</b>
+<b class="nc"><i class="no-highlight">25</i>&nbsp;    return inv;</b>
+<i class="no-highlight">26</i>&nbsp;  }
+<i class="no-highlight">27</i>&nbsp;
+<i class="no-highlight">28</i>&nbsp;  // Solves a system of linear equations as an augmented matrix
+<i class="no-highlight">29</i>&nbsp;  // with the rightmost column containing the constants. The answers
+<i class="no-highlight">30</i>&nbsp;  // will be stored on the rightmost column after the algorithm is done.
+<i class="no-highlight">31</i>&nbsp;  // NOTE: make sure your matrix is consistent and does not have multiple
+<i class="no-highlight">32</i>&nbsp;  // solutions before you solve the system if you want a unique valid answer.
+<i class="no-highlight">33</i>&nbsp;  // Time Complexity: O(r²c)
+<i class="no-highlight">34</i>&nbsp;  static void solve(double[][] augmentedMatrix) {
+<b class="nc"><i class="no-highlight">35</i>&nbsp;    int nRows = augmentedMatrix.length, nCols = augmentedMatrix[0].length, lead = 0;</b>
+<b class="nc"><i class="no-highlight">36</i>&nbsp;    for (int r = 0; r &lt; nRows; r++) {</b>
+<b class="nc"><i class="no-highlight">37</i>&nbsp;      if (lead &gt;= nCols) break;</b>
+<b class="nc"><i class="no-highlight">38</i>&nbsp;      int i = r;</b>
+<b class="nc"><i class="no-highlight">39</i>&nbsp;      while (Math.abs(augmentedMatrix[i][lead]) &lt; EPS) {</b>
+<b class="nc"><i class="no-highlight">40</i>&nbsp;        if (++i == nRows) {</b>
+<b class="nc"><i class="no-highlight">41</i>&nbsp;          i = r;</b>
+<b class="nc"><i class="no-highlight">42</i>&nbsp;          if (++lead == nCols) return;</b>
+<i class="no-highlight">43</i>&nbsp;        }
+<i class="no-highlight">44</i>&nbsp;      }
+<b class="nc"><i class="no-highlight">45</i>&nbsp;      double[] temp = augmentedMatrix[r];</b>
+<b class="nc"><i class="no-highlight">46</i>&nbsp;      augmentedMatrix[r] = augmentedMatrix[i];</b>
+<b class="nc"><i class="no-highlight">47</i>&nbsp;      augmentedMatrix[i] = temp;</b>
+<b class="nc"><i class="no-highlight">48</i>&nbsp;      double lv = augmentedMatrix[r][lead];</b>
+<b class="nc"><i class="no-highlight">49</i>&nbsp;      for (int j = 0; j &lt; nCols; j++) augmentedMatrix[r][j] /= lv;</b>
+<b class="nc"><i class="no-highlight">50</i>&nbsp;      for (i = 0; i &lt; nRows; i++) {</b>
+<b class="nc"><i class="no-highlight">51</i>&nbsp;        if (i != r) {</b>
+<b class="nc"><i class="no-highlight">52</i>&nbsp;          lv = augmentedMatrix[i][lead];</b>
+<b class="nc"><i class="no-highlight">53</i>&nbsp;          for (int j = 0; j &lt; nCols; j++) augmentedMatrix[i][j] -= lv * augmentedMatrix[r][j];</b>
+<i class="no-highlight">54</i>&nbsp;        }
+<i class="no-highlight">55</i>&nbsp;      }
+<b class="nc"><i class="no-highlight">56</i>&nbsp;      lead++;</b>
+<i class="no-highlight">57</i>&nbsp;    }
+<i class="no-highlight">58</i>&nbsp;  }
+<i class="no-highlight">59</i>&nbsp;
+<i class="no-highlight">60</i>&nbsp;  // Checks if the matrix is inconsistent
+<i class="no-highlight">61</i>&nbsp;  static boolean isInconsistent(double[][] arr) {
+<b class="nc"><i class="no-highlight">62</i>&nbsp;    int nCols = arr[0].length;</b>
+<i class="no-highlight">63</i>&nbsp;    outer:
+<b class="nc"><i class="no-highlight">64</i>&nbsp;    for (int y = 0; y &lt; arr.length; y++) {</b>
+<b class="nc"><i class="no-highlight">65</i>&nbsp;      if (Math.abs(arr[y][nCols - 1]) &gt; EPS) {</b>
+<b class="nc"><i class="no-highlight">66</i>&nbsp;        for (int x = 0; x &lt; nCols - 1; x++) if (Math.abs(arr[y][x]) &gt; EPS) continue outer;</b>
+<b class="nc"><i class="no-highlight">67</i>&nbsp;        return true;</b>
+<i class="no-highlight">68</i>&nbsp;      }
+<i class="no-highlight">69</i>&nbsp;    }
+<b class="nc"><i class="no-highlight">70</i>&nbsp;    return false;</b>
+<i class="no-highlight">71</i>&nbsp;  }
+<i class="no-highlight">72</i>&nbsp;
+<i class="no-highlight">73</i>&nbsp;  // Make sure your matrix is consistent as well
+<i class="no-highlight">74</i>&nbsp;  static boolean hasMultipleSolutions(double[][] arr) {
+<b class="nc"><i class="no-highlight">75</i>&nbsp;    int nCols = arr[0].length, nEmptyRows = 0;</b>
+<i class="no-highlight">76</i>&nbsp;    outer:
+<b class="nc"><i class="no-highlight">77</i>&nbsp;    for (int y = 0; y &lt; arr.length; y++) {</b>
+<b class="nc"><i class="no-highlight">78</i>&nbsp;      for (int x = 0; x &lt; nCols; x++) if (Math.abs(arr[y][x]) &gt; EPS) continue outer;</b>
+<b class="nc"><i class="no-highlight">79</i>&nbsp;      nEmptyRows++;</b>
+<i class="no-highlight">80</i>&nbsp;    }
+<b class="nc"><i class="no-highlight">81</i>&nbsp;    return nCols - 1 &gt; arr.length - nEmptyRows;</b>
+<i class="no-highlight">82</i>&nbsp;  }
+<i class="no-highlight">83</i>&nbsp;
+<i class="no-highlight">84</i>&nbsp;  public static void main(String[] args) {
+<i class="no-highlight">85</i>&nbsp;
+<i class="no-highlight">86</i>&nbsp;    // Check this matrix is invertable
+<b class="nc"><i class="no-highlight">87</i>&nbsp;    double[][] matrix = {</b>
+<i class="no-highlight">88</i>&nbsp;      {2, -4, 0},
+<i class="no-highlight">89</i>&nbsp;      {0, 6, 0},
+<i class="no-highlight">90</i>&nbsp;      {2, 2, -2}
+<i class="no-highlight">91</i>&nbsp;    };
+<i class="no-highlight">92</i>&nbsp;
+<b class="nc"><i class="no-highlight">93</i>&nbsp;    double[][] inv = inverse(matrix);</b>
+<b class="nc"><i class="no-highlight">94</i>&nbsp;    for (double[] row : inv) System.out.println(java.util.Arrays.toString(row));</b>
+<i class="no-highlight">95</i>&nbsp;  }
+<i class="no-highlight">96</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-07 12:04</div>
+</div>
+</body>
+</html>

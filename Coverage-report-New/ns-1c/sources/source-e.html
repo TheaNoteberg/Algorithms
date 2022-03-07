@@ -1,0 +1,216 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ConnectedComponentsDfsSolverAdjacencyList</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.graphtheory</a>
+</div>
+
+<h1>Coverage Summary for Class: ConnectedComponentsDfsSolverAdjacencyList (com.williamfiset.algorithms.graphtheory)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ConnectedComponentsDfsSolverAdjacencyList</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/39)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/**
+<i class="no-highlight">2</i>&nbsp; * This file contains an algorithm to find all the connected components of an undirected graph. If
+<i class="no-highlight">3</i>&nbsp; * the graph you&#39;re dealing with is directed have a look at Tarjan&#39;s algorithm to find strongly
+<i class="no-highlight">4</i>&nbsp; * connected components.
+<i class="no-highlight">5</i>&nbsp; *
+<i class="no-highlight">6</i>&nbsp; * @author William Fiset, william.alexandre.fiset@gmail.com
+<i class="no-highlight">7</i>&nbsp; */
+<i class="no-highlight">8</i>&nbsp;package com.williamfiset.algorithms.graphtheory;
+<i class="no-highlight">9</i>&nbsp;
+<i class="no-highlight">10</i>&nbsp;import java.util.*;
+<i class="no-highlight">11</i>&nbsp;
+<i class="no-highlight">12</i>&nbsp;public class ConnectedComponentsDfsSolverAdjacencyList {
+<i class="no-highlight">13</i>&nbsp;
+<i class="no-highlight">14</i>&nbsp;  private final int n;
+<i class="no-highlight">15</i>&nbsp;
+<i class="no-highlight">16</i>&nbsp;  private int componentCount;
+<i class="no-highlight">17</i>&nbsp;  private int[] components;
+<i class="no-highlight">18</i>&nbsp;  private boolean solved;
+<i class="no-highlight">19</i>&nbsp;  private boolean[] visited;
+<i class="no-highlight">20</i>&nbsp;  private List&lt;List&lt;Integer&gt;&gt; graph;
+<i class="no-highlight">21</i>&nbsp;
+<i class="no-highlight">22</i>&nbsp;  /** @param graph - An undirected graph as an adjacency list. */
+<b class="nc"><i class="no-highlight">23</i>&nbsp;  public ConnectedComponentsDfsSolverAdjacencyList(List&lt;List&lt;Integer&gt;&gt; graph) {</b>
+<b class="nc"><i class="no-highlight">24</i>&nbsp;    if (graph == null) throw new NullPointerException();</b>
+<b class="nc"><i class="no-highlight">25</i>&nbsp;    this.n = graph.size();</b>
+<b class="nc"><i class="no-highlight">26</i>&nbsp;    this.graph = graph;</b>
+<i class="no-highlight">27</i>&nbsp;  }
+<i class="no-highlight">28</i>&nbsp;
+<i class="no-highlight">29</i>&nbsp;  public int[] getComponents() {
+<b class="nc"><i class="no-highlight">30</i>&nbsp;    solve();</b>
+<b class="nc"><i class="no-highlight">31</i>&nbsp;    return components;</b>
+<i class="no-highlight">32</i>&nbsp;  }
+<i class="no-highlight">33</i>&nbsp;
+<i class="no-highlight">34</i>&nbsp;  public int countComponents() {
+<b class="nc"><i class="no-highlight">35</i>&nbsp;    solve();</b>
+<b class="nc"><i class="no-highlight">36</i>&nbsp;    return componentCount;</b>
+<i class="no-highlight">37</i>&nbsp;  }
+<i class="no-highlight">38</i>&nbsp;
+<i class="no-highlight">39</i>&nbsp;  public void solve() {
+<b class="nc"><i class="no-highlight">40</i>&nbsp;    if (solved) return;</b>
+<i class="no-highlight">41</i>&nbsp;
+<b class="nc"><i class="no-highlight">42</i>&nbsp;    visited = new boolean[n];</b>
+<b class="nc"><i class="no-highlight">43</i>&nbsp;    components = new int[n];</b>
+<b class="nc"><i class="no-highlight">44</i>&nbsp;    for (int i = 0; i &lt; n; i++) {</b>
+<b class="nc"><i class="no-highlight">45</i>&nbsp;      if (!visited[i]) {</b>
+<b class="nc"><i class="no-highlight">46</i>&nbsp;        componentCount++;</b>
+<b class="nc"><i class="no-highlight">47</i>&nbsp;        dfs(i);</b>
+<i class="no-highlight">48</i>&nbsp;      }
+<i class="no-highlight">49</i>&nbsp;    }
+<i class="no-highlight">50</i>&nbsp;
+<b class="nc"><i class="no-highlight">51</i>&nbsp;    solved = true;</b>
+<i class="no-highlight">52</i>&nbsp;  }
+<i class="no-highlight">53</i>&nbsp;
+<i class="no-highlight">54</i>&nbsp;  private void dfs(int at) {
+<b class="nc"><i class="no-highlight">55</i>&nbsp;    visited[at] = true;</b>
+<b class="nc"><i class="no-highlight">56</i>&nbsp;    components[at] = componentCount;</b>
+<b class="nc"><i class="no-highlight">57</i>&nbsp;    for (int to : graph.get(at)) if (!visited[to]) dfs(to);</b>
+<i class="no-highlight">58</i>&nbsp;  }
+<i class="no-highlight">59</i>&nbsp;
+<i class="no-highlight">60</i>&nbsp;  /* Finding connected components example */
+<i class="no-highlight">61</i>&nbsp;
+<i class="no-highlight">62</i>&nbsp;  public static List&lt;List&lt;Integer&gt;&gt; createGraph(int n) {
+<b class="nc"><i class="no-highlight">63</i>&nbsp;    List&lt;List&lt;Integer&gt;&gt; graph = new ArrayList&lt;&gt;(n);</b>
+<b class="nc"><i class="no-highlight">64</i>&nbsp;    for (int i = 0; i &lt; n; i++) graph.add(new ArrayList&lt;&gt;());</b>
+<b class="nc"><i class="no-highlight">65</i>&nbsp;    return graph;</b>
+<i class="no-highlight">66</i>&nbsp;  }
+<i class="no-highlight">67</i>&nbsp;
+<i class="no-highlight">68</i>&nbsp;  public static void addUndirectedEdge(List&lt;List&lt;Integer&gt;&gt; graph, int from, int to) {
+<b class="nc"><i class="no-highlight">69</i>&nbsp;    graph.get(from).add(to);</b>
+<b class="nc"><i class="no-highlight">70</i>&nbsp;    graph.get(to).add(from);</b>
+<i class="no-highlight">71</i>&nbsp;  }
+<i class="no-highlight">72</i>&nbsp;
+<i class="no-highlight">73</i>&nbsp;  public static void main(String[] args) {
+<i class="no-highlight">74</i>&nbsp;
+<b class="nc"><i class="no-highlight">75</i>&nbsp;    final int n = 11;</b>
+<b class="nc"><i class="no-highlight">76</i>&nbsp;    List&lt;List&lt;Integer&gt;&gt; graph = createGraph(n);</b>
+<i class="no-highlight">77</i>&nbsp;
+<i class="no-highlight">78</i>&nbsp;    // Setup a graph with five connected components:
+<i class="no-highlight">79</i>&nbsp;    // {0,1,7}, {2,5}, {4,8}, {3,6,9}, {10}
+<b class="nc"><i class="no-highlight">80</i>&nbsp;    addUndirectedEdge(graph, 0, 1);</b>
+<b class="nc"><i class="no-highlight">81</i>&nbsp;    addUndirectedEdge(graph, 1, 7);</b>
+<b class="nc"><i class="no-highlight">82</i>&nbsp;    addUndirectedEdge(graph, 7, 0);</b>
+<b class="nc"><i class="no-highlight">83</i>&nbsp;    addUndirectedEdge(graph, 2, 5);</b>
+<b class="nc"><i class="no-highlight">84</i>&nbsp;    addUndirectedEdge(graph, 4, 8);</b>
+<b class="nc"><i class="no-highlight">85</i>&nbsp;    addUndirectedEdge(graph, 3, 6);</b>
+<b class="nc"><i class="no-highlight">86</i>&nbsp;    addUndirectedEdge(graph, 6, 9);</b>
+<i class="no-highlight">87</i>&nbsp;
+<i class="no-highlight">88</i>&nbsp;    ConnectedComponentsDfsSolverAdjacencyList solver;
+<b class="nc"><i class="no-highlight">89</i>&nbsp;    solver = new ConnectedComponentsDfsSolverAdjacencyList(graph);</b>
+<b class="nc"><i class="no-highlight">90</i>&nbsp;    int count = solver.countComponents();</b>
+<b class="nc"><i class="no-highlight">91</i>&nbsp;    System.out.printf(&quot;Number of components: %d\n&quot;, count);</b>
+<i class="no-highlight">92</i>&nbsp;
+<b class="nc"><i class="no-highlight">93</i>&nbsp;    int[] components = solver.getComponents();</b>
+<b class="nc"><i class="no-highlight">94</i>&nbsp;    for (int i = 0; i &lt; n; i++)</b>
+<b class="nc"><i class="no-highlight">95</i>&nbsp;      System.out.printf(&quot;Node %d is part of component %d\n&quot;, i, components[i]);</b>
+<i class="no-highlight">96</i>&nbsp;
+<i class="no-highlight">97</i>&nbsp;    // Prints:
+<i class="no-highlight">98</i>&nbsp;    // Number of components: 5
+<i class="no-highlight">99</i>&nbsp;    // Node 0 is part of component 1
+<i class="no-highlight">100</i>&nbsp;    // Node 1 is part of component 1
+<i class="no-highlight">101</i>&nbsp;    // Node 2 is part of component 2
+<i class="no-highlight">102</i>&nbsp;    // Node 3 is part of component 3
+<i class="no-highlight">103</i>&nbsp;    // Node 4 is part of component 4
+<i class="no-highlight">104</i>&nbsp;    // Node 5 is part of component 2
+<i class="no-highlight">105</i>&nbsp;    // Node 6 is part of component 3
+<i class="no-highlight">106</i>&nbsp;    // Node 7 is part of component 1
+<i class="no-highlight">107</i>&nbsp;    // Node 8 is part of component 4
+<i class="no-highlight">108</i>&nbsp;    // Node 9 is part of component 3
+<i class="no-highlight">109</i>&nbsp;    // Node 10 is part of component 5
+<i class="no-highlight">110</i>&nbsp;  }
+<i class="no-highlight">111</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-07 12:04</div>
+</div>
+</body>
+</html>

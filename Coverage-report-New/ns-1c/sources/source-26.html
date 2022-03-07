@@ -1,0 +1,206 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > TspBruteForce</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.williamfiset.algorithms.graphtheory</a>
+</div>
+
+<h1>Coverage Summary for Class: TspBruteForce (com.williamfiset.algorithms.graphtheory)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TspBruteForce</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    71,4%
+  </span>
+  <span class="absValue">
+    (5/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    71,7%
+  </span>
+  <span class="absValue">
+    (33/46)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;/**
+<i class="no-highlight">2</i>&nbsp; * This file shows you how to solve the traveling salesman problem using a brute force approach.
+<i class="no-highlight">3</i>&nbsp; * Since the time complexity is on the order of O(n!) this method is not convenient for n &gt; 12
+<i class="no-highlight">4</i>&nbsp; *
+<i class="no-highlight">5</i>&nbsp; * &lt;p&gt;Time Complexity: O(n!)
+<i class="no-highlight">6</i>&nbsp; *
+<i class="no-highlight">7</i>&nbsp; * @author William Fiset, Micah Stairs
+<i class="no-highlight">8</i>&nbsp; */
+<i class="no-highlight">9</i>&nbsp;package com.williamfiset.algorithms.graphtheory;
+<i class="no-highlight">10</i>&nbsp;
+<b class="nc"><i class="no-highlight">11</i>&nbsp;public class TspBruteForce {</b>
+<i class="no-highlight">12</i>&nbsp;
+<i class="no-highlight">13</i>&nbsp;  // Given an nxn complete graph represented as an adjacency
+<i class="no-highlight">14</i>&nbsp;  // matrix this method finds the best tour that visits all
+<i class="no-highlight">15</i>&nbsp;  // the nodes while minimizing the overall visit cost.
+<i class="no-highlight">16</i>&nbsp;  public static int[] tsp(double[][] matrix) {
+<i class="no-highlight">17</i>&nbsp;
+<b class="fc"><i class="no-highlight">18</i>&nbsp;    int n = matrix.length;</b>
+<b class="fc"><i class="no-highlight">19</i>&nbsp;    int[] permutation = new int[n];</b>
+<b class="fc"><i class="no-highlight">20</i>&nbsp;    for (int i = 0; i &lt; n; i++) permutation[i] = i;</b>
+<i class="no-highlight">21</i>&nbsp;
+<b class="fc"><i class="no-highlight">22</i>&nbsp;    int[] bestTour = permutation.clone();</b>
+<b class="fc"><i class="no-highlight">23</i>&nbsp;    double bestTourCost = Double.POSITIVE_INFINITY;</b>
+<i class="no-highlight">24</i>&nbsp;
+<i class="no-highlight">25</i>&nbsp;    // Try all n! tours
+<i class="no-highlight">26</i>&nbsp;    do {
+<i class="no-highlight">27</i>&nbsp;
+<b class="fc"><i class="no-highlight">28</i>&nbsp;      double tourCost = computeTourCost(permutation, matrix);</b>
+<i class="no-highlight">29</i>&nbsp;
+<b class="fc"><i class="no-highlight">30</i>&nbsp;      if (tourCost &lt; bestTourCost) {</b>
+<b class="fc"><i class="no-highlight">31</i>&nbsp;        bestTourCost = tourCost;</b>
+<b class="fc"><i class="no-highlight">32</i>&nbsp;        bestTour = permutation.clone();</b>
+<i class="no-highlight">33</i>&nbsp;      }
+<i class="no-highlight">34</i>&nbsp;
+<b class="fc"><i class="no-highlight">35</i>&nbsp;    } while (nextPermutation(permutation));</b>
+<i class="no-highlight">36</i>&nbsp;
+<b class="fc"><i class="no-highlight">37</i>&nbsp;    return bestTour;</b>
+<i class="no-highlight">38</i>&nbsp;  }
+<i class="no-highlight">39</i>&nbsp;
+<i class="no-highlight">40</i>&nbsp;  public static double computeTourCost(int[] tour, double[][] matrix) {
+<i class="no-highlight">41</i>&nbsp;
+<b class="fc"><i class="no-highlight">42</i>&nbsp;    double cost = 0;</b>
+<i class="no-highlight">43</i>&nbsp;
+<i class="no-highlight">44</i>&nbsp;    // Compute the cost of going to each city
+<b class="fc"><i class="no-highlight">45</i>&nbsp;    for (int i = 1; i &lt; matrix.length; i++) {</b>
+<b class="fc"><i class="no-highlight">46</i>&nbsp;      int from = tour[i - 1];</b>
+<b class="fc"><i class="no-highlight">47</i>&nbsp;      int to = tour[i];</b>
+<b class="fc"><i class="no-highlight">48</i>&nbsp;      cost += matrix[from][to];</b>
+<i class="no-highlight">49</i>&nbsp;    }
+<i class="no-highlight">50</i>&nbsp;
+<i class="no-highlight">51</i>&nbsp;    // Compute the cost to return to the starting city
+<b class="fc"><i class="no-highlight">52</i>&nbsp;    int last = tour[matrix.length - 1];</b>
+<b class="fc"><i class="no-highlight">53</i>&nbsp;    int first = tour[0];</b>
+<b class="fc"><i class="no-highlight">54</i>&nbsp;    return cost + matrix[last][first];</b>
+<i class="no-highlight">55</i>&nbsp;  }
+<i class="no-highlight">56</i>&nbsp;
+<i class="no-highlight">57</i>&nbsp;  // Generates the next ordered permutation in-place (skips repeated permutations).
+<i class="no-highlight">58</i>&nbsp;  // Calling this when the array is already at the highest permutation returns false.
+<i class="no-highlight">59</i>&nbsp;  // Recommended usage is to start with the smallest permutations and use a do while
+<i class="no-highlight">60</i>&nbsp;  // loop to generate each successive permutations (see main for example).
+<i class="no-highlight">61</i>&nbsp;  public static boolean nextPermutation(int[] sequence) {
+<b class="fc"><i class="no-highlight">62</i>&nbsp;    int first = getFirst(sequence);</b>
+<b class="fc"><i class="no-highlight">63</i>&nbsp;    if (first == -1) return false;</b>
+<b class="fc"><i class="no-highlight">64</i>&nbsp;    int toSwap = sequence.length - 1;</b>
+<b class="fc"><i class="no-highlight">65</i>&nbsp;    while (sequence[first] &gt;= sequence[toSwap]) --toSwap;</b>
+<b class="fc"><i class="no-highlight">66</i>&nbsp;    swap(sequence, first++, toSwap);</b>
+<b class="fc"><i class="no-highlight">67</i>&nbsp;    toSwap = sequence.length - 1;</b>
+<b class="fc"><i class="no-highlight">68</i>&nbsp;    while (first &lt; toSwap) swap(sequence, first++, toSwap--);</b>
+<b class="fc"><i class="no-highlight">69</i>&nbsp;    return true;</b>
+<i class="no-highlight">70</i>&nbsp;  }
+<i class="no-highlight">71</i>&nbsp;
+<i class="no-highlight">72</i>&nbsp;  private static int getFirst(int[] sequence) {
+<b class="fc"><i class="no-highlight">73</i>&nbsp;    for (int i = sequence.length - 2; i &gt;= 0; --i) if (sequence[i] &lt; sequence[i + 1]) return i;</b>
+<b class="fc"><i class="no-highlight">74</i>&nbsp;    return -1;</b>
+<i class="no-highlight">75</i>&nbsp;  }
+<i class="no-highlight">76</i>&nbsp;
+<i class="no-highlight">77</i>&nbsp;  private static void swap(int[] sequence, int i, int j) {
+<b class="fc"><i class="no-highlight">78</i>&nbsp;    int tmp = sequence[i];</b>
+<b class="fc"><i class="no-highlight">79</i>&nbsp;    sequence[i] = sequence[j];</b>
+<b class="fc"><i class="no-highlight">80</i>&nbsp;    sequence[j] = tmp;</b>
+<b class="fc"><i class="no-highlight">81</i>&nbsp;  }</b>
+<i class="no-highlight">82</i>&nbsp;
+<i class="no-highlight">83</i>&nbsp;  public static void main(String[] args) {
+<i class="no-highlight">84</i>&nbsp;
+<b class="nc"><i class="no-highlight">85</i>&nbsp;    int n = 10;</b>
+<b class="nc"><i class="no-highlight">86</i>&nbsp;    double[][] matrix = new double[n][n];</b>
+<b class="nc"><i class="no-highlight">87</i>&nbsp;    for (double[] row : matrix) java.util.Arrays.fill(row, 100);</b>
+<i class="no-highlight">88</i>&nbsp;
+<i class="no-highlight">89</i>&nbsp;    // Construct an optimal tour
+<b class="nc"><i class="no-highlight">90</i>&nbsp;    int edgeCost = 5;</b>
+<b class="nc"><i class="no-highlight">91</i>&nbsp;    int[] optimalTour = {2, 7, 6, 1, 9, 8, 5, 3, 4, 0, 2};</b>
+<b class="nc"><i class="no-highlight">92</i>&nbsp;    for (int i = 1; i &lt; optimalTour.length; i++)</b>
+<b class="nc"><i class="no-highlight">93</i>&nbsp;      matrix[optimalTour[i - 1]][optimalTour[i]] = edgeCost;</b>
+<i class="no-highlight">94</i>&nbsp;
+<b class="nc"><i class="no-highlight">95</i>&nbsp;    int[] bestTour = tsp(matrix);</b>
+<b class="nc"><i class="no-highlight">96</i>&nbsp;    System.out.println(java.util.Arrays.toString(bestTour));</b>
+<i class="no-highlight">97</i>&nbsp;
+<b class="nc"><i class="no-highlight">98</i>&nbsp;    double tourCost = computeTourCost(bestTour, matrix);</b>
+<b class="nc"><i class="no-highlight">99</i>&nbsp;    System.out.println(&quot;Tour cost: &quot; + tourCost);</b>
+<b class="nc"><i class="no-highlight">100</i>&nbsp;  }</b>
+<i class="no-highlight">101</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-03-07 12:04</div>
+</div>
+</body>
+</html>
