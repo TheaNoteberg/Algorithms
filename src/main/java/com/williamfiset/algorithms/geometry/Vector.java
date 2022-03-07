@@ -29,7 +29,7 @@ public class Vector extends Point {
         }
         return new Vector(normalizedCoord);
     }
-    public Vector makeTwoPointsVector(Point point1, Point point2){
+    public static Vector makeTwoPointsVector(Point point1, Point point2){
         if (point1.coordinates.length != point2.coordinates.length) throw new ArithmeticException("Points must be in the same dimension");
         double[] vector = new double[point1.coordinates.length];
         for (int i = 0; i < point1.coordinates.length; i++) {

@@ -40,7 +40,7 @@ public class Line {
   public Line(double x1, double y1, double z1, double x2, double y2, double z2) {
     Point point1 = new Point(x1, y1, z1);
     Point point2 = new Point(x2, y2, z2);
-    this.vector = vector.makeTwoPointsVector(point1, point2);
+    this.vector = Vector.makeTwoPointsVector(point1, point2);
     this.point = point1;
   }
 
@@ -145,7 +145,7 @@ public class Line {
   }
   
   public boolean pointOnLine(Point point){
-    Vector comparizonVector = vector.makeTwoPointsVector(point, this.point);
+    Vector comparizonVector = Vector.makeTwoPointsVector(point, this.point);
     comparizonVector.getNormalized();
     this.vector.getNormalized();
     Vector cross_value = Vector.crossProduct(comparizonVector, this.vector);
@@ -176,5 +176,4 @@ public class Line {
     }
     return pointOnLine(line.getPoint());
   }
-  
 }
