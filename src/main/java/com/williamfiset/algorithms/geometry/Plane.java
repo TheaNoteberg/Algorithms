@@ -1,16 +1,20 @@
+/*
+* A class to represent a plane in 3D space.
+*
+* @author Edvard Aldor, Jonathan Hedin, Oscar Ingels, Thea Nöteberg
+*/
+
 package com.williamfiset.algorithms.geometry;
 
 import static java.lang.Math.*;
 
 import java.util.Arrays;
 
-
-//import java.awt.geom.Point3D;
-
 public class Plane {
     // The internal representation of a plane is
     // in Hessian normal form which is: ax + by + cz + d = 0
     private double a, b, c, d;
+    
     public Plane(double a, double b, double c, double d){
         this.a = a;
         this.b = b;
@@ -81,6 +85,7 @@ public class Plane {
         return new Vector(norm);
     }
 
+    // Checks so that input is not invalid
     private void checkInput() {
         double[] abcdOne = {a,b,c};
 

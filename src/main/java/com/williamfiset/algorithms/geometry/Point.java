@@ -1,8 +1,10 @@
-package com.williamfiset.algorithms.geometry;
-
 /*
-A simple point in n-dimmensional space.
+* A simple point in n-dimmensional space.
+*
+* @author Edvard Aldor, Jonathan Hedin, Oscar Ingels, Thea Nöteberg
 */
+
+package com.williamfiset.algorithms.geometry;
 
 public class Point {
     public double[] coordinates;

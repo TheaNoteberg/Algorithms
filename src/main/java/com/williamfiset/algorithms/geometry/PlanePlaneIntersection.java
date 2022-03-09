@@ -1,18 +1,17 @@
+/**
+ * Given two two planes in 3D space, find the line at which
+ * they intersect, given that they are not parallell.
+ * 
+ * <p>Time Complexity: O(1) (input size is not variable)
+ *
+ * @author Edvard Aldor, Jonathan Hedin, Oscar Ingels, Thea Nöteberg
+ */
+
 package com.williamfiset.algorithms.geometry;
 
-import static java.lang.Math.*;
-
-import java.util.Arrays;
-
-import com.williamfiset.algorithms.linearalgebra.GaussianElimination;
-import com.williamfiset.algorithms.linearalgebra.MatrixInverse;
-import com.williamfiset.algorithms.linearalgebra.MatrixMultiplication;
-
-
 public class PlanePlaneIntersection {
-    
-   
 
+    // Finds whether a dimension is set to 0 in both planes.
     private static int findCommonZero(Plane planeOne, Plane planeTwo){
         //Checks if a dimension is already removed.
         int index = 2;
@@ -28,6 +27,8 @@ public class PlanePlaneIntersection {
         return index;
     }
 
+    // Findsa point that exists on the intersection line 
+    // given that one dimension can be set to 0
     public static Point findPoint(double[] planeOne, double[] planeTwo, int index){
         //Finds the point to the line
         double[] point = {-1, -1, -1};
@@ -54,21 +55,29 @@ public class PlanePlaneIntersection {
 
     public static Line planePlaneIntersection(Plane planeOne, Plane planeTwo ){
 
+        // Gets the Hessian normal form representation of the planes (ax+by+cz+d=0)
         double [] normaleq1 = planeOne.getABCD();
         double [] normaleq2 = planeTwo.getABCD();
+        
+        // Calculates the normal vector between the two plane normals, 
+        // which will be the direction vector of the intersection line.
         Vector normalOne = new Vector(normaleq1[0], normaleq1[1], normaleq1[2]);
         Vector normalTwo = new Vector(normaleq2[0], normaleq2[1], normaleq2[2]);
 
         Vector normalVector = Vector.crossProduct(normalOne, normalTwo);
+        
+        // return null if planes are parallell
         if (normalVector.getValue(0) == 0 && normalVector.getValue(1) == 0 && normalVector.getValue(2) == 0) return null;
         
-
         int index = findCommonZero(planeOne, planeTwo);
         //if there is no common zero => y=0
         if (index == -1) index = 2;
         
+        // Use a lesser dimension to solve linear equation of
+        // finding a point on the line.
         double[] newPlanOne = new double[3];
         double[] newPlanTwo = new double[3];
+        
         //Remove one dimenson that is set to zero
         for (int i=0; i<normaleq1.length; i++){
             if (i>index){
@@ -80,10 +89,10 @@ public class PlanePlaneIntersection {
                 newPlanTwo[i] = normaleq2[i];
             }
         }
+
         Point point = findPoint(newPlanOne, newPlanTwo, index);
 
         return new Line(normalVector, point); //Default return
-
     }
 
 
