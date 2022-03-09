@@ -1,0 +1,817 @@
+diff --git a/src/main/java/com/williamfiset/algorithms/geometry/Line.java b/src/main/java/com/williamfiset/algorithms/geometry/Line.java
+index 7852e0d..d3d7fc8 100644
+--- a/src/main/java/com/williamfiset/algorithms/geometry/Line.java
++++ b/src/main/java/com/williamfiset/algorithms/geometry/Line.java
+@@ -11,10 +11,14 @@ import java.awt.geom.Point2D;
+ 
+ public class Line {
+ 
+-  // The internal representation of a line is
++  // For a 2D line, the internal representation of a line is
+   // in general form which is: ax + by = c
+-  private double a, b, c;
+ 
++  // For all other dimensions it's defined by a vector and a point
++  private double a, b, c;
++  private Vector vector;
++  private Point point;
++  
+   // A very same epsilon value used as a threshold for double equality
+   private static final double EPS = 0.0000001;
+ 
+@@ -30,6 +34,43 @@ public class Line {
+     c = x2 * y1 - x1 * y2;
+     normalise();
+   }
++  
++
++  //creates a 3D line from two points. 
++  public Line(double x1, double y1, double z1, double x2, double y2, double z2) {
++    Point point1 = new Point(x1, y1, z1);
++    Point point2 = new Point(x2, y2, z2);
++    this.vector = vector.makeTwoPointsVector(point1, point2);
++    this.point = point1;
++  }
++
++  // Constructs a N-Dimensional line from a vector and point (parametric form).
++  public Line(Vector vector, Point point){
++    if (vector.getDim() == point.getDim()){
++      this.vector = vector;
++      this.point = point;
++    }
++    else throw new ArithmeticException("The point and vector must be in the same dimension");
++    
++  }
++
++  // Constructs a N-Dimensional line from two vectors (parametric form).
++  public Line(Vector posVector, Vector dirVector){
++    if (posVector.getDim() == dirVector.getDim()){
++      this.vector = posVector;
++      this.point = dirVector;
++    }
++    else throw new ArithmeticException("The vectors must be in the same dimension");
++    
++  }
++
++  public Vector getVector(){
++    return vector;
++  }
++
++  public Point getPoint(){
++    return point;
++  }
+ 
+   // Constructs a line from a slope and a point
+   public static Line slopePointToLine(double slope, Point2D pt) {
+@@ -102,10 +143,39 @@ public class Line {
+ 
+     return new Point2D.Double(x, y);
+   }
++  
++  public boolean pointOnLine(Point point){
++    Vector comparizonVector = vector.makeTwoPointsVector(point, this.point);
++    comparizonVector.getNormalized();
++    this.vector.getNormalized();
++    Vector cross_value = Vector.crossProduct(comparizonVector, this.vector);
++
++    for(int i = 0; i<comparizonVector.getDim(); i++){
++      if(cross_value.getValue(i) != 0) return false;
++    }
++    return true;
+ 
+-  // Get a printable representation of a this Line
++  }
++  
++  // Get a printable representation of a this Line  
+   @Override
+   public String toString() {
+     return a + "x + " + b + "y = " + c;
+   }
++
++  @Override
++  public boolean equals(Object other){
++    //Makes it possible to compare two lines to each other.
++    if (!(other instanceof Line)) return false;
++    if (other == this) return true;
++    Line line = (Line) other;
++    Vector thisNorm = this.getVector().getNormalized();
++    Vector otherNorm = line.getVector().getNormalized();
++    Vector crossVal = Vector.crossProduct(thisNorm, otherNorm);
++    for(int i = 0; i<crossVal.getDim(); i++){
++      if(crossVal.getValue(i) != 0) return false;
++    }
++    return pointOnLine(line.getPoint());
++  }
++  
+ }
+diff --git a/src/main/java/com/williamfiset/algorithms/geometry/Plane.java b/src/main/java/com/williamfiset/algorithms/geometry/Plane.java
+new file mode 100644
+index 0000000..5d6ba8d
+--- /dev/null
++++ b/src/main/java/com/williamfiset/algorithms/geometry/Plane.java
+@@ -0,0 +1,121 @@
++/*
++* A class to represent a plane in 3D space.
++*
++* @author Edvard Aldor, Jonathan Hedin, Oscar Ingels, Thea Nöteberg
++*/
++
++package com.williamfiset.algorithms.geometry;
++
++import static java.lang.Math.*;
++
++import java.util.Arrays;
++
++public class Plane {
++    // The internal representation of a plane is
++    // in Hessian normal form which is: ax + by + cz + d = 0
++    private double a, b, c, d;
++    
++    public Plane(double a, double b, double c, double d){
++        this.a = a;
++        this.b = b;
++        this.c = c;
++        this.d = d;
++        checkInput();
++    }
++
++    //Constructs a plane from 3 points.
++    public Plane(Point point1, Point point2, Point point3) {
++        double a_bX  = point1.getX() - point2.getX();
++        double a_bY  = point1.getY() - point2.getY();
++        double a_bZ  = point1.getZ() - point2.getZ();
++        double a_cX  = point1.getX() - point3.getX();
++        double a_cY  = point1.getY() - point3.getY();
++        double a_cZ  = point1.getZ() - point3.getZ();
++
++        Vector a_b = new Vector(a_bX, a_bY, a_bZ);
++        Vector a_c = new Vector(a_cX, a_cY, a_cZ);
++
++        Vector normalVector = Vector.crossProduct(a_b, a_c);
++        
++        this.a = normalVector.getValue(0);
++        this.b = normalVector.getValue(1);
++        this.c = normalVector.getValue(2);
++        this.d = -(a*point1.getX() + b*point1.getY() + c*point1.getZ());
++        checkInput();
++    }
++    //Construct plane from three points in doubles
++    public Plane(double[] point1, double[] point2, double[] point3) {
++        double a_bX  = point1[0] - point2[0];
++        double a_bY  = point1[1] - point2[1];
++        double a_bZ  = point1[2] - point2[2];
++        double a_cX  = point1[0] - point3[0];
++        double a_cY  = point1[1] - point3[1];
++        double a_cZ  = point1[2] - point3[2];
++        Vector a_b = new Vector(a_bX, a_bY, a_bZ);
++        Vector a_c = new Vector(a_cX, a_cY, a_cZ);
++
++        Vector normalVector = Vector.crossProduct(a_b, a_c);
++
++        this.a = normalVector.coordinates[0];
++        this.b = normalVector.coordinates[1];
++        this.c = normalVector.coordinates[2];
++        this.d = -(this.a*point1[0] + this.b*point1[1] + this.c*point1[2]);
++        checkInput();
++    }
++    
++    //Constructs a plane from 2 lines
++    public Plane(Line line1, Line line2){
++
++        Vector vector1 = line1.getVector();
++        Vector vector2 = line2.getVector();
++
++        Vector normalVector = Vector.crossProduct(vector1, vector2);
++        
++        this.a = normalVector.coordinates[0];
++        this.b = normalVector.coordinates[1];
++        this.c = normalVector.coordinates[2];
++        double[] point = line1.getPoint().coordinates;
++        this.d = -(this.a*point[0] + this.b*point[1] + this.c*point[2]);
++        checkInput();
++    }
++
++    public Vector getNormalVector() {
++        double pyth = sqrt(pow(a,2) + pow(b,2) + pow(c,2));
++        double [] norm = {a/pyth,b/pyth,c/pyth};
++        return new Vector(norm);
++    }
++
++    // Checks so that input is not invalid
++    private void checkInput() {
++        double[] abcdOne = {a,b,c};
++
++        double[] zeroArr = {0,0,0};
++
++        if (Arrays.equals(abcdOne, zeroArr)) {
++         throw new ArithmeticException("there is no plane with only zero values");}
++    }
++
++    public double[] getABCD() {
++        return new double[] {a,b,c,d}; 
++       
++    }
++    public String toString() {
++        String a_val=Double.toString(this.a);
++        String b_val=Double.toString(this.b);
++        String c_val=Double.toString(this.c);
++        String d_val=Double.toString(this.d);
++        return  a_val + "x + " +  b_val + "y + " + c_val + "z + " + d_val + "= 0";
++    }
++
++    @Override
++    public boolean equals(Object other) {
++        //Possible to compare two planes to each other.
++        if (!(other instanceof Plane)) return false;
++        if (other == this) return true;
++        Plane plane = (Plane) other;
++        double[] abcdOther = plane.getABCD();
++        double[] abcdThis = new double[] {a,b,c,d};
++        if (Arrays.equals(abcdThis, abcdOther)) return true;
++        else return false;
++    }
++}   
+diff --git a/src/main/java/com/williamfiset/algorithms/geometry/PlanePlaneIntersection.java b/src/main/java/com/williamfiset/algorithms/geometry/PlanePlaneIntersection.java
+new file mode 100644
+index 0000000..0f2281a
+--- /dev/null
++++ b/src/main/java/com/williamfiset/algorithms/geometry/PlanePlaneIntersection.java
+@@ -0,0 +1,111 @@
++/**
++ * Given two two planes in 3D space, find the line at which
++ * they intersect, given that they are not parallell.
++ * 
++ * <p>Time Complexity: O(1) (input size is not variable)
++ *
++ * @author Edvard Aldor, Jonathan Hedin, Oscar Ingels, Thea Nöteberg
++ */
++
++package com.williamfiset.algorithms.geometry;
++
++public class PlanePlaneIntersection {
++
++    // Finds whether a dimension is set to 0 in both planes.
++    private static int findCommonZero(Plane planeOne, Plane planeTwo){
++        //Checks if a dimension is already removed.
++        int index = 2;
++        double[] abcdOne = planeOne.getABCD();
++        double[] abcdTwo = planeTwo.getABCD();
++
++        for (int i = 0; i < 3; i++){
++            //If x or y or z is 0 they shouldnt be set to zero to find one point on the line
++            if (abcdOne[i] == 0 && abcdTwo[i] == 0) {
++                index = i;
++            }
++        }
++        return index;
++    }
++
++    // Findsa point that exists on the intersection line 
++    // given that one dimension can be set to 0
++    public static Point findPoint(double[] planeOne, double[] planeTwo, int index){
++        //Finds the point to the line
++        double[] point = {-1, -1, -1};
++
++        double[] first_equation = {-planeOne[1], -planeOne[2]};
++        double[] second_equation = {planeTwo[0]*first_equation[0]+planeTwo[1],planeTwo[0]*first_equation[1]+ planeTwo[2]};
++
++        double second_variable_solution = -second_equation[1]/second_equation[0]; //y
++        double first_variable_solution = first_equation[0]*second_variable_solution + first_equation[1]; //x
++        double[] both_solutions = {first_variable_solution, second_variable_solution};
++        point[index] = 0;
++        int j = 0;
++        
++        for (int i =0; i<point.length; i++){
++            if (point[i] != 0){
++                point[i] = both_solutions[j];
++                j++; 
++            }
++        }
++       
++        return new Point(point[0], point[1], point[2]);
++
++    }
++
++    public static Line planePlaneIntersection(Plane planeOne, Plane planeTwo ){
++
++        // Gets the Hessian normal form representation of the planes (ax+by+cz+d=0)
++        double [] normaleq1 = planeOne.getABCD();
++        double [] normaleq2 = planeTwo.getABCD();
++        
++        // Calculates the normal vector between the two plane normals, 
++        // which will be the direction vector of the intersection line.
++        Vector normalOne = new Vector(normaleq1[0], normaleq1[1], normaleq1[2]);
++        Vector normalTwo = new Vector(normaleq2[0], normaleq2[1], normaleq2[2]);
++
++        Vector normalVector = Vector.crossProduct(normalOne, normalTwo);
++        
++        // return null if planes are parallell
++        if (normalVector.getValue(0) == 0 && normalVector.getValue(1) == 0 && normalVector.getValue(2) == 0) return null;
++        
++        int index = findCommonZero(planeOne, planeTwo);
++        //if there is no common zero => y=0
++        if (index == -1) index = 2;
++        
++        // Use a lesser dimension to solve linear equation of
++        // finding a point on the line.
++        double[] newPlanOne = new double[3];
++        double[] newPlanTwo = new double[3];
++        
++        //Remove one dimenson that is set to zero
++        for (int i=0; i<normaleq1.length; i++){
++            if (i>index){
++                newPlanOne[i-1] = normaleq1[i];
++                newPlanTwo[i-1] = normaleq2[i];
++            } 
++            if (i < index) {
++                newPlanOne[i] = normaleq1[i];
++                newPlanTwo[i] = normaleq2[i];
++            }
++        }
++
++        Point point = findPoint(newPlanOne, newPlanTwo, index);
++
++        return new Line(normalVector, point); //Default return
++    }
++
++
++    public static void main(String[] args) {
++        //Test in main instead of testclasses.
++        Line answer = new Line (new Vector(-7,4,-1), new Point(-7, 4, 0));
++        Plane planeOne = new Plane(1, 2, 1, -1);
++        Plane planeTwo = new Plane(2, 3, -2, 2);
++        Line result = PlanePlaneIntersection.planePlaneIntersection(planeOne, planeTwo);
++        Vector vector = result.getVector();
++        Point point = result.getPoint();
++        double[] expectedResult = vector.getCoordinates();
++        double[] expectedPoint = point.getCoordinates();
++        
++    }
++}
+diff --git a/src/main/java/com/williamfiset/algorithms/geometry/Point.java b/src/main/java/com/williamfiset/algorithms/geometry/Point.java
+new file mode 100644
+index 0000000..2b314c6
+--- /dev/null
++++ b/src/main/java/com/williamfiset/algorithms/geometry/Point.java
+@@ -0,0 +1,61 @@
++/*
++* A simple point in n-dimmensional space.
++*
++* @author Edvard Aldor, Jonathan Hedin, Oscar Ingels, Thea Nöteberg
++*/
++
++package com.williamfiset.algorithms.geometry;
++
++public class Point {
++    public double[] coordinates;
++    private int dim;
++
++    // Define a point with arbitrary dimensionality
++    public Point(double[] coordinates) {
++        this.coordinates = coordinates;
++        this.dim = coordinates.length;
++    }
++
++    // Define a 2D point
++    public Point(double x, double y) {
++        coordinates = new double[2];
++        this.coordinates[0] = x;
++        this.coordinates[1] = y;
++        this.dim = 2;
++    }
++
++    // Define a 3D point
++    public Point(double x, double y, double z) {
++        coordinates = new double[3];
++        this.coordinates[0] = x;
++        this.coordinates[1] = y;
++        this.coordinates[2] = z;
++        this.dim = 3;
++    }
++
++    public int getDim(){
++        return coordinates.length;
++    }
++
++    public double[] getCoordinates() {
++        return coordinates;
++    }
++
++    public double getX() {
++        if (dim >= 1) return coordinates[0];
++        else throw new ArithmeticException("Point has 0 dimensions");
++    }
++
++    public double getY() {
++        if (dim >= 2) return coordinates[1];
++        else throw new ArithmeticException("Point does not have 2 dimensions");
++    }
++
++    public double getZ() {
++        if (dim >= 3) return coordinates[2];
++        else throw new ArithmeticException("Point does not have 3 dimensions");
++    }
++    public double getCoordinat(int x){
++        return coordinates[x];
++    }
++}
+diff --git a/src/main/java/com/williamfiset/algorithms/geometry/Vector.java b/src/main/java/com/williamfiset/algorithms/geometry/Vector.java
+new file mode 100644
+index 0000000..c77c45a
+--- /dev/null
++++ b/src/main/java/com/williamfiset/algorithms/geometry/Vector.java
+@@ -0,0 +1,76 @@
++/*
++* A class to represent an n-dimensional vector.
++*
++* @author Edvard Aldor, Jonathan Hedin, Oscar Ingels, Thea Nöteberg
++*/
++
++package com.williamfiset.algorithms.geometry;
++
++import static java.lang.Math.*;
++
++public class Vector extends Point {
++
++    // Define a vector using coordinate array
++    public Vector(double[] coordinates) {
++        super(coordinates);
++    }
++
++    // Define a 2D vector using x and y
++    public Vector(double x, double y) {
++        super(x, y);
++    }
++
++    // Define a 3D vector using x, y and z
++    public Vector(double x, double y, double z) {
++        super(x, y, z);
++    }
++
++    // Get the vector norm
++    public double getNorm() {
++        //Get the norm from a vector
++        double pyth = 0;
++        for (double v : coordinates) pyth += pow(v,2);
++        return sqrt(pyth);
++    }
++
++    // Generate a normalized vector
++    public Vector getNormalized() {
++        //Normalizes the vector
++        double norm = getNorm();
++        double[] normalizedCoord = new double[coordinates.length];
++        for (int i = 0; i < normalizedCoord.length; i++) {
++            normalizedCoord[i] = coordinates[i] / norm;
++        }
++        return new Vector(normalizedCoord);
++    }
++
++    // Return a vector that spanns two points.
++    public Vector makeTwoPointsVector(Point point1, Point point2){
++        if (point1.coordinates.length != point2.coordinates.length) throw new ArithmeticException("Points must be in the same dimension");
++        
++        double[] vector = new double[point1.coordinates.length];
++        for (int i = 0; i < point1.coordinates.length; i++) {
++            vector[i] = point1.getCoordinat(i)-point2.getCoordinat(i);
++        }
++        
++        return new Vector(vector);
++    }
++
++    //Calculates the orthogonal vector to two input vectors with cross product
++    public static Vector crossProduct(Vector vector1, Vector vector2){
++        if( vector1.getDim() != 3 || vector2.getDim() != 3) throw new ArithmeticException("The vectors need to be in 3D");
++        
++        double x = vector1.getValue(1)*vector2.getValue(2) - vector1.getValue(2)*vector2.getValue(1);
++        double y = -(vector1.getValue(0)*vector2.getValue(2) - vector1.getValue(2)*vector2.getValue(0));
++        double z = vector1.getValue(0)*vector2.getValue(1) - vector1.getValue(1)*vector2.getValue(0);
++        return new Vector(x, y, z);
++    }
++
++    public double getValue(int index) {
++        return coordinates[index];
++    }
++
++    public int getDim(){
++        return coordinates.length;
++    }
++}
+diff --git a/src/main/java/com/williamfiset/algorithms/linearalgebra/GaussianElimination.java b/src/main/java/com/williamfiset/algorithms/linearalgebra/GaussianElimination.java
+index 2ea82f3..b968c62 100644
+--- a/src/main/java/com/williamfiset/algorithms/linearalgebra/GaussianElimination.java
++++ b/src/main/java/com/williamfiset/algorithms/linearalgebra/GaussianElimination.java
+@@ -6,7 +6,7 @@
+  */
+ package com.williamfiset.algorithms.linearalgebra;
+ 
+-class GaussianElimination {
++public class GaussianElimination {
+ 
+   // Define a small value of epsilon to compare double values
+   static final double EPS = 0.00000001;
+@@ -17,7 +17,7 @@ class GaussianElimination {
+   // NOTE: make sure your matrix is consistent and does not have multiple
+   // solutions when you solve the system if you want a unique valid answer.
+   // Time Complexity: O(r²c)
+-  static void solve(double[][] augmentedMatrix) {
++  public static void solve(double[][] augmentedMatrix) {
+     int nRows = augmentedMatrix.length, nCols = augmentedMatrix[0].length, lead = 0;
+     for (int r = 0; r < nRows; r++) {
+       if (lead >= nCols) break;
+diff --git a/src/main/java/com/williamfiset/algorithms/linearalgebra/MatrixInverse.java b/src/main/java/com/williamfiset/algorithms/linearalgebra/MatrixInverse.java
+index e773b82..4e5b0d3 100644
+--- a/src/main/java/com/williamfiset/algorithms/linearalgebra/MatrixInverse.java
++++ b/src/main/java/com/williamfiset/algorithms/linearalgebra/MatrixInverse.java
+@@ -5,13 +5,13 @@
+  */
+ package com.williamfiset.algorithms.linearalgebra;
+ 
+-class MatrixInverse {
++public class MatrixInverse {
+ 
+   // Define a small value of epsilon to compare double values
+   static final double EPS = 0.00000001;
+ 
+   // Invert the specified matrix. Assumes invertibility. Time Complexity: O(r²c)
+-  static double[][] inverse(double[][] matrix) {
++  public static double[][] inverse(double[][] matrix) {
+     if (matrix.length != matrix[0].length) return null;
+     int n = matrix.length;
+     double[][] augmented = new double[n][n * 2];
+diff --git a/src/main/java/com/williamfiset/algorithms/linearalgebra/MatrixMultiplication.java b/src/main/java/com/williamfiset/algorithms/linearalgebra/MatrixMultiplication.java
+index 4c417fe..9e30be4 100644
+--- a/src/main/java/com/williamfiset/algorithms/linearalgebra/MatrixMultiplication.java
++++ b/src/main/java/com/williamfiset/algorithms/linearalgebra/MatrixMultiplication.java
+@@ -7,11 +7,11 @@
+  */
+ package com.williamfiset.algorithms.linearalgebra;
+ 
+-class MatrixMultiplication {
++public class MatrixMultiplication {
+ 
+   // Returns the result of the product of the matrices 'a' and 'b'
+   // or null if the matrices are the wrong dimensions
+-  static double[][] multiply(double[][] a, double[][] b) {
++  public static double[][] multiply(double[][] a, double[][] b) {
+     int aRows = a.length, aCols = a[0].length;
+     int bRows = b.length, bCols = b[0].length;
+     if (aCols != bRows) return null;
+diff --git a/src/test/java/com/williamfiset/algorithms/geometry/PlanePlaneIntersectionTest.java b/src/test/java/com/williamfiset/algorithms/geometry/PlanePlaneIntersectionTest.java
+new file mode 100644
+index 0000000..9ab64e2
+--- /dev/null
++++ b/src/test/java/com/williamfiset/algorithms/geometry/PlanePlaneIntersectionTest.java
+@@ -0,0 +1,40 @@
++package com.williamfiset.algorithms.geometry;
++import static com.google.common.truth.Truth.assertThat;
++import static org.junit.jupiter.api.Assertions.*;
++import org.junit.*;
++
++public class PlanePlaneIntersectionTest {
++
++    @Test
++    public void PlanePlaneIntersectionTestOne(){
++        //Expected input: Two planes x+2y+z = 1 and 2x+3y-2z=-2
++        //Expected output: A line with vector: [-7,4,-1]t + [-7,4,0]
++        Line answer = new Line (new Vector(-7,4,-1), new Point(-7, 4, 0));
++        Plane planeOne = new Plane(1, 2, 1, -1);
++        Plane planeTwo = new Plane(2, 3, -2, 2);
++        Line result = PlanePlaneIntersection.planePlaneIntersection(planeOne, planeTwo);
++        assertThat(answer).isEqualTo(result);
++    }
++    
++    @Test
++    public void PlanePlaneIntersectionTestTwo(){
++        //Expected input: Two planes x+y+z = -1 and x+2y+3z=-4
++        //Expected output: A line with vector: [1, -2, 1]t + [2,-3,0]
++        Line answer = new Line(new Vector(1, -2, 1), new Point(2, -3, 0));
++        Plane planeOne = new Plane (1, 1, 1, 1);
++        Plane planeTwo = new Plane (1, 2, 3, 4);
++        Line result = PlanePlaneIntersection.planePlaneIntersection(planeOne, planeTwo);
++        assertThat(answer).isEqualTo(result);
++    }
++    
++    @Test
++    public void PlanePlaneIntersectionTestThree(){
++        //Expected input: Two planes 5x+4y+4z = -6 and 5x+4y+4z=0
++        //Expected output: Null
++        Plane planeOne = new Plane (5, 4, 4, 6);
++        Plane planeTwo = new Plane (5, 4, 4, 0);
++        Line result = PlanePlaneIntersection.planePlaneIntersection(planeOne, planeTwo);
++        assertThat(result).isEqualTo(null);
++    }
++    
++}
+\ No newline at end of file
+diff --git a/src/test/java/com/williamfiset/algorithms/geometry/PlaneTest.java b/src/test/java/com/williamfiset/algorithms/geometry/PlaneTest.java
+new file mode 100644
+index 0000000..8580062
+--- /dev/null
++++ b/src/test/java/com/williamfiset/algorithms/geometry/PlaneTest.java
+@@ -0,0 +1,75 @@
++package com.williamfiset.algorithms.geometry;
++import static com.google.common.truth.Truth.assertThat;
++import static org.junit.jupiter.api.Assertions.*;
++import org.junit.*;
++public class PlaneTest {
++
++    @Test
++    public void testPlane(){
++        //Expected input: Array of doubles with size 4:
++        //Expected output: Plane object
++        double[] expectedResult = {2,3,4,5};
++        Plane plane = new Plane(expectedResult[0],expectedResult[1],expectedResult[2],expectedResult[3]);
++        double[] hessianform = plane.getABCD();
++        for (int i=0; i<expectedResult.length; i++){
++            assertThat(expectedResult[i]).isEqualTo(hessianform[i]);
++        }
++    }
++
++    @Test(expected = ArithmeticException.class)
++    public void testPlaneInput(){
++        //Expected input: Array of doubles with size 4, with a,b,c equal to 0:
++        //Expected output: ArithmeticException
++        double[] expectedResult = {0,0,0,5};
++        Plane plane = new Plane(expectedResult[0],expectedResult[1],expectedResult[2],expectedResult[3]);
++    }
++
++    @Test
++    public void testThreePointPlane(){
++        //Expected input: Three points
++        //Expected output: Plane object
++        Point point1 = new Point(1,1,1);
++        Point point2 = new Point(-1,1,0);
++        Point point3 = new Point(2,0,3);
++        Plane plane = new Plane(point1,point2,point3);
++        double[] Hessianform = plane.getABCD();
++        double[] expectedResult = {-1,3,2,-4};
++        for (int i=0; i<expectedResult.length; i++){
++            assertThat(expectedResult[i]).isEqualTo(Hessianform[i]);
++        }
++    }
++    @Test
++    public void testThreeArraysPlane() {
++        //Expected input: Three points in the form of three doubles
++        //Expected output: Plane object
++        double[] point1 = {1,1,1};
++        double[] point2 = {-1,1,0};
++        double[] point3 = {2,0,3};
++        Plane plane = new Plane(point1,point2,point3);
++        double[] hessianform = plane.getABCD();
++        double[] expectedResult = {-1,3,2,-4};
++        for (int i=0; i<expectedResult.length; i++){
++            assertThat(expectedResult[i]).isEqualTo(hessianform[i]);
++        }
++    }
++    @Test
++    public void testTwoLinesPlane() {
++        //Expected input: Two Lines
++        //Expected output: Plane object
++        Vector vector1 = new Vector(2,0,1);
++        Vector vector2 = new Vector(-1,1,-2);
++
++        Point point1 = new Point(1,1,1);
++        Point point2 = new Point(2,0,3);
++
++        Line line1 = new Line(vector1, point1);
++        Line line2 = new Line(vector2, point2);
++
++        Plane plane = new Plane(line1, line2);
++        double[] hessianform = plane.getABCD();
++        double[] expectedResult = {-1,3,2,-4};
++        for (int i=0; i<expectedResult.length; i++){
++            assertThat(expectedResult[i]).isEqualTo(hessianform[i]);
++        }
++    }
++}
+diff --git a/src/test/java/com/williamfiset/algorithms/geometry/VectorTest.java b/src/test/java/com/williamfiset/algorithms/geometry/VectorTest.java
+new file mode 100644
+index 0000000..a8533fa
+--- /dev/null
++++ b/src/test/java/com/williamfiset/algorithms/geometry/VectorTest.java
+@@ -0,0 +1,58 @@
++package com.williamfiset.algorithms.geometry;
++
++import org.junit.*;
++
++import static org.junit.jupiter.api.Assertions.assertEquals;
++
++public class VectorTest {
++    @Test
++    public void testGetNormalized(){
++        //Expected input:two doubles (up to n-dimensions)
++        //Expected output: Normalized values of the vector.
++        Vector vector = new Vector(4, 3);
++        Vector expectedOutput = new Vector(0.8, 0.6);
++        Vector result = vector.getNormalized();
++        for (int i = 0; i< expectedOutput.getDim(); i++){
++            assertEquals(expectedOutput.getValue(i), result.getValue(i));
++        }
++
++    }
++
++    @Test
++    public void testCrossProduct(){
++        //Expected input:Two Vectors
++        //Expected output: The orthogonal Vector to the two inputed vectors
++        Vector vector1 = new Vector(1, 2, 3);
++        Vector vector2 = new Vector(3, 3, 3);
++        Vector expectedOutput = new Vector(-3, 6, -3);
++        Vector result = vector1.crossProduct(vector1, vector2);
++        for (int i = 0; i< expectedOutput.getDim(); i++) {
++            assertEquals(expectedOutput.getValue(i), result.getValue(i));
++        }
++
++    }
++
++    @Test(expected = ArithmeticException.class)
++    public void testWrongInput(){
++        //Expected input: Two points, but different dimensions
++        //Expected output: ArithmeticException
++        Vector vector = new Vector(1, 2);
++        Point point1 = new Point(1, 2);
++        Point point2 = new Point(1, 2, 3);
++        vector.makeTwoPointsVector(point1, point2);
++    }
++
++    @Test
++    public void testMakeTwoPointsVector(){
++        //Expected input:Two points
++        //Expected output: Vector from the two points.
++        Vector expectedOutput = new Vector(0, -1, -2);
++        Point point1 = new Point(1, 1, 1);
++        Point point2 = new Point(1, 2, 3);
++        Vector result = expectedOutput.makeTwoPointsVector(point1, point2);
++        for (int i = 0; i< expectedOutput.getDim(); i++){
++            assertEquals(expectedOutput.getValue(i), result.getValue(i));
++        }
++    }
++
++}
++        Vector vector2 = new Vector(3, 3, 3);
++        Vector expectedOutput = new Vector(-3, 6, -3);
++        Vector result = vector1.crossProduct(vector1, vector2);
++        for (int i = 0; i< expectedOutput.getDim(); i++) {
++            assertEquals(expectedOutput.getValue(i), result.getValue(i));
++        }
++
++    }
++
++    @Test(expected = ArithmeticException.class)
++    public void testWrongInput(){
++        //Expected input: Two points, but different dimensions
++        //Expected output: ArithmeticException
++        Vector vector = new Vector(1, 2);
++        Point point1 = new Point(1, 2);
++        Point point2 = new Point(1, 2, 3);
++        vector.makeTwoPointsVector(point1, point2);
++    }
++
++    @Test
++    public void testMakeTwoPointsVector(){
++        //Expected input:Two points
++        //Expected output: Vector from the two points.
++        Vector expectedOutput = new Vector(0, -1, -2);
++        Point point1 = new Point(1, 1, 1);
++        Point point2 = new Point(1, 2, 3);
++        Vector result = expectedOutput.makeTwoPointsVector(point1, point2);
++        for (int i = 0; i< expectedOutput.getDim(); i++){
++            assertEquals(expectedOutput.getValue(i), result.getValue(i));
++        }
++    }
++
++}
++        Vector vector2 = new Vector(3, 3, 3);
++        Vector expectedOutput = new Vector(-3, 6, -3);
++        Vector result = vector1.crossProduct(vector1, vector2);
++        for (int i = 0; i< expectedOutput.getDim(); i++) {
++            assertEquals(expectedOutput.getValue(i), result.getValue(i));
++        }
++
++    }
++
++    @Test(expected = ArithmeticException.class)
++    public void testWrongInput(){
++        //Expected input: Two points, but different dimensions
++        //Expected output: ArithmeticException
++        Vector vector = new Vector(1, 2);
++        Point point1 = new Point(1, 2);
++        Point point2 = new Point(1, 2, 3);
++        vector.makeTwoPointsVector(point1, point2);
++    }
++
++    @Test
++    public void testMakeTwoPointsVector(){
++        //Expected input:Two points
++        //Expected output: Vector from the two points.
++        Vector expectedOutput = new Vector(0, -1, -2);
++        Point point1 = new Point(1, 1, 1);
++        Point point2 = new Point(1, 2, 3);
++        Vector result = expectedOutput.makeTwoPointsVector(point1, point2);
++        for (int i = 0; i< expectedOutput.getDim(); i++){
++            assertEquals(expectedOutput.getValue(i), result.getValue(i));
++        }
++    }
++
++}
