@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class VectorTest {
     @Test
     public void testGetNormalized(){
+        //Expected input:two doubles (up to n-dimensions)
+        //Expected output: Normalized values of the vector.
         Vector vector = new Vector(4, 3);
         Vector expectedOutput = new Vector(0.8, 0.6);
         Vector result = vector.getNormalized();
@@ -18,6 +20,8 @@ public class VectorTest {
 
     @Test
     public void testCrossProduct(){
+        //Expected input:Two Vectors
+        //Expected output: The orthogonal Vector to the two inputed vectors
         Vector vector1 = new Vector(1, 2, 3);
         Vector vector2 = new Vector(3, 3, 3);
         Vector expectedOutput = new Vector(-3, 6, -3);
@@ -30,6 +34,8 @@ public class VectorTest {
 
     @Test(expected = ArithmeticException.class)
     public void testWrongInput(){
+        //Expected input: Two points, but different dimensions
+        //Expected output: ArithmeticException
         Vector vector = new Vector(1, 2);
         Point point1 = new Point(1, 2);
         Point point2 = new Point(1, 2, 3);
@@ -38,6 +44,8 @@ public class VectorTest {
 
     @Test
     public void testMakeTwoPointsVector(){
+        //Expected input:Two points
+        //Expected output: Vector from the two points.
         Vector expectedOutput = new Vector(0, -1, -2);
         Point point1 = new Point(1, 1, 1);
         Point point2 = new Point(1, 2, 3);

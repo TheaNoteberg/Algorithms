@@ -11,7 +11,6 @@ public class Plane {
     // The internal representation of a plane is
     // in Hessian normal form which is: ax + by + cz + d = 0
     private double a, b, c, d;
-    // (1,2,3)t + (2,3,4) = (t+2, 2+3t, 3t+4)
     public Plane(double a, double b, double c, double d){
         this.a = a;
         this.b = b;
@@ -20,7 +19,7 @@ public class Plane {
         checkInput();
     }
 
-    //Constructs a plane from 3 points. Kanske behöver skapa två vektorer istället för två nya points rad 28,29
+    //Constructs a plane from 3 points.
     public Plane(Point point1, Point point2, Point point3) {
         double a_bX  = point1.getX() - point2.getX();
         double a_bY  = point1.getY() - point2.getY();
@@ -105,6 +104,7 @@ public class Plane {
 
     @Override
     public boolean equals(Object other) {
+        //Possible to compare two planes to each other.
         if (!(other instanceof Plane)) return false;
         if (other == this) return true;
         Plane plane = (Plane) other;

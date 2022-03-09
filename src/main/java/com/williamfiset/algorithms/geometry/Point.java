@@ -56,5 +56,4 @@ public class Point {
     public double getCoordinat(int x){
         return coordinates[x];
     }
-    //Add for loop functionality for larger dimensions.
 }

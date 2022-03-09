@@ -165,6 +165,7 @@ public class Line {
 
   @Override
   public boolean equals(Object other){
+    //Makes it possible to compare two lines to each other.
     if (!(other instanceof Line)) return false;
     if (other == this) return true;
     Line line = (Line) other;

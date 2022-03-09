@@ -16,12 +16,14 @@ public class Vector extends Point {
     }
 
     public double getNorm() {
+        //Get the norm from a vector
         double pyth = 0;
         for (double v : coordinates) pyth += pow(v,2);
         return sqrt(pyth);
     }
 
     public Vector getNormalized() {
+        //Normalizes the vector
         double norm = getNorm();
         double[] normalizedCoord = new double[coordinates.length];
         for (int i = 0; i < normalizedCoord.length; i++) {
@@ -39,7 +41,7 @@ public class Vector extends Point {
         return new Vector(vector);
     }
 
-    //Coalculates the normalvector with cross product
+    //Calculates the orthogonal vector to two input vectors with cross product
     public static Vector crossProduct(Vector vector1, Vector vector2){
         if( vector1.getDim() != 3 || vector2.getDim() != 3) throw new ArithmeticException("The vectors need to be in 3D");
         //double[] normalVector = new double[3];
